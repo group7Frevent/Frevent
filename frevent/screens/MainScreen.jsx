@@ -4,15 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
 
 const MainScreen = () => {
-
-    const [userData, setUserData] = useState(true)
-    const user = useSelector(selectUser)
-
     const dispatch = useDispatch();
 
-    useState(() => {
-        console.log(user)
-    }, [user])
 
     const setTestRedux = () => {
         const testUserData = {
@@ -23,8 +16,8 @@ const MainScreen = () => {
             type: "user"
         }
         dispatch(addUser(testUserData))
-        setUserData(false)
     }
+
     return (
         <View style={styles.container}>
             <Text>Testi</Text>
