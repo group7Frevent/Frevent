@@ -2,42 +2,42 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
+import Login from './loginSignup/Login';
+import TabNavigation from './tabNavigation/TabNavigation';
+
 
 const MainScreen = () => {
+
+    const [logged, setLogged] = useState(false)
+
     const dispatch = useDispatch();
 
 
-    const setTestRedux = () => {
-        const testUserData = {
-            userID: 23,
-            username: "Sepon",
-            imageUrl: "http://sddsadsads",
-            token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
-            type: "user"
-        }
-        dispatch(addUser(testUserData))
+    if (logged) {
+        // Renderöidään etusivu
+        return (
+            <View>
+                <TabNavigation />
+            </View>
+        )
+    } else {
+        // Renderöidään login ja signup UI
+        //Login ->
+        return (
+            <Login setLogged={setLogged} />
+        )
     }
-
-    return (
-        <View style={styles.container}>
-            <Text>Testi</Text>
-            <Button
-                onPress={setTestRedux}
-                title="Add"
-            />
-        </View>
-    )
-
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
-
-
 export default MainScreen
+
+/*const setTestRedux = () => {
+    const testUserData = {
+        userID: 23,
+        username: "Sepon",
+        imageUrl: "http://sddsadsads",
+        token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
+        type: "user"
+    }
+    dispatch(addUser(testUserData))
+}*/
