@@ -4,15 +4,41 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
+http.listen(3002);
+var file1 = require('./socket_io/socketio')(io)
+
+
 dotenv.config();
 
 var indexRouter = require('./routes/index');
 var authRoute = require('./routes/auth')
+var messageRoute = require('./routes/messages')
 
 var app = express();
 
 var app = express();
 var cors = require('cors')
+
+///// Socket.io
+
+
+/*
+io.on("connection", (socket) => {
+    console.log("Here : " + socket.id)
+
+
+
+    socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id)
+    })
+})
+
+*/
+
+
+
 app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +51,7 @@ app.use('/auth', authRoute)
 
 app.use(authenticateToken);
 
+app.use('/messages', messageRoute)
 
 
 function authenticateToken(req, res, next) {
@@ -32,6 +59,7 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
 
     console.log("token = " + token);
+    console.log("Here")
     if (token == null) return res.sendStatus(401)
 
     jwt.verify(token, process.env.MY_TOKEN, (err, user) => {
