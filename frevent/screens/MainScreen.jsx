@@ -5,20 +5,21 @@ import { addUser, selectUser } from '../features/userSlice';
 import Login from './loginSignup/Login';
 import TabNavigation from './tabNavigation/TabNavigation';
 
-
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
-
     const dispatch = useDispatch();
-
 
     if (logged) {
         // Renderöidään etusivu
         return (
+            <>
             <View>
-                <TabNavigation />
+                <Text>Logged in</Text>
             </View>
+            <TabNavigation />
+            </>
+            
         )
     } else {
         // Renderöidään login ja signup UI
@@ -41,3 +42,4 @@ export default MainScreen
     }
     dispatch(addUser(testUserData))
 }*/
+

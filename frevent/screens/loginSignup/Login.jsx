@@ -36,7 +36,7 @@ const Login = ({ setLogged }) => {
             },
         };
 
-        const requestUrl = 'http://192.168.0.100:3000/auth/login/'
+        const requestUrl = 'http://84.250.31.253:3000/auth/login/'
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
