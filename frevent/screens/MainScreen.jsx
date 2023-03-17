@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
 import Login from './loginSignup/Login';
+import Signup from './loginSignup/Signup';
 import TabNavigation from './tabNavigation/TabNavigation';
 
 
@@ -24,7 +25,8 @@ const MainScreen = () => {
         // Renderöidään login ja signup UI
         //Login ->
         return (
-            <Login setLogged={setLogged} />
+           // <Login setLogged={setLogged} />
+              <Signup/>
         )
     }
 }

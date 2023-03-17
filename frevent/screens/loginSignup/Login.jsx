@@ -4,10 +4,12 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
 
+
+
 const Login = ({ setLogged }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
-
+    
     // Valmistelee redux
     const dispatch = useDispatch();
 
@@ -36,7 +38,7 @@ const Login = ({ setLogged }) => {
             },
         };
 
-        const requestUrl = 'http://192.168.0.100:3000/auth/login/'
+        const requestUrl = 'http://192.168.32.156:3000/auth/login/'
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -53,6 +55,7 @@ const Login = ({ setLogged }) => {
     }
 
     return (
+
         <View style={styles.container}>
             <TextInput
                 style={styles.input}
@@ -76,6 +79,7 @@ const Login = ({ setLogged }) => {
             </TouchableOpacity>
 
         </View>
+
     )
 }
 
