@@ -21,7 +21,7 @@ const errors = {
         }
 
         else {
-            res.status(400).send("unknown error" + dberr)
+            res.status(403).send("unknown error: " + dberr)
         }
     }
 }
