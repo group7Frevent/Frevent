@@ -21,22 +21,6 @@ var app = express();
 var app = express();
 var cors = require('cors')
 
-///// Socket.io
-
-
-/*
-io.on("connection", (socket) => {
-    console.log("Here : " + socket.id)
-
-
-
-    socket.on("disconnect", () => {
-        console.log("User Disconnected", socket.id)
-    })
-})
-
-*/
-
 
 
 app.use(cors())
@@ -48,10 +32,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/auth', authRoute)
-
-app.use(authenticateToken);
-
 app.use('/messages', messageRoute)
+
+//app.use(authenticateToken);
+
 
 
 function authenticateToken(req, res, next) {
