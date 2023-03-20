@@ -3,12 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
 import Login from './loginSignup/Login';
+import Signup from './loginSignup/Signup';
 import TabNavigation from './tabNavigation/TabNavigation';
 
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
+
+    const [showLogin , setShowLogin] = useState(true)
+
     const dispatch = useDispatch();
+
 
 
     if (logged) {
@@ -20,11 +25,16 @@ const MainScreen = () => {
             
         )
     } else {
-        // Renderöidään login ja signup UI
-        //Login ->
-        return (
-            <Login setLogged={setLogged} />
-        )
+        if (showLogin) {
+            return (
+                <Login setLogged={setLogged} setShowRegister={setShowLogin}/>
+            )
+        }
+        else {
+            return (
+                <Signup setShowLogin={setShowLogin}/>
+            )
+        }
     }
 }
 
@@ -38,6 +48,7 @@ export default MainScreen
         token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
         type: "user"
     }
-    dispatch(addUser(testUserData))
-}*/
+
+    dispatch(addUser(testUserData))}*/ 
+
 

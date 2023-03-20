@@ -37,7 +37,7 @@ const userLogin = (username, password, res) => {
                     if (compareResult) {
                         // password matches, returning user details
                         // Get json web token
-                        const token = generateAccessToken({ username: username });
+                        const token = generateAccessToken({ userData: dbres[0] });
                         dbres[0].token = token
                         // Delete password field
                         delete dbres[0].password
@@ -74,7 +74,7 @@ const companyLogin = (username, password, res) => {
                     if (compareResult) {
                         // password matches, returning user details
                         // Get json web token
-                        const token = generateAccessToken({ username: username });
+                        const token = generateAccessToken({ userData: dbres[0] });
                         dbres[0].token = token
                         // Delete password field
                         delete dbres[0].password
@@ -103,7 +103,7 @@ router.post('/register/user', function (req, res, next) {
 
     if (req.body.username && req.body.fname
         && req.body.lname && req.body.password
-        && req.body.picture && req.body.birthdate) {
+        && req.body.picture && req.body.birthdate && req.body.email) {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             var date = new Date(req.body.birthdate)
             users.addUser(req.body, date, hash, (dberr, dbRes) => {
@@ -117,7 +117,7 @@ router.post('/register/user', function (req, res, next) {
                         } else {
                             // Return company details and json web token
                             // Get json web token
-                            const token = generateAccessToken({ username: req.body.username });
+                            const token = generateAccessToken({ userData: dbResult[0] });
                             dbResult[0].token = token
                             // Delete password field
                             delete dbResult[0].password
@@ -158,7 +158,7 @@ router.post('/register/company', function (req, res, next) {
                         } else {
                             // Return company details and json web token
                             // Get json web token
-                            const token = generateAccessToken({ username: req.body.username });
+                            const token = generateAccessToken({ userData: dbResult[0] });
                             dbResult[0].token = token
                             // Delete password field
                             delete dbResult[0].password
@@ -182,9 +182,9 @@ router.post('/register/company', function (req, res, next) {
 
 
 // Generate token
-function generateAccessToken(username) {
+function generateAccessToken(userID) {
     dotenv.config();
-    return jwt.sign(username, process.env.MY_TOKEN, { expiresIn: '300d' });
+    return jwt.sign(userID, process.env.MY_TOKEN, { expiresIn: '300d' });
 }
 
 
