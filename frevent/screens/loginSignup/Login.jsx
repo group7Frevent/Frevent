@@ -56,7 +56,7 @@ const Login = ({ setLogged }) => {
         <View style={styles.container}>
             <TextInput
                 style={styles.input}
-                placeholder="User Name"
+                placeholder="Username"
                 placeholderTextColor="#b5b5b5"
                 onChangeText={setUserName}
                 value={userName}

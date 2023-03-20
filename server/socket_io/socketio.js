@@ -1,6 +1,7 @@
 var clients = [];
 
 exports = module.exports = function (io) {
+    // Creaet connection to Socket.io
     io.sockets.on('connection', function (socket) {
 
         socket.on('storeClientInfo', (data) => {
