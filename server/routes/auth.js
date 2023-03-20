@@ -103,7 +103,7 @@ router.post('/register/user', function (req, res, next) {
 
     if (req.body.username && req.body.fname
         && req.body.lname && req.body.password
-        && req.body.picture && req.body.birthdate) {
+        && req.body.picture && req.body.birthdate && req.body.email) {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             var date = new Date(req.body.birthdate)
             users.addUser(req.body, date, hash, (dberr, dbRes) => {
