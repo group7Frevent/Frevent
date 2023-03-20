@@ -41,5 +41,4 @@ export default MainScreen
         token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
         type: "user"
     }
-    dispatch(addUser(testUserData))
-}*/
+    dispatch(addUser(testUserData))*/
