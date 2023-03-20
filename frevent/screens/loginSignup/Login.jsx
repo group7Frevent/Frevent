@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
+
 
 const Login = ({ setLogged }) => {
     const [userName, setUserName] = useState("")
@@ -54,10 +55,12 @@ const Login = ({ setLogged }) => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title} >Welcome to Frevent</Text>
+            <Image style={styles.image} source={require("../../assets/kaverit.png")}/>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
-                placeholderTextColor="#b5b5b5"
+
                 onChangeText={setUserName}
                 value={userName}
                 autoCapitalize='none'
@@ -65,7 +68,7 @@ const Login = ({ setLogged }) => {
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor="#b5b5b5"
+                placeholderTextColor="black"
                 secureTextEntry={true}
                 onChangeText={setPassword}
                 value={password}
@@ -82,7 +85,7 @@ const Login = ({ setLogged }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FEF9A7',
         alignItems: 'center',
         justifyContent: 'center',
 
@@ -95,7 +98,8 @@ const styles = StyleSheet.create({
         margin: 1,
         paddingLeft: 10,
         color: "white",
-        backgroundColor: "#465881"
+        backgroundColor: "#FAC213"
+        
     },
     button: {
         marginTop: 40,
@@ -103,11 +107,22 @@ const styles = StyleSheet.create({
         width: 300,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#465881",
+        backgroundColor: "#F77E21",
         color: "#fff",
         padding: 10,
         borderRadius: 10,
     },
+    image: {
+        width: 250, 
+        height: 200,
+        
+    },
+    title: {
+        fontSize:30,
+        fontWeight: 'bold',
+        color: "#465881"
+
+    }
 });
 
 export default Login
