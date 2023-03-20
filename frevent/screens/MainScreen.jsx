@@ -10,13 +10,11 @@ const MainScreen = () => {
     const [logged, setLogged] = useState(false)
     const dispatch = useDispatch();
 
+
     if (logged) {
         // Renderöidään etusivu
         return (
             <>
-            <View>
-                <Text>Logged in</Text>
-            </View>
             <TabNavigation />
             </>
             

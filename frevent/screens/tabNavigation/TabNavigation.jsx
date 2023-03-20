@@ -5,10 +5,10 @@ import { selectUser } from '../../features/userSlice'
 import Ionic from 'react-native-vector-icons/Ionicons'
 import {NavigationContainer} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import MainScreen from "../MainScreen";
-import EventsScreen from "../EventsScreen";
-import FriendsScreen from "../FriendsScreen";
-import SettingsScreen from "../SettingsScreen";
+import EventsScreen from "./EventsScreen";
+import FriendsScreen from "./FriendsScreen";
+import SettingsScreen from "./SettingsScreen";
+import HomeScreen from "./HomeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +46,7 @@ const TabNavigation = () => {
                     inactiveTintColor: 'gray',
                 }}
             >
-                <Tab.Screen name="Home" component={MainScreen}/>
+                <Tab.Screen name="Home" component={HomeScreen}/>
                 <Tab.Screen name="My Events" component={EventsScreen}/>
                 <Tab.Screen name="Friends" component={FriendsScreen}/>
                 <Tab.Screen name="Settings" component={SettingsScreen}/>

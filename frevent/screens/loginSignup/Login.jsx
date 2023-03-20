@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
+import MainScreen from '../MainScreen';
 
 const Login = ({ setLogged }) => {
     const [userName, setUserName] = useState("")
