@@ -60,7 +60,7 @@ const Login = ({ setLogged }) => {
             <TextInput
                 style={styles.input}
                 placeholder="Username"
-                placeholderTextColor="black"
+
                 onChangeText={setUserName}
                 value={userName}
                 autoCapitalize='none'
