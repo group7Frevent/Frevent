@@ -6,7 +6,7 @@ import { addUser } from '../../features/userSlice';
 
 
 
-const Login = ({ setLogged }) => {
+const Login = ({ setLogged, setShowRegister }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     
@@ -79,6 +79,9 @@ const Login = ({ setLogged }) => {
             <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
                 <Text>Log In</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
+                <Text style={styles.bottomtitle} > No account yet? Register here</Text>
+            </TouchableOpacity>
 
         </View>
 
@@ -125,6 +128,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: "#465881"
 
+    },
+    bottomtitle: {
+        padding: 10
     }
 });
 

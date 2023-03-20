@@ -10,8 +10,11 @@ import TabNavigation from './tabNavigation/TabNavigation';
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
+    const [showLogin , setShowLogin] = useState(true)
+    
 
     const dispatch = useDispatch();
+
 
 
     if (logged) {
@@ -22,12 +25,16 @@ const MainScreen = () => {
             </View>
         )
     } else {
-        // Renderöidään login ja signup UI
-        //Login ->
-        return (
-           // <Login setLogged={setLogged} />
-              <Signup/>
-        )
+        if (showLogin) {
+            return (
+                <Login setLogged={setLogged} setShowRegister={setShowLogin}/>
+            )
+        }
+        else {
+            return (
+                <Signup setShowLogin={setShowLogin}/>
+            )
+        }
     }
 }
 

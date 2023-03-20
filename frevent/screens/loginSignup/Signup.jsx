@@ -1,29 +1,71 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 
 
-const Signup = ({ navigation }) => {
+const Signup = ({  setShowLogin }) => {
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [birthDay, setBirthday] = useState('');
+    const [picture, setPicture] = useState('');
 
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
+         var details = {
+            username: userName,
+            password: password,
+            fname: firstName,
+            lname: lastName,
+            email: email,
+            birthday: birthDay,
+            picture: picture,
+            accountType: "user"
+        };
+
+        var formBody = [];
+
+        for (var property in details) {
+            var encodedKey = encodeURIComponent(property);
+            var encodedValue = encodeURIComponent(details[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+
+        formBody = formBody.join("&");
+
+        const config = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        };
+
+        const requestUrl = 'http://192.168.32.156:3000/auth/register/user'
+
+
+        axios.post(requestUrl, formBody, config).then((response) => {
+            // Login succeed
+            console.log(response.data)
+            // Tallennetaan tiedot reduxiin
+            dispatch(addUser(response.data))
+            setLogged(true)
+        }).catch((error) => {
+            console.log(error)
+        })
+
     };
 
     return (
-        
+  
 
         <View style={styles.container}>
+        <Text style={styles.title}>Create an account</Text>
             <Image
                 source={require('../../assets/regLogo.png')}
                 style={styles.logo}
             />
-            <Text style={styles.title}>Create an account</Text>
             <TextInput
                 style={styles.input}
                 placeholder="UserName"
@@ -32,6 +74,16 @@ const Signup = ({ navigation }) => {
                 value={userName}
                 autoCapitalize="none"
                 maxLength={20}
+            />
+                 <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#465881"
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                value={password}
+                autoCapitalize="none"
+                maxLength={15}
             />
             <TextInput
                 style={styles.input}
@@ -51,16 +103,7 @@ const Signup = ({ navigation }) => {
                 autoCapitalize="none"
                 maxLength={50}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#465881"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize="none"
-                maxLength={15}
-            />
+       
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -84,8 +127,8 @@ const Signup = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
                 <Text>Sign up</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
-                <Text>Already have an account? Log in</Text>
+            <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
+                <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
         </View>
     );
@@ -128,8 +171,11 @@ const styles = StyleSheet.create({
     logo: {
         width: 250, // set the width of the logo to 100 pixels
         height: 200, // set the height of the logo to 100 pixels
-        marginBottom: -20, // add some margin at the bottom to separate the logo from the form
+        marginBottom: -10, // add some margin at the bottom to separate the logo from the form
     },
+    bottomtitle: {
+        padding: 10
+    }
 });
 
 export default Signup;
