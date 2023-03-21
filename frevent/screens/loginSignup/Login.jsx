@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import MainScreen from '../MainScreen';
 const Login = ({ setLogged, setShowRegister }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
-    
+
     // Valmistelee redux
     const dispatch = useDispatch();
 
@@ -40,7 +40,7 @@ const Login = ({ setLogged, setShowRegister }) => {
         };
 
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/login/'
+        const requestUrl = 'http://192.168.0.100:3000/auth/login/'
 
 
 
@@ -61,11 +61,10 @@ const Login = ({ setLogged, setShowRegister }) => {
 
         <View style={styles.container}>
             <Text style={styles.title} >Welcome to Frevent</Text>
-            <Image style={styles.image} source={require("../../assets/kaverit.png")}/>
+            <Image style={styles.image} source={require("../../assets/kaverit.png")} />
             <TextInput
                 style={styles.input}
                 placeholder="Username"
-
                 onChangeText={setUserName}
                 value={userName}
                 autoCapitalize='none'
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: "white",
         backgroundColor: "#FAC213"
-        
+
     },
     button: {
         marginTop: 40,
@@ -122,12 +121,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     image: {
-        width: 250, 
+        width: 250,
         height: 200,
-        
+
     },
     title: {
-        fontSize:30,
+        fontSize: 30,
         fontWeight: 'bold',
         color: "#465881"
 
