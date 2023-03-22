@@ -15,6 +15,7 @@ dotenv.config();
 var indexRouter = require('./routes/index');
 var authRoute = require('./routes/auth')
 var messageRoute = require('./routes/messages')
+var settingsRoute = require('./routes/settings')
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', authRoute)
 app.use('/messages', messageRoute)
+app.use('/settings', settingsRoute)
 
 //app.use(authenticateToken);
 
