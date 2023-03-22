@@ -5,11 +5,11 @@ const errors = {
         }
 
         else if (dberr == "wrong password") {
-            res.status(403).send("wrong password")
+            res.status(401).send("wrong password")
         }
 
         else if (dberr == "wrong username") {
-            res.status(403).send("wrong username")
+            res.status(402).send("wrong username")
         }
 
         else if (dberr.errno == 1062) {
@@ -17,11 +17,11 @@ const errors = {
         }
 
         else if (dberr.errno == 1048) {
-            res.status(403).send("Birthdate not valid")
+            res.status(404).send("Birthdate not valid")
         }
 
         else {
-            res.status(403).send("unknown error: " + dberr)
+            res.status(405).send("unknown error: " + dberr)
         }
     }
 }
