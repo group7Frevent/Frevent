@@ -1,37 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addUser } from '../../features/userSlice';
+import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
 
-
-
-
-const Signup = ({  setShowLogin, setLogged }) => {
+const CompanySignup = ({  setShowLogin, setShowCompanySignup}) => {
     const [userName, setUserName] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [birthDay, setBirthday] = useState('');
+    const [companyName, setCompanyName] = useState("");
     const [picture, setPicture] = useState('');
 
-    // Valmistelee redux
     const dispatch = useDispatch();
-
-   
-
+    
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
          var details = {
             username: userName,
             password: password,
-            fname: firstName,
-            lname: lastName,
             email: email,
-            birthdate: birthDay,
             picture: "jepjep",
+            companyname: companyName,
             accountType: "user"
         };
 
@@ -52,7 +41,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
             },
         };
 
-        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/register/user'
+        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/register/company'
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -78,7 +67,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
             />
             <TextInput
                 style={styles.input}
-                placeholder="UserName"
+                placeholder="Username"
                 placeholderTextColor="#465881"
                 onChangeText={setUserName}
                 value={userName}
@@ -97,47 +86,28 @@ const Signup = ({  setShowLogin, setLogged }) => {
             />
             <TextInput
                 style={styles.input}
-                placeholder="First Name"
-                placeholderTextColor="#465881"
-                onChangeText={setFirstName}
-                value={firstName}
-                autoCapitalize="none"
-                maxLength={30}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                placeholderTextColor="#465881"
-                onChangeText={setLastName}
-                value={lastName}
-                autoCapitalize="none"
-                maxLength={50}
-            />
-       
-            <TextInput
-                style={styles.input}
                 placeholder="Email"
                 placeholderTextColor="#465881"
                 onChangeText={setEmail}
                 value={email}
                 autoCapitalize="none"
             />
-            <TextInputMask
+            <TextInput
                 style={styles.input}
-                type={'datetime'}
-                options={{
-                    format: 'YYYY.MM.DD'
-                }}
-                placeholder="Date of Birth"
+                placeholder="Company name"
                 placeholderTextColor="#465881"
-                onChangeText={setBirthday}
-                value={birthDay}
+                onChangeText={setCompanyName}
+                value={companyName}
                 autoCapitalize="none"
+                maxLength={20}
             />
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
                 <Text>Sign up</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
+            <TouchableOpacity onPress={() => {
+                setShowCompanySignup(false)
+                setShowLogin(true)}}
+                 color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
         </View>
@@ -158,7 +128,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         margin: 1,
         paddingLeft: 10,
-        color: 'white',
+        color: 'black',
         backgroundColor: '#FAC213',
         
     },
@@ -184,8 +154,9 @@ const styles = StyleSheet.create({
         marginBottom: -10, // add some margin at the bottom to separate the logo from the form
     },
     bottomtitle: {
-        padding: 10
+        padding: 10,
+        fontWeight: "bold"
     }
 });
 
-export default Signup;
+export default CompanySignup;

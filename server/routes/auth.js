@@ -100,10 +100,11 @@ const companyLogin = (username, password, res) => {
 
 // Register new user
 router.post('/register/user', function (req, res, next) {
-
+    console.log("here")
     if (req.body.username && req.body.fname
         && req.body.lname && req.body.password
         && req.body.picture && req.body.birthdate && req.body.email) {
+            
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             var date = new Date(req.body.birthdate)
             users.addUser(req.body, date, hash, (dberr, dbRes) => {
@@ -122,7 +123,8 @@ router.post('/register/user', function (req, res, next) {
                             // Delete password field
                             delete dbResult[0].password
                             // Return
-                            res.send(dbResult[0])
+                            console.log(dbResult)
+                            res.send(dbResult)
                         }
                     })
                 }
@@ -141,7 +143,7 @@ router.post('/register/user', function (req, res, next) {
 router.post('/register/company', function (req, res, next) {
     // Check all params exist
     if (req.body.username && req.body.password
-        && req.body.picture && req.body.companyname) {
+        && req.body.picture && req.body.companyname && req.body.email) {
         // bcrypt password
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             // If hash succeed lets add company to mysql

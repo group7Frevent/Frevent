@@ -4,35 +4,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
 import Login from './loginSignup/Login';
 import Signup from './loginSignup/Signup';
+import CompanySignup from './loginSignup/CompanySignup'
 import TabNavigation from './tabNavigation/TabNavigation';
 
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
-
-    const [showLogin , setShowLogin] = useState(true)
+    const [showLogin, setShowLogin] = useState(true)
+    const [showCompanySignup, setShowCompanySignup] = useState(false)
 
     const dispatch = useDispatch();
-
 
 
     if (logged) {
         // Renderöidään etusivu
         return (
             <>
-            <TabNavigation />
+                <TabNavigation />
             </>
-            
+
         )
     } else {
         if (showLogin) {
             return (
-                <Login setLogged={setLogged} setShowRegister={setShowLogin}/>
+                <Login setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
+            )
+        }
+        else if (showCompanySignup) {
+            return (
+                <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} />
             )
         }
         else {
             return (
-                <Signup setShowLogin={setShowLogin}/>
+                <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
             )
         }
     }
@@ -49,6 +54,6 @@ export default MainScreen
         type: "user"
     }
 
-    dispatch(addUser(testUserData))}*/ 
+    dispatch(addUser(testUserData))}*/
 
 

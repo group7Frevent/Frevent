@@ -8,12 +8,13 @@ const users = {
         return db.query("select * from users where ID=?", [ID], callback);
     },
     addUser: function (body, date, hash, callback) {
-        return db.query("INSERT INTO users (username, fname, lname, birthdate, password, picture) VALUES (?, ?, ?, ?, ?, ?)",
-            [body.username, body.fname, body.lname, date, hash, body.picture], callback)
+        return db.query("INSERT INTO users (username, fname, lname, birthdate, picture, password, email) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [body.username, body.fname, body.lname, date, body.picture, hash, body.email], callback)
     },
     updateUser: function (body, hash, callback) {
         return db.query("UPDATE users SET username=?, password=? where ID=?",
             [body.username, hash, body.ID], callback)
+
     }
 };
 

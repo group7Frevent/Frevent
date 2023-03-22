@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-const ChatBox = ({ data }) => {
+const ChatBox = ({ data, unread }) => {
 
     // Init date var
     const [date, setDate] = useState(Date)
@@ -19,12 +19,17 @@ const ChatBox = ({ data }) => {
                         uri: data?.picture,
                     }} />
                 <View style={styles.texts}>
-                    <View >
+                    <View style={styles.topRow}>
                         <Text style={styles.sender}>{data?.username}</Text>
+                        {unread > 0 &&
+                            <View style={styles.numberBox}>
+                                <Text>{unread}</Text>
+                            </View>
+                        }
                     </View>
                     <View style={styles.msgAndClock}>
                         <Text>{data?.message ? data?.message : "Start chatting!"}</Text>
-                        <Text>{date !== "NaN seconds ago" && date}</Text>
+                        <Text style={unread > 0 ? { color: "#f77f1b", fontWeight: 700 } : {}}>{date !== "NaN seconds ago" && date}</Text>
                     </View>
                 </View>
             </View>
@@ -94,11 +99,25 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     line: {
-        height: 2,
+        height: 1,
         backgroundColor: 'gray',
         width: "95%",
         borderRadius: 10,
         alignSelf: "center"
+    },
+    numberBox: {
+        backgroundColor: "#f77f1b",
+        height: 20,
+        width: 20,
+        borderRadius: 20 / 2,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    topRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingRight: 10,
+        alignItems: "center"
     }
 });
 
