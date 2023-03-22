@@ -1,13 +1,22 @@
 import { View, Text, SafeAreaView } from 'react-native'
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import ChatContainer from './components/ChatContainer'
-import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Conversation from './components/Conversation';
+import CustomHeader from './components/CustomHeader';
+
+const Stack = createNativeStackNavigator();
 
 const ChatStack = () => {
-    const Stack = createNativeStackNavigator()
     return (
-        <ChatContainer />
+        <Stack.Navigator >
+            <Stack.Screen name="Chats" component={ChatContainer} />
+            <Stack.Screen
+                name="Chat"
+                component={Conversation}
+                options={{ headerShown: false }}
+            />
+        </Stack.Navigator>
     )
 }
 /*<NavigationContainer>
