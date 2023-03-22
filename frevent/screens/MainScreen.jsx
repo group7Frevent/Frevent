@@ -32,7 +32,7 @@ const MainScreen = () => {
         }
         else {
             return (
-                <Signup setShowLogin={setShowLogin}/>
+                <Signup setLogged={setLogged} setShowLogin={setShowLogin}/>
             )
         }
     }
