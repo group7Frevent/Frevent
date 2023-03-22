@@ -11,9 +11,9 @@ const users = {
         return db.query("INSERT INTO users (username, fname, lname, birthdate, password, picture) VALUES (?, ?, ?, ?, ?, ?)",
             [body.username, body.fname, body.lname, date, hash, body.picture], callback)
     },
-    updateUser: function (body, callback) {
+    updateUser: function (body, hash, callback) {
         return db.query("UPDATE users SET username=?, password=? where ID=?",
-            [body.username, body.password, body.ID], callback)
+            [body.username, hash, body.ID], callback)
     }
 };
 

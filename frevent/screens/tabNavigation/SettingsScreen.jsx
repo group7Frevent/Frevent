@@ -17,7 +17,7 @@ const SettingsScreen = () => {
     var details = {
       username: username,
       password: password,
-      accountType: "user"
+      ID: userData.user.ID,
   };
 
   var formBody = [];
@@ -37,7 +37,7 @@ const SettingsScreen = () => {
       },
   };
 
-    axios.put('https://restapi-dot-frevent.ew.r.appspot.com/auth/update/user/' + userData.user.ID, formBody, config)
+    axios.put('http://84.250.31.253:3000/settings/update/user/', formBody, config)
       .then(response => {
         console.log(response.data);
       })
