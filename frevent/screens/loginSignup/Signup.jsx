@@ -4,8 +4,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
-import * as ImagePicker from 'expo-image-picker';
-np
+
 
 
 
