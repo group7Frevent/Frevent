@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from '../../features/userSlice';
 
 
-const Signup = ({  setShowLogin }) => {
+
+
+const Signup = ({  setShowLogin, setLogged }) => {
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -11,6 +16,11 @@ const Signup = ({  setShowLogin }) => {
     const [email, setEmail] = useState('');
     const [birthDay, setBirthday] = useState('');
     const [picture, setPicture] = useState('');
+
+    // Valmistelee redux
+    const dispatch = useDispatch();
+
+   
 
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
@@ -20,8 +30,8 @@ const Signup = ({  setShowLogin }) => {
             fname: firstName,
             lname: lastName,
             email: email,
-            birthday: birthDay,
-            picture: picture,
+            birthdate: birthDay,
+            picture: "jepjep",
             accountType: "user"
         };
 

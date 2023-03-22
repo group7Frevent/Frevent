@@ -27,17 +27,17 @@ const MainScreen = () => {
     } else {
         if (showLogin) {
             return (
-                <Login setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin}/>
+                <Login setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
             )
         }
-        else if(showCompanySignup){
-            return(
+        else if (showCompanySignup) {
+            return (
                 <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} />
             )
         }
-        else  {
+        else {
             return (
-               <Signup setShowLogin={setShowLogin} />
+                <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
             )
         }
     }
