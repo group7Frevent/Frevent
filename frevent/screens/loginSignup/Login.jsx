@@ -7,10 +7,9 @@ import MainScreen from '../MainScreen';
 
 
 
-const Login = ({ setLogged, setShowRegister }) => {
+const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
-    const [errorMessage, setErrorMessage] = useState("")
     
     // Valmistelee redux
     const dispatch = useDispatch();
@@ -41,7 +40,7 @@ const Login = ({ setLogged, setShowRegister }) => {
         };
 
 
-        const requestUrl = 'http://87.100.225.218:3000/auth/login/'
+        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/login/'
 
 
 
@@ -50,7 +49,7 @@ const Login = ({ setLogged, setShowRegister }) => {
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setLogged(true)
+            setLogged(true) 
         }).catch((error) => {
             console.log(error.response.data)
             if(error.response.data === "wrong username") {
@@ -90,7 +89,12 @@ const Login = ({ setLogged, setShowRegister }) => {
                 <Text>Log In</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
-                <Text style={styles.bottomtitle} > No account yet? Register here</Text>
+                <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() =>{
+                setShowCompanySignup(true)
+                setShowLogin(false) } } color="#fff">
+                <Text style={styles.bottomtitle} > Create your company account here!</Text>
             </TouchableOpacity>
 
         </View>
