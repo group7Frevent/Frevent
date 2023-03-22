@@ -40,7 +40,7 @@ const Login = ({ setLogged, setShowRegister }) => {
         };
 
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/login/'
+        const requestUrl = 'http://192.168.0.66:3000/auth/login/'
 
 
 

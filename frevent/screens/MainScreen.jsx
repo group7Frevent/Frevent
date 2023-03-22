@@ -5,6 +5,7 @@ import { addUser, selectUser } from '../features/userSlice';
 import Login from './loginSignup/Login';
 import Signup from './loginSignup/Signup';
 import TabNavigation from './tabNavigation/TabNavigation';
+import HomeScreen from './tabNavigation/HomeScreen';
 
 const MainScreen = () => {
 
@@ -17,7 +18,7 @@ const MainScreen = () => {
 
 
     if (logged) {
-        // Renderöidään etusivu
+        // Renderöidään etusivu */
         return (
             <>
             <TabNavigation />
