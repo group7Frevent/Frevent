@@ -40,7 +40,7 @@ const Login = ({ setLogged, setShowRegister }) => {
         };
 
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/login/'
+        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/login/'
 
 
 

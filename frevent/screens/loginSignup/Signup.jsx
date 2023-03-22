@@ -42,7 +42,7 @@ const Signup = ({  setShowLogin }) => {
             },
         };
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/register/user'
+        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/register/user'
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
