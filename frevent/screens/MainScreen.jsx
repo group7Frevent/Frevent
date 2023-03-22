@@ -6,12 +6,11 @@ import Login from './loginSignup/Login';
 import Signup from './loginSignup/Signup';
 import TabNavigation from './tabNavigation/TabNavigation';
 
-
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
-    const [showLogin , setShowLogin] = useState(true)
-    
+
+    const [showLogin, setShowLogin] = useState(true)
 
     const dispatch = useDispatch();
 
@@ -20,19 +19,20 @@ const MainScreen = () => {
     if (logged) {
         // Renderöidään etusivu
         return (
-            <View>
+            <>
                 <TabNavigation />
-            </View>
+            </>
+
         )
     } else {
         if (showLogin) {
             return (
-                <Login setLogged={setLogged} setShowRegister={setShowLogin}/>
+                <Login setLogged={setLogged} setShowRegister={setShowLogin} />
             )
         }
         else {
             return (
-                <Signup setLogged={setLogged} setShowLogin={setShowLogin}/>
+                <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
             )
         }
     }
@@ -48,4 +48,7 @@ export default MainScreen
         token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
         type: "user"
     }
-    dispatch(addUser(testUserData))*/
+
+    dispatch(addUser(testUserData))}*/
+
+

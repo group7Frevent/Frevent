@@ -1,83 +1,117 @@
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ChatBox from './ChatBox';
-import io from 'socket.io-client'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../../features/userSlice'
 import axios from 'axios';
+import { ScrollView } from 'react-native';
+import { socket } from '../../../socket';
+import { useIsFocused } from "@react-navigation/native";
 
-const socket = io.connect("http://192.168.0.100:3002")
+const ChatContainer = ({ navigation }) => {
 
-
-const ChatContainer = () => {
-
+    const isFocused = useIsFocused();
     // Init all variables
     const [converstions, setConverstions] = useState([])
 
     const [receivedMsg, setReceivedMsg] = useState("")
 
     const userData = useSelector(selectUser)
-    socket.emit('storeClientInfo', { customId: userData.user.ID });
 
-
-    useState(() => {
-
-        // Get all conversations......
+    const getConversations = () => {
         axios.get("http://192.168.0.100:3000/messages/friends/" + userData.user.ID).then((response) => {
             response.data.sort((a, b) => {
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
-
-
                 // If date is "Undefined" convert it to null
                 if (!a.timestamp) {
                     a.timestamp = new Date(null)
-                    console.log(a.timestamp)
+                }
+
+                if (!b.timestamp) {
+                    b.timestamp = new Date(null)
                 }
                 return new Date(b.timestamp) - new Date(a.timestamp);
 
             }
             )
-            //console.log(response.data)
             setConverstions(response.data)
         })
-    }, [])
+    }
 
 
-    /*
+    useState(() => {
+        socket.emit('storeClientInfo', { customId: userData.user.ID });
+
+
+        // Get all conversations......
+        getConversations()
+    }, [socket])
+
+
+
     useEffect(() => {
+        getConversations()
+    }, [isFocused])
 
-        socket.on("getMSG", (data) => {
-            console.log("deviceID :" + userData.user.ID + " " + data.sendTo + " " + data.message)
-            setReceivedMsg(data.message)
-            console.log(data.message)
+    const navigateToChat = (data) => {
+
+
+        const config = {
+            headers: {
+                Authorization: `Basic ${userData.user.token}`,
+            },
+        };
+        console.log(userData.user.token)
+        axios.put("http://192.168.0.100:3000/messages/setSeen/" + userData.user.ID + "/" + data.ID, {}, config)
+            .then((response) => {
+                response.data.sort((a, b) => {
+                    // Turn your strings into dates, and then subtract them
+                    // to get a value that is either negative, positive, or zero.
+
+                    // If date is "Undefined" convert it to null
+                    if (!a.timestamp) {
+                        a.timestamp = new Date(null)
+                    }
+
+                    if (!b.timestamp) {
+                        b.timestamp = new Date(null)
+                    }
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+
+                }
+                )
+                setConverstions(response.data)
+            })
+
+        navigation.navigate("Chat", {
+            conversationID: data.ID,
+            conversationdata: data
         })
-    }, [socket]) */
+    }
 
 
     return (
         <View style={styles.container}>
-            <SafeAreaView>
+            <ScrollView style={styles.ScrollView}>
 
                 {converstions.map((data, index) => {
                     return (
-                        <TouchableOpacity key={index}>
-                            <ChatBox data={data} />
+                        <TouchableOpacity key={index} onPress={() => navigateToChat(data)}>
+                            <ChatBox data={data} unread={data.unread} />
                         </TouchableOpacity>
                     )
                 })}
-                <Text>This id: {userData.user.ID}</Text>
-                <Text>{receivedMsg}</Text>
-            </SafeAreaView>
-        </View>
+
+            </ScrollView>
+        </View >
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 40
-    }
+    },
 });
 
 

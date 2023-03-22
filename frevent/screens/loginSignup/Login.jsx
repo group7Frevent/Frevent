@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Modal} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
+import MainScreen from '../MainScreen';
 
 
 
 const Login = ({ setLogged, setShowRegister }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
     
     // Valmistelee redux
     const dispatch = useDispatch();
@@ -38,7 +40,9 @@ const Login = ({ setLogged, setShowRegister }) => {
             },
         };
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/login/'
+
+        const requestUrl = 'http://87.100.225.218:3000/auth/login/'
+
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -48,7 +52,13 @@ const Login = ({ setLogged, setShowRegister }) => {
             dispatch(addUser(response.data))
             setLogged(true)
         }).catch((error) => {
-            console.log(error)
+            console.log(error.response.data)
+            if(error.response.data === "wrong username") {
+                Alert.alert("Username not found");
+            }
+            else {
+                Alert.alert("Wrong password");
+            }
         })
 
 
@@ -58,11 +68,11 @@ const Login = ({ setLogged, setShowRegister }) => {
 
         <View style={styles.container}>
             <Text style={styles.title} >Welcome to Frevent</Text>
-            <Image style={styles.image} source={require("../../assets/kaverit.png")}/>
+            <Image style={styles.image} source={require("../../assets/kaverit.png")} />
             <TextInput
                 style={styles.input}
                 placeholder="Username"
-
+                placeholderTextColor="grey"
                 onChangeText={setUserName}
                 value={userName}
                 autoCapitalize='none'
@@ -70,7 +80,7 @@ const Login = ({ setLogged, setShowRegister }) => {
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor="black"
+                placeholderTextColor="grey"
                 secureTextEntry={true}
                 onChangeText={setPassword}
                 value={password}
@@ -103,9 +113,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 1,
         paddingLeft: 10,
-        color: "white",
+        color: "black",
         backgroundColor: "#FAC213"
-        
+
     },
     button: {
         marginTop: 40,
@@ -119,18 +129,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     image: {
-        width: 250, 
+        width: 250,
         height: 200,
-        
+
     },
     title: {
-        fontSize:30,
+        fontSize: 30,
         fontWeight: 'bold',
         color: "#465881"
 
     },
     bottomtitle: {
-        padding: 10
+        padding: 10,
+        fontWeight: 'bold'
     }
 });
 
