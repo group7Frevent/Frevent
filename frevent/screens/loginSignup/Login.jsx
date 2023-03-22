@@ -68,7 +68,7 @@ const Login = ({ setLogged, setShowRegister }) => {
 
         <View style={styles.container}>
             <Text style={styles.title} >Welcome to Frevent</Text>
-            <Image style={styles.image} source={require("../../assets/kaverit.png")}/>
+            <Image style={styles.image} source={require("../../assets/kaverit.png")} />
             <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: "black",
         backgroundColor: "#FAC213"
-        
+
     },
     button: {
         marginTop: 40,
@@ -129,12 +129,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     image: {
-        width: 250, 
+        width: 250,
         height: 200,
-        
+
     },
     title: {
-        fontSize:30,
+        fontSize: 30,
         fontWeight: 'bold',
         color: "#465881"
 

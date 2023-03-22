@@ -10,7 +10,7 @@ const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
 
-    const [showLogin , setShowLogin] = useState(true)
+    const [showLogin, setShowLogin] = useState(true)
 
     const dispatch = useDispatch();
 
@@ -20,19 +20,19 @@ const MainScreen = () => {
         // Renderöidään etusivu
         return (
             <>
-            <TabNavigation />
+                <TabNavigation />
             </>
-            
+
         )
     } else {
         if (showLogin) {
             return (
-                <Login setLogged={setLogged} setShowRegister={setShowLogin}/>
+                <Login setLogged={setLogged} setShowRegister={setShowLogin} />
             )
         }
         else {
             return (
-                <Signup setShowLogin={setShowLogin}/>
+                <Signup setShowLogin={setShowLogin} />
             )
         }
     }
@@ -49,6 +49,6 @@ export default MainScreen
         type: "user"
     }
 
-    dispatch(addUser(testUserData))}*/ 
+    dispatch(addUser(testUserData))}*/
 
 

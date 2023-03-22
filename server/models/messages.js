@@ -14,8 +14,16 @@ const messageController = {
             [senderID, toID, senderID, toID], callback)
     },
     getLatestMessageByID: function (ID, callback) {
-        return db.query("SELECT message, timestamp FROM messages WHERE ID = ?;",
+        return db.query("SELECT message, timestamp, seen FROM messages WHERE ID = ?;",
             [ID], callback)
+    },
+    getHowManyUnRead: function (senderID, toID, callback) {
+        return db.query("SELECT COUNT(ID) AS unread FROM messages where senderID=? AND toID=? and seen=0;",
+            [senderID, toID], callback)
+    },
+    setMessagesSeen: function (senderID, toID, callback) {
+        return db.query("UPDATE messages SET seen=1 WHERE senderID=? AND toID=?;",
+            [senderID, toID], callback)
     }
 };
 
