@@ -12,7 +12,8 @@ const HomeScreen = () => {
     const [eventTitle, setEventTitle] = useState('')
     const [eventDescription, setEventDescription] = useState('')
     const [eventTime, setEventTime] = useState(new Date) 
-    const [attendees, setAttendees] = useState(0)
+
+    
 
     const userData = useSelector(selectUser)
    const getData = async () => {
@@ -24,6 +25,7 @@ const HomeScreen = () => {
                 }
             }
             const response = await axios.get('http://192.168.0.66:3000/events/getevents/'+userData?.user.ID)
+            response.app
             console.log(response.data)
             setVisibleEvents(response.data)
         }
@@ -35,6 +37,7 @@ const HomeScreen = () => {
     useEffect(()=> {
       getData()
     },[])
+
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -49,7 +52,7 @@ const HomeScreen = () => {
           <View style = {styles.lowerPart}>
             <View style = {{flex:1,}}>
               <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY")}, {data.Paikka}</Text>
-              <Text style = {styles.attendees}>32 people attending</Text>
+              <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
             </View>
             <View>
             <TouchableOpacity style={styles.button} /*onPress={loginRequest}*/ color="#fff">
