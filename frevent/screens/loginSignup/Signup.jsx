@@ -52,7 +52,9 @@ const Signup = ({ setShowLogin, setLogged }) => {
             },
         };
 
+
         const requestUrl = API_URL + 'auth/register/user'
+
 
 
         axios.post(requestUrl, formBody, config).then((response) => {

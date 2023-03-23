@@ -183,6 +183,7 @@ router.post('/register/company', function (req, res, next) {
 
 
 
+
 // Generate token
 function generateAccessToken(userID) {
     dotenv.config();
