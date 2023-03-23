@@ -1,12 +1,16 @@
 var express = require('express');
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-var http = require("http").createServer(app);
-var io = require("socket.io")(http);
-http.listen(3002);
+
+server.listen(process.env.PORT || 3000);
 var file1 = require('./socket_io/socketio')(io)
 
 
@@ -16,13 +20,11 @@ var indexRouter = require('./routes/index');
 var authRoute = require('./routes/auth')
 var messageRoute = require('./routes/messages')
 
+
 var eventsRouter = require('./routes/eventDetails')
 var settingsRoute = require('./routes/settings')
 
 
-var app = express();
-
-var app = express();
 var cors = require('cors')
 
 

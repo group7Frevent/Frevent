@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
-import MainScreen from '../MainScreen';
+import { API_URL } from '@env'
 
 
 
@@ -41,7 +41,9 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
 
 
 
-        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/login/'
+        const requestUrl = API_URL + 'auth/login/'
+
+
 
 
 

@@ -3,7 +3,7 @@ var messageController = require('../models/messages')
 
 
 exports = module.exports = function (io) {
-    // Creaet connection to Socket.io
+    // Create connection to Socket.io
     io.sockets.on('connection', function (socket) {
         //console.log(socket)
         socket.on('storeClientInfo', (data) => {

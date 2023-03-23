@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
+import { API_URL } from '@env'
 
 
 
-
-const Signup = ({  setShowLogin, setLogged }) => {
+const Signup = ({ setShowLogin, setLogged }) => {
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -20,11 +20,11 @@ const Signup = ({  setShowLogin, setLogged }) => {
     // Valmistelee redux
     const dispatch = useDispatch();
 
-   
+
 
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
-         var details = {
+        var details = {
             username: userName,
             password: password,
             fname: firstName,
@@ -52,7 +52,9 @@ const Signup = ({  setShowLogin, setLogged }) => {
             },
         };
 
-        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/register/user'
+
+        const requestUrl = API_URL + 'auth/register/user'
+
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -68,10 +70,10 @@ const Signup = ({  setShowLogin, setLogged }) => {
     };
 
     return (
-  
+
 
         <View style={styles.container}>
-        <Text style={styles.title}>Create an account</Text>
+            <Text style={styles.title}>Create an account</Text>
             <Image
                 source={require('../../assets/regLogo.png')}
                 style={styles.logo}
@@ -85,7 +87,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 autoCapitalize="none"
                 maxLength={20}
             />
-                 <TextInput
+            <TextInput
                 style={styles.input}
                 placeholder="Password"
                 placeholderTextColor="#465881"
@@ -113,7 +115,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 autoCapitalize="none"
                 maxLength={50}
             />
-       
+
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: 'white',
         backgroundColor: '#FAC213',
-        
+
     },
     button: {
         marginTop: 40,
