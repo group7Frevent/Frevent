@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Modal} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
-import MainScreen from '../MainScreen';
+import { API_URL } from '@env'
 
 
 
 const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
-    
+
     // Valmistelee redux
     const dispatch = useDispatch();
 
@@ -40,7 +40,7 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
         };
 
 
-        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/login/'
+        const requestUrl = API_URL + 'auth/login/'
 
 
 
@@ -49,10 +49,10 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setLogged(true) 
+            setLogged(true)
         }).catch((error) => {
             console.log(error.response.data)
-            if(error.response.data === "wrong username") {
+            if (error.response.data === "wrong username") {
                 Alert.alert("Username not found");
             }
             else {
@@ -91,9 +91,10 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
             <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
                 <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() =>{
+            <TouchableOpacity onPress={() => {
                 setShowCompanySignup(true)
-                setShowLogin(false) } } color="#fff">
+                setShowLogin(false)
+            }} color="#fff">
                 <Text style={styles.bottomtitle} > Create your company account here!</Text>
             </TouchableOpacity>
 

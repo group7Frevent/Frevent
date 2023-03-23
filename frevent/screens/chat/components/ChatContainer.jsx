@@ -7,6 +7,7 @@ import axios from 'axios';
 import { ScrollView } from 'react-native';
 import { socket } from '../../../socket';
 import { useIsFocused } from "@react-navigation/native";
+import { API_URL } from '@env'
 
 const ChatContainer = ({ navigation }) => {
 
@@ -19,7 +20,7 @@ const ChatContainer = ({ navigation }) => {
     const userData = useSelector(selectUser)
 
     const getConversations = () => {
-        axios.get("http://192.168.0.100:3000/messages/friends/" + userData.user.ID).then((response) => {
+        axios.get(API_URL + "messages/friends/" + userData.user.ID).then((response) => {
             response.data.sort((a, b) => {
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
@@ -63,7 +64,7 @@ const ChatContainer = ({ navigation }) => {
             },
         };
         console.log(userData.user.token)
-        axios.put("http://192.168.0.100:3000/messages/setSeen/" + userData.user.ID + "/" + data.ID, {}, config)
+        axios.put(API_URL + "messages/setSeen/" + userData.user.ID + "/" + data.ID, {}, config)
             .then((response) => {
                 response.data.sort((a, b) => {
                     // Turn your strings into dates, and then subtract them

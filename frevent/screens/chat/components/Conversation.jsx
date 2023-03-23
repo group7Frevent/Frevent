@@ -10,6 +10,7 @@ import axios from 'axios';
 import { TextInput } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import CustomHeader from './CustomHeader';
+import { API_URL } from '@env'
 
 const Conversation = ({ route, navigation }) => {
     const { conversationID, conversationdata } = route.params;
@@ -25,7 +26,7 @@ const Conversation = ({ route, navigation }) => {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        axios.get("http://192.168.0.100:3000/messages/getmsg/" + senderID + "/" + toID, config)
+        axios.get(API_URL + "messages/getmsg/" + senderID + "/" + toID, config)
             .then(response => {
                 setConv(response.data)
                 scrollViewRef.current.scrollToEnd()
