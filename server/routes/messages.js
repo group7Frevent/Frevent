@@ -114,7 +114,7 @@ const getConversationsFun = (senderID, req, res) => {
                                 // How many messages unRead
                                 console.log(dbresult[0]?.seen)
                                 if (dbresult[0]?.seen == 0) {
-                                    messageController.getHowManyUnRead(senderID, ID, (dbe, dbr) => {
+                                    messageController.getHowManyUnRead(ID, senderID, (dbe, dbr) => {
                                         if (dber) rejected(dber)
                                         console.log("here")
                                         returnObj[elementPos].unread = dbr[0].unread
@@ -154,10 +154,10 @@ router.put("/setSeen/:senderID/:toID", async (req, res, next) => {
         // Added extra middleware
         // Get bearer token and encode it to check userID
         const authHeader = req.headers['authorization']
-        console.log(authHeader)
+        //console.log(authHeader)
         const token = authHeader && authHeader.split(' ')[1]
         const encodedToken = parseJwt(token)
-        if (encodedToken.userData.ID == req.params.senderID) {
+        if (encodedToken.userData.ID == req.params.toID) {
             messageController.setMessagesSeen(req.params.senderID, req.params.toID, (dbErr, dbRes) => {
                 if (dbErr) {
                     errors.errorCode(dbErr, res)
