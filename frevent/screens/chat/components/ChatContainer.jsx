@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native';
 import { socket } from '../../../socket';
 import { useIsFocused } from "@react-navigation/native";
 import { API_URL } from '@env'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatContainer = ({ navigation }) => {
 
@@ -15,12 +16,12 @@ const ChatContainer = ({ navigation }) => {
     // Init all variables
     const [converstions, setConverstions] = useState([])
 
-    const [receivedMsg, setReceivedMsg] = useState("")
 
     const userData = useSelector(selectUser)
 
     const getConversations = () => {
         axios.get(API_URL + "messages/friends/" + userData.user.ID).then((response) => {
+
             response.data.sort((a, b) => {
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
@@ -36,15 +37,23 @@ const ChatContainer = ({ navigation }) => {
 
             }
             )
+            AsyncStorage.setItem(userData.user.username, JSON.stringify(response?.data));
             setConverstions(response.data)
         })
     }
 
 
+    const getAsyncData = async () => {
+
+
+        const conversations = await AsyncStorage.getItem(userData.user.username)
+        setConverstions(JSON.parse(conversations))
+
+    }
+
     useState(() => {
         socket.emit('storeClientInfo', { customId: userData.user.ID });
-
-
+        getAsyncData()
         // Get all conversations......
         getConversations()
     }, [socket])
@@ -52,6 +61,7 @@ const ChatContainer = ({ navigation }) => {
 
 
     useEffect(() => {
+        getAsyncData()
         getConversations()
     }, [isFocused])
 
@@ -63,8 +73,8 @@ const ChatContainer = ({ navigation }) => {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        console.log(userData.user.token)
-        axios.put(API_URL + "messages/setSeen/" + userData.user.ID + "/" + data.ID, {}, config)
+        console.log(API_URL)
+        axios.put(API_URL + "messages/setSeen/" + data.ID + "/" + userData.user.ID, {}, config)
             .then((response) => {
                 response.data.sort((a, b) => {
                     // Turn your strings into dates, and then subtract them
@@ -83,8 +93,10 @@ const ChatContainer = ({ navigation }) => {
                 }
                 )
                 setConverstions(response.data)
+            }).catch((e) => {
+                console.log(e.response.data)
             })
-
+        //console.log("here" + userData.user.ID + data.ID + userData.user.token)
         navigation.navigate("Chat", {
             conversationID: data.ID,
             conversationdata: data
@@ -96,9 +108,12 @@ const ChatContainer = ({ navigation }) => {
         <View style={styles.container}>
             <ScrollView style={styles.ScrollView}>
 
-                {converstions.map((data, index) => {
+                {converstions && converstions.map((data, index) => {
                     return (
-                        <TouchableOpacity key={index} onPress={() => navigateToChat(data)}>
+                        <TouchableOpacity key={index} onPress={() => {
+                            setConverstions([])
+                            navigateToChat(data)
+                        }}>
                             <ChatBox data={data} unread={data.unread} />
                         </TouchableOpacity>
                     )
