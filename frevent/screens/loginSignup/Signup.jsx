@@ -9,7 +9,7 @@ import { firebase } from '../../config'
 
 
 const Signup = ({ setShowLogin, setLogged }) => {
-    
+
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -17,53 +17,54 @@ const Signup = ({ setShowLogin, setLogged }) => {
     const [email, setEmail] = useState('');
     const [birthDay, setBirthday] = useState('');
     const [picture, setPicture] = useState('');
-    
+
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
+    useEffect(() => {
+      image && uploadImage()
+    
+    }, [image])
     
 
-        const pickImage = async () => {
-            // No permission request is neccessary for launching the image library
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-                
+    const pickImage = async () => {
+        // No permission request is neccessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+
+        });
+
+
+        const source = { uri: result.assets[0].uri };
+        console.log(source);
+        setImage(source);
+
+    };
+    const uploadImage = async () => {
+        setUploading(true);
+        const response = await fetch(image.uri)
+        const blob = await response.blob();
+        const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+        const ref = firebase.storage().ref().child(filename);
+        ref.put(blob).then(() => {
+            ref.getDownloadURL().then((url) => {
+                setPicture(url); // <- This is the download URL of the image
+                setUploading(false); 
+            }).catch((error) => {
+                console.log(error);
+                setUploading(false);
             });
-            
-
-            const source = { uri: result.assets[0].uri };
-            console.log(source);
-            setImage(source);
-        
-        };
-        const uploadImage = async () => {
-            setUploading(true);
-            const response = await fetch(image.uri)
-            const blob = await response.blob();
-            const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
-            var ref = firebase.storage().ref().child(filename).put(blob)
-            const url= await ref.getDownloadURL().catch((error)=>console.log(error))
-            console.log(ref)
-            try {
-                await ref;
-
-                console.log(url);
-            } catch (e) {
-                console.log(e);
-            }
+        }).catch((error) => {
+            console.log(error);
             setUploading(false);
-            Alert.alert(
-                'Photo uploaded!'
-            );
-            setImage(null);
-        };
-    
-        
-    
-    
+        });
+    };
+
+
+
 
 
 
@@ -83,7 +84,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
             lname: lastName,
             email: email,
             birthdate: birthDay,
-            picture: "jepjep",
+            picture: picture,
             accountType: "user"
         };
 
@@ -118,136 +119,142 @@ const Signup = ({ setShowLogin, setLogged }) => {
         })
 
     };
-    
+
 
     return (
-
-        <ScrollView style={styles.scrollView}>
+        
         <View style={styles.container}>
         
-            <Text style={styles.title}>Create an account</Text>
-            <Image
-                source={require('../../assets/regLogo.png')}
-                style={styles.logo}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="UserName"
-                placeholderTextColor="#465881"
-                onChangeText={setUserName}
-                value={userName}
-                autoCapitalize="none"
-                maxLength={20}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#465881"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize="none"
-                maxLength={15}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="First Name"
-                placeholderTextColor="#465881"
-                onChangeText={setFirstName}
-                value={firstName}
-                autoCapitalize="none"
-                maxLength={30}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                placeholderTextColor="#465881"
-                onChangeText={setLastName}
-                value={lastName}
-                autoCapitalize="none"
-                maxLength={50}
-            />
+                <Text style={styles.title}>Create an account</Text>
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder="UserName"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setUserName}
+                    value={userName}
+                    autoCapitalize="none"
+                    maxLength={20}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    autoCapitalize="none"
+                    maxLength={15}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setFirstName}
+                    value={firstName}
+                    autoCapitalize="none"
+                    maxLength={30}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Last Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setLastName}
+                    value={lastName}
+                    autoCapitalize="none"
+                    maxLength={50}
+                />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#465881"
-                onChangeText={setEmail}
-                value={email}
-                autoCapitalize="none"
-            />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    underlineColorAndroid={'transparent'}
+                    secureTextEntry={true}
+                    placeholderTextColor="#465881"
+                    onChangeText={setEmail}
+                    value={email}
+                    autoCapitalize="none"
+                />
 
-            <TextInputMask
-                style={styles.input}
-                type={'datetime'}
-                options={{
-                    format: 'YYYY.MM.DD'
-                }}
-                placeholder="Date of Birth"
-                placeholderTextColor="#465881"
-                onChangeText={setBirthday}
-                value={birthDay}
-                autoCapitalize="none"
-            />
-            
-            <TouchableOpacity style={styles.selectButton} onPress={pickImage}>
-                <Text>Select Image</Text>
-            </TouchableOpacity>
+                <TextInputMask
+                    style={styles.input}
+                    underlineColorAndroid={'transparent'}
+                    type={'datetime'}
+                    options={{
+                        format: 'YYYY.MM.DD'
+                    }}
+                    placeholder="Date of Birth"
+                    placeholderTextColor="#465881"
+                    onChangeText={setBirthday}
+                    value={birthDay}
+                    autoCapitalize="none"
+                />
 
-            <View style={styles.imageContainer}>
-            {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />}
+                <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
+                    <Text style={styles.uploadText}> Select profile picture</Text>
+                </TouchableOpacity>
+
+                <View style={styles.imageContainer}>
+                {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+
+                </View>
+
+
+                <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
+                    <Text style={styles.buttonText}>Sign up</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
+                    <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
+                </TouchableOpacity>
+
         
-            </View> 
+            </View>
             
-
-            <TouchableOpacity style={styles.button} onPress={ uploadImage} color="#fff">
-                <Text style={styles.buttonText}>Sign up</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
-                <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
-            </TouchableOpacity>
-        
-        </View>
-        </ScrollView>
     );
 
-            };
+};
 
 
 
 const styles = StyleSheet.create({
     container: {
+        alignSelf: 'stretch',
         flex: 1,
+        paddingLeft: 60,
+        paddingRight: 60,
         backgroundColor: '#FEF9A7',
-        alignItems: 'center',
         justifyContent: 'center',
     },
     input: {
-        marginTop: 10,
-        height: 50,
-        width: 300,
-        borderRadius: 15,
-        margin: 1,
-        paddingLeft: 10,
-        color: 'white',
-        backgroundColor: '#FAC213',
+        alignSelf: 'stretch',
+        height: 40,
+        marginBottom: 30,
+        borderBottomColor: '#F77E21',
+        borderBottomWidth: 1,
+        color: ''
 
     },
     button: {
-        marginTop: 40,
-        height: 50,
-        width: 300,
-        justifyContent: 'center',
+        marginTop: 30,
+        borderRadius: 100,
+        alignSelf: 'stretch',
         alignItems: 'center',
         backgroundColor: '#F77E21',
         color: '#fff',
-        padding: 10,
-        borderRadius: 10,
+        padding: 20,
+        
     },
     title: {
-        fontSize: 30,
-        fontWeight: 'bold',
+        marginBottom: 30,
+        fontSize: 24,
+        paddingBottom: 10,
+        borderBottomColor: '#465881',
+        borderBottomWidth: 1,
         color: '#465881',
     },
     logo: {
@@ -259,32 +266,42 @@ const styles = StyleSheet.create({
         padding: 10
     },
     selectButton: {
-        borderRadius:5,
-        width:150,
-        height: 40,
-        backgroundColor:'blue',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    uploadButton: {
+        marginLeft: 25,
+        marginBottom: 20,
         borderRadius: 5,
-        width:150,
-        height: 40,
-        backgroundColor:'red',
+        width: 200,
+        height: 25,
+        backgroundColor: '#465881',
+        alignSelf: 'stretch',
         alignItems: 'center',
-        justifyContent: 'center',
     },
+    uploadText: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
+    uploadedText:{
+        color: '#465881',
+        fontSize: 17,
+        marginRight: 25,
+    },
+   
     buttonText: {
         color: 'white',
         fontSize: 18,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     imageContainer: {
-        marginTop:30,
-        marginBottom:50,
+        marginTop: 0,
+        marginBottom: 0,
         alignItems: 'center',
+    },
+    bottomtitle: {
+        padding: 10,
+        marginLeft: 20,
+        fontSize: 15,
     }
-    
+
 });
 
 export default Signup;
