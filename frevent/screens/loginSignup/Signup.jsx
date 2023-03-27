@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, SafeAreaView, Alert, ScrollView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
+import * as  ImagePicker from 'expo-image-picker'
+import { firebase } from '../../config'
 
 
-
-
-const Signup = ({  setShowLogin, setLogged }) => {
+const Signup = ({ setShowLogin, setLogged }) => {
+    
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -16,15 +17,66 @@ const Signup = ({  setShowLogin, setLogged }) => {
     const [email, setEmail] = useState('');
     const [birthDay, setBirthday] = useState('');
     const [picture, setPicture] = useState('');
+    
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    
+
+        const pickImage = async () => {
+            // No permission request is neccessary for launching the image library
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+                
+            });
+            
+
+            const source = { uri: result.assets[0].uri };
+            console.log(source);
+            setImage(source);
+        
+        };
+        const uploadImage = async () => {
+            setUploading(true);
+            const response = await fetch(image.uri)
+            const blob = await response.blob();
+            const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+            var ref = firebase.storage().ref().child(filename).put(blob)
+            const url= await ref.getDownloadURL().catch((error)=>console.log(error))
+            console.log(ref)
+            try {
+                await ref;
+
+                console.log(url);
+            } catch (e) {
+                console.log(e);
+            }
+            setUploading(false);
+            Alert.alert(
+                'Photo uploaded!'
+            );
+            setImage(null);
+        };
+    
+        
+    
+    
+
+
+
 
     // Valmistelee redux
     const dispatch = useDispatch();
 
-   
+
 
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
-         var details = {
+        console.log("here")
+        var details = {
             username: userName,
             password: password,
             fname: firstName,
@@ -52,7 +104,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
             },
         };
 
-        const requestUrl = 'http://192.168.32.156:3000/auth/register/user'
+        const requestUrl = 'https://restapi-dot-frevent.ew.r.appspot.com/auth/register/user'
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -66,12 +118,14 @@ const Signup = ({  setShowLogin, setLogged }) => {
         })
 
     };
+    
 
     return (
-  
 
+        <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
-        <Text style={styles.title}>Create an account</Text>
+        
+            <Text style={styles.title}>Create an account</Text>
             <Image
                 source={require('../../assets/regLogo.png')}
                 style={styles.logo}
@@ -85,7 +139,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 autoCapitalize="none"
                 maxLength={20}
             />
-                 <TextInput
+            <TextInput
                 style={styles.input}
                 placeholder="Password"
                 placeholderTextColor="#465881"
@@ -113,7 +167,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 autoCapitalize="none"
                 maxLength={50}
             />
-       
+
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -122,6 +176,7 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 value={email}
                 autoCapitalize="none"
             />
+
             <TextInputMask
                 style={styles.input}
                 type={'datetime'}
@@ -134,15 +189,32 @@ const Signup = ({  setShowLogin, setLogged }) => {
                 value={birthDay}
                 autoCapitalize="none"
             />
-            <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
-                <Text>Sign up</Text>
+            
+            <TouchableOpacity style={styles.selectButton} onPress={pickImage}>
+                <Text>Select Image</Text>
             </TouchableOpacity>
+
+            <View style={styles.imageContainer}>
+            {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />}
+        
+            </View> 
+            
+
+            <TouchableOpacity style={styles.button} onPress={ uploadImage} color="#fff">
+                <Text style={styles.buttonText}>Sign up</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
+        
         </View>
+        </ScrollView>
     );
-};
+
+            };
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -160,7 +232,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: 'white',
         backgroundColor: '#FAC213',
-        
+
     },
     button: {
         marginTop: 40,
@@ -185,7 +257,34 @@ const styles = StyleSheet.create({
     },
     bottomtitle: {
         padding: 10
+    },
+    selectButton: {
+        borderRadius:5,
+        width:150,
+        height: 40,
+        backgroundColor:'blue',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    uploadButton: {
+        borderRadius: 5,
+        width:150,
+        height: 40,
+        backgroundColor:'red',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight:'bold'
+    },
+    imageContainer: {
+        marginTop:30,
+        marginBottom:50,
+        alignItems: 'center',
     }
+    
 });
 
 export default Signup;
