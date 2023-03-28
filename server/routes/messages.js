@@ -4,7 +4,6 @@ var errors = require("../errors")
 var messageController = require('../models/messages')
 var friends = require('../models/friends');
 const users = require('../models/users');
-const { errorCode } = require('../errors');
 
 
 // Send msg
