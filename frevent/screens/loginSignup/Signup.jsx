@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Image, SafeAreaView, Alert, ScrollView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
-import { API_URL } from '@env'
 
+import * as  ImagePicker from 'expo-image-picker'
+import { firebase } from '../../config'
+import { API_URL } from '@env'
 
 
 const Signup = ({ setShowLogin, setLogged }) => {
@@ -17,6 +20,57 @@ const Signup = ({ setShowLogin, setLogged }) => {
     const [birthDay, setBirthday] = useState('');
     const [picture, setPicture] = useState('');
 
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    useEffect(() => {
+      image && uploadImage()
+    
+    }, [image])
+    
+
+    const pickImage = async () => {
+        // No permission request is neccessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+
+        });
+
+
+        const source = { uri: result.assets[0].uri };
+        console.log(source);
+        setImage(source);
+
+    };
+    const uploadImage = async () => {
+        setUploading(true);
+        const response = await fetch(image.uri)
+        const blob = await response.blob();
+        const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+        const ref = firebase.storage().ref().child(filename);
+        ref.put(blob).then(() => {
+            ref.getDownloadURL().then((url) => {
+                setPicture(url); // <- This is the download URL of the image
+                setUploading(false); 
+            }).catch((error) => {
+                console.log(error);
+                setUploading(false);
+            });
+        }).catch((error) => {
+            console.log(error);
+            setUploading(false);
+        });
+    };
+
+
+
+
+
+
+
     // Valmistelee redux
     const dispatch = useDispatch();
 
@@ -24,6 +78,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
 
     const handleSignup = () => {
         // Rekisteröinnin logiikka tähän
+
         var details = {
             username: userName,
             password: password,
@@ -31,7 +86,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
             lname: lastName,
             email: email,
             birthdate: birthDay,
-            picture: "jepjep",
+            picture: picture,
             accountType: "user"
         };
 
@@ -52,9 +107,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
             },
         };
 
-
         const requestUrl = API_URL + 'auth/register/user'
-
 
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -71,7 +124,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
 
     return (
 
-
+        
         <View style={styles.container}>
             <Text style={styles.title}>Create an account</Text>
             <Image
@@ -144,13 +197,18 @@ const Signup = ({ setShowLogin, setLogged }) => {
             </TouchableOpacity>
         </View>
     );
+
 };
+
+
 
 const styles = StyleSheet.create({
     container: {
+        alignSelf: 'stretch',
         flex: 1,
+        paddingLeft: 60,
+        paddingRight: 60,
         backgroundColor: '#FEF9A7',
-        alignItems: 'center',
         justifyContent: 'center',
     },
     input: {
@@ -165,19 +223,21 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        marginTop: 40,
-        height: 50,
-        width: 300,
-        justifyContent: 'center',
+        marginTop: 30,
+        borderRadius: 100,
+        alignSelf: 'stretch',
         alignItems: 'center',
         backgroundColor: '#F77E21',
         color: '#fff',
-        padding: 10,
-        borderRadius: 10,
+        padding: 20,
+        
     },
     title: {
-        fontSize: 30,
-        fontWeight: 'bold',
+        marginBottom: 30,
+        fontSize: 24,
+        paddingBottom: 10,
+        borderBottomColor: '#465881',
+        borderBottomWidth: 1,
         color: '#465881',
     },
     logo: {
@@ -187,7 +247,44 @@ const styles = StyleSheet.create({
     },
     bottomtitle: {
         padding: 10
+    },
+    selectButton: {
+        marginLeft: 25,
+        marginBottom: 20,
+        borderRadius: 5,
+        width: 200,
+        height: 25,
+        backgroundColor: '#465881',
+        alignSelf: 'stretch',
+        alignItems: 'center',
+    },
+    uploadText: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
+    uploadedText:{
+        color: '#465881',
+        fontSize: 17,
+        marginRight: 25,
+    },
+   
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    imageContainer: {
+        marginTop: 0,
+        marginBottom: 0,
+        alignItems: 'center',
+    },
+    bottomtitle: {
+        padding: 10,
+        marginLeft: 20,
+        fontSize: 15,
     }
+
 });
 
 export default Signup;
