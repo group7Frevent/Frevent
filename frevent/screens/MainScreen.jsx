@@ -7,6 +7,7 @@ import Signup from './loginSignup/Signup';
 import CompanySignup from './loginSignup/CompanySignup'
 import TabNavigation from './tabNavigation/TabNavigation';
 import HomeScreen from './tabNavigation/HomeScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = () => {
 
@@ -14,14 +15,28 @@ const MainScreen = () => {
     const [showLogin, setShowLogin] = useState(true)
     const [showCompanySignup, setShowCompanySignup] = useState(false)
 
+    // Valmistelee redux
     const dispatch = useDispatch();
+    
+    const getLoggedStatus = async () => {
 
+        const userData = await AsyncStorage.getItem("userData")
+        const parsedJsonData = JSON.parse(userData)
+        if(parsedJsonData?.token) {
+            console.log(parsedJsonData)
+            dispatch(addUser(parsedJsonData))
+            setLogged(true)
+        }
+    }
+    useEffect(() => {
+        getLoggedStatus()
+    },[])
 
     if (logged) {
         // Renderöidään etusivu */
         return (
             <>
-                <TabNavigation />
+                <TabNavigation setLogged={setLogged} />
             </>
 
         )

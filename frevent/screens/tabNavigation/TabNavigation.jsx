@@ -13,7 +13,7 @@ import ChatStack from '../chat/ChatStack'
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = () => {
+const TabNavigation = ({setLogged}) => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 
@@ -22,6 +22,16 @@ const TabNavigation = () => {
         <Tab.Navigator
 
             screenOptions={({ route }) => ({
+
+                tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: [
+          {
+            display: "flex"
+          },
+          null
+        ],
+
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 
@@ -41,22 +51,14 @@ const TabNavigation = () => {
             })
 
             }
-            tabBarOptions={{
-                style: {
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                },
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
-            }}
         >
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="My Events" component={EventsScreen} />
             <Tab.Screen name="Friends" component={FriendsScreen} />
             <Tab.Screen options={{ headerShown: false }} name="Chat" component={ChatStack} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen name="Settings" >
+                {props => <SettingsScreen {...props} setLogged={setLogged}/>}
+            </Tab.Screen>
         </Tab.Navigator>
 
     )

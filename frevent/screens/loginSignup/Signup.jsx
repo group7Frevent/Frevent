@@ -10,6 +10,8 @@ import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
 import { API_URL } from '@env'
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Signup = ({ setShowLogin, setLogged }) => {
     const [userName, setUserName] = useState('');
@@ -112,9 +114,10 @@ const Signup = ({ setShowLogin, setLogged }) => {
 
         axios.post(requestUrl, formBody, config).then((response) => {
             // Login succeed
-            console.log(response.data)
+            //console.log(response.data)
             // Tallennetaan tiedot reduxiin
-            dispatch(addUser(response.data))
+            AsyncStorage.setItem("userData", JSON.stringify(response?.data[0]));
+            dispatch(addUser(response.data[0]))
             setLogged(true)
         }).catch((error) => {
             console.log(error)
@@ -123,79 +126,98 @@ const Signup = ({ setShowLogin, setLogged }) => {
     };
 
     return (
-
         
         <View style={styles.container}>
-            <Text style={styles.title}>Create an account</Text>
-            <Image
-                source={require('../../assets/regLogo.png')}
-                style={styles.logo}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="UserName"
-                placeholderTextColor="#465881"
-                onChangeText={setUserName}
-                value={userName}
-                autoCapitalize="none"
-                maxLength={20}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#465881"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize="none"
-                maxLength={15}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="First Name"
-                placeholderTextColor="#465881"
-                onChangeText={setFirstName}
-                value={firstName}
-                autoCapitalize="none"
-                maxLength={30}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                placeholderTextColor="#465881"
-                onChangeText={setLastName}
-                value={lastName}
-                autoCapitalize="none"
-                maxLength={50}
-            />
+        
+                <Text style={styles.title}>Create an account</Text>
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder="UserName"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setUserName}
+                    value={userName}
+                    autoCapitalize="none"
+                    maxLength={20}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    autoCapitalize="none"
+                    maxLength={15}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setFirstName}
+                    value={firstName}
+                    autoCapitalize="none"
+                    maxLength={30}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Last Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setLastName}
+                    value={lastName}
+                    autoCapitalize="none"
+                    maxLength={50}
+                />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#465881"
-                onChangeText={setEmail}
-                value={email}
-                autoCapitalize="none"
-            />
-            <TextInputMask
-                style={styles.input}
-                type={'datetime'}
-                options={{
-                    format: 'YYYY.MM.DD'
-                }}
-                placeholder="Date of Birth"
-                placeholderTextColor="#465881"
-                onChangeText={setBirthday}
-                value={birthDay}
-                autoCapitalize="none"
-            />
-            <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
-                <Text>Sign up</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
-                <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
-            </TouchableOpacity>
-        </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setEmail}
+                    value={email}
+                    autoCapitalize="none"
+                />
+
+                <TextInputMask
+                    style={styles.input}
+                    underlineColorAndroid={'transparent'}
+                    type={'datetime'}
+                    options={{
+                        format: 'YYYY.MM.DD'
+                    }}
+                    placeholder="Date of Birth"
+                    placeholderTextColor="#465881"
+                    onChangeText={setBirthday}
+                    value={birthDay}
+                    autoCapitalize="none"
+                />
+
+                <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
+                    <Text style={styles.uploadText}> Select profile picture</Text>
+                </TouchableOpacity>
+
+                <View style={styles.imageContainer}>
+                {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+
+                </View>
+
+
+                <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
+                    <Text style={styles.buttonText}>Sign up</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
+                    <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
+                </TouchableOpacity>
+
+        
+            </View>
+            
     );
 
 };
@@ -212,14 +234,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     input: {
-        marginTop: 10,
-        height: 50,
-        width: 300,
-        borderRadius: 15,
-        margin: 1,
-        paddingLeft: 10,
-        color: 'white',
-        backgroundColor: '#FAC213',
+        alignSelf: 'stretch',
+        height: 40,
+        marginBottom: 30,
+        borderBottomColor: '#F77E21',
+        borderBottomWidth: 1,
+        
 
     },
     button: {

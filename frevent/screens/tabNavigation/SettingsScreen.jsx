@@ -4,13 +4,20 @@ import axios from 'axios';
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
 import { useNavigation } from '@react-navigation/native';
+import { API_URL } from "@env"
+import { useDispatch } from "react-redux";
+import { addUser } from '../../features/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const SettingsScreen = () => {
+const SettingsScreen = ({setLogged}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const userData = useSelector(selectUser)
   const navigation = useNavigation();
+
+  // Valmistelee redux
+  const dispatch = useDispatch();
 
   const handleSaveChanges = () => {
 
@@ -37,7 +44,7 @@ const SettingsScreen = () => {
       },
   };
 
-    axios.put('http://84.250.31.253:3000/settings/update/user/', formBody, config)
+    axios.put(API_URL + 'settings/update/user/', formBody, config)
       .then(response => {
         console.log(response.data);
       })
@@ -46,9 +53,11 @@ const SettingsScreen = () => {
       });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     //väliaikaisesti hakee käyttäjän id:n reduxista
-    console.log(userData.user.ID + userData.user.username)
+    await AsyncStorage.removeItem("userData");
+    dispatch(addUser(null))
+    setLogged(false)
   };
 
   return (

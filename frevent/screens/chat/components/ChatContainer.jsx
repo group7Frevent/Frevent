@@ -97,7 +97,7 @@ const ChatContainer = ({ navigation }) => {
                 console.log(e.response.data)
             })
         //console.log("here" + userData.user.ID + data.ID + userData.user.token)
-        navigation.navigate("Chat", {
+        navigation.navigate("Conversation", {
             conversationID: data.ID,
             conversationdata: data
         })

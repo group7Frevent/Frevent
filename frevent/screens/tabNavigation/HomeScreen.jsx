@@ -19,7 +19,7 @@ const HomeScreen = () => {
 
     const userData = useSelector(selectUser)
    const getData = async () => {
-
+      console.log(userData?.user.token)
         try {
             var config = {
                 headers: {
@@ -28,8 +28,7 @@ const HomeScreen = () => {
             }
             console.log(API_URL + 'events/getevents/')
             const response = await axios.get(API_URL + 'events/getevents/', config)
-            response.app
-            //console.log(response.data)
+            console.log(response.data)
             setVisibleEvents(response.data)
 
       setVisibleEvents(response.data)
@@ -78,9 +77,11 @@ const HomeScreen = () => {
   
 
   return (
-    <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
-      <Text style = {styles.title} >Welcome to Frevent</Text>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.header}>
+          <Text style = {styles.title} >Welcome to Frevent</Text>
+        </View>
       
       {visibleEvents.map((data, index) => {
         return(
@@ -107,8 +108,8 @@ const HomeScreen = () => {
       
       })}
       
-    </View>
     </ScrollView>
+    </View>
   )
 }
 
@@ -127,9 +128,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     padding: 10,
     backgroundColor: "#FAC213",
-    width: '90%',
-
-
   },
   button: {
     alignItems: "center",
@@ -147,7 +145,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: "#D61C4E"
+    color: "#D61C4E",
+    
 
   },
   description: {
@@ -176,6 +175,15 @@ const styles = StyleSheet.create({
 
   bottomtitle: {
     padding: 10
+  },
+  scrollView:{
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  header: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems:"center"
   }
 });
 
