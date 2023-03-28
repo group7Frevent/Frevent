@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
 import axios from 'axios';
 import dayjs from "dayjs";
+import {API_URL} from "@env"
 
 const HomeScreen = () => {
 
@@ -22,12 +23,13 @@ const HomeScreen = () => {
         try {
             var config = {
                 headers: {
-                   // 'Authorization': `Basic ${user.token}`   // user authorization
+                    'Authorization': `Basic ${userData?.user.token}`   // user authorization
                 }
             }
-            const response = await axios.get('http://192.168.0.66:3000/events/getevents/'+userData?.user.ID)
+            console.log(API_URL + 'events/getevents/')
+            const response = await axios.get(API_URL + 'events/getevents/', config)
             response.app
-            console.log(response.data)
+            //console.log(response.data)
             setVisibleEvents(response.data)
 
       setVisibleEvents(response.data)
@@ -41,6 +43,39 @@ const HomeScreen = () => {
     getData()
   }, [])
 
+  const kissa = [
+      {
+        id: 2,
+        eventType: "cus"
+      },
+      {
+        id: 3,
+        eventType: "cus"
+      },
+      {
+        id: 2,
+        eventType: "com"
+      }
+  ]
+
+  const buttonPush = (id, type) => {
+    console.log(`ID:  ${id} :: ${type}`)
+  }
+
+  const includes = (id, type) => {
+    // Map kissa 
+    kissa && kissa.map((data, index) => {
+      //console.log(`ID:  ${id} :: ${data.id} //  ${type} :: ${data.eventType}`)
+      if(id == data.id && type == data.eventType) {
+        console.log(`ID:  ${id} :: ${type}`)
+        console.log(false)
+        return false
+      } 
+    })
+    return true
+    // return true or false
+  }
+  
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -58,9 +93,14 @@ const HomeScreen = () => {
               <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
             </View>
             <View>
-            <TouchableOpacity style={styles.button} /*onPress={loginRequest}*/ color="#fff">
-                <Text>Attend</Text>
-            </TouchableOpacity>
+            {console.log(includes(data?.id, data?.eventType)) ?
+                <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
+                  <Text>Attend</Text>
+              </TouchableOpacity> :
+              <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
+              <Text>testi</Text>
+          </TouchableOpacity>
+            }
             </View>
           </View>
       </View>)
