@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { API_URL } from '@env'
 
-export const socket = io.connect("http://192.168.0.100:3002")
+export const socket = io.connect(API_URL)
 

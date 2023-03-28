@@ -143,7 +143,7 @@ router.post('/register/user', function (req, res, next) {
 router.post('/register/company', function (req, res, next) {
     // Check all params exist
     if (req.body.username && req.body.password
-        && req.body.picture && req.body.companyname) {
+        && req.body.picture && req.body.companyname && req.body.email) {
         // bcrypt password
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             // If hash succeed lets add company to mysql
@@ -179,6 +179,7 @@ router.post('/register/company', function (req, res, next) {
     }
 
 });
+
 
 
 

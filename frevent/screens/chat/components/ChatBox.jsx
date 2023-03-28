@@ -42,8 +42,17 @@ const ChatBox = ({ data, unread }) => {
 // Function that returns date since text
 function timeSince(date) {
 
-    var seconds = Math.floor((new Date() - date) / 1000);
+    function addHours(date, hours) {
+        date.setHours(date.getHours() + hours);
 
+        return date;
+    }
+
+    const date2 = new Date();
+
+    const newDate = addHours(date2, 2);
+
+    var seconds = Math.floor((newDate - date) / 1000);
     var interval = seconds / 31536000;
 
     if (interval > 50) {
@@ -69,8 +78,10 @@ function timeSince(date) {
     if (interval > 1) {
         return Math.floor(interval) + " minutes ago";
     }
+
     return Math.floor(seconds) + " seconds ago";
 }
+
 
 // Styles
 const styles = StyleSheet.create({

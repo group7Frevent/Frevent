@@ -10,6 +10,8 @@ import axios from 'axios';
 import { TextInput } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements'
 import CustomHeader from './CustomHeader';
+import { API_URL } from '@env'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Conversation = ({ route, navigation }) => {
     const { conversationID, conversationdata } = route.params;
@@ -25,15 +27,22 @@ const Conversation = ({ route, navigation }) => {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        axios.get("http://192.168.0.100:3000/messages/getmsg/" + senderID + "/" + toID, config)
+        axios.get(API_URL + "messages/getmsg/" + senderID + "/" + toID, config)
             .then(response => {
+                AsyncStorage.setItem(`${userData.user.ID}/${conversationID}`, JSON.stringify(response?.data));
                 setConv(response.data)
-                scrollViewRef.current.scrollToEnd()
+
             })
+
+    }
+    const getAsyncData = async () => {
+        const conv = await AsyncStorage.getItem(`${userData.user.ID}/${conversationID}`)
+        setConv(JSON.parse(conv))
 
     }
 
     useEffect(() => {
+        getAsyncData()
         getConversation(userData.user.ID, conversationID)
     }, [])
 
@@ -64,7 +73,7 @@ const Conversation = ({ route, navigation }) => {
         }
 
         socket.emit("send_message", data)
-        console.log(newDate)
+        //console.log(newDate)
         setConv([...conv, data])
         setMsg("")
     }
@@ -80,10 +89,11 @@ const Conversation = ({ route, navigation }) => {
 
                     <ScrollView style={styles.bubblesContainer}
                         ref={scrollViewRef}
-                        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false })}>
+                        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+                    >
 
 
-                        {conv.map((data, index) => {
+                        {conv && conv.map((data, index) => {
                             if (data.senderID === userData.user.ID) {
                                 return (
                                     <ChatBubbleRight text={data.message} timestamp={data.timestamp} key={index} />
