@@ -12,7 +12,7 @@ const ChatStack = () => {
         <Stack.Navigator >
             <Stack.Screen name="Chats" component={ChatContainer} />
             <Stack.Screen
-                name="Chat"
+                name="Conversation"
                 component={Conversation}
                 options={{ headerShown: false }}
             />

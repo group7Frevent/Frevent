@@ -4,7 +4,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
 import { API_URL } from '@env'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
@@ -51,6 +51,7 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
             // Login succeed
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
+            AsyncStorage.setItem("userData", JSON.stringify(response?.data));
             dispatch(addUser(response.data))
             setLogged(true)
         }).catch((error) => {
