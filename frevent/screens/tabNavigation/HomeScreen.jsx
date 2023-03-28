@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -6,6 +6,7 @@ import axios from 'axios';
 import dayjs from "dayjs";
 
 const HomeScreen = () => {
+
 
     //const { user, setUser } = useContext(UserContext)                                          
     const [visibleEvents, setVisibleEvents] = useState([])
@@ -28,15 +29,17 @@ const HomeScreen = () => {
             response.app
             console.log(response.data)
             setVisibleEvents(response.data)
-        }
-        catch (error) {
-            console.log(error)
-        }
-    } 
 
-    useEffect(()=> {
-      getData()
-    },[])
+      setVisibleEvents(response.data)
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
 
   return (
@@ -71,68 +74,68 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: '#FEF9A7',
-      alignItems: 'center',
-      justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#FEF9A7',
+    alignItems: 'center',
+    justifyContent: 'center',
 
   },
   event: {
-      marginTop: 20,
-      borderRadius: 10,
-      marginRight: 15,
-      marginLeft: 15,
-      padding: 10,
-      backgroundColor: "#FAC213",
-      width: '90%',
-      
-      
+    marginTop: 20,
+    borderRadius: 10,
+    marginRight: 15,
+    marginLeft: 15,
+    padding: 10,
+    backgroundColor: "#FAC213",
+    width: '90%',
+
+
   },
   button: {
-      alignItems: "center",
-      backgroundColor: "#F77E21",
-      color: "#fff",
-      padding: 8,
-      paddingRight: 20,
-      paddingLeft: 20,
-      marginTop: 5,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: "#D61C4E"
+    alignItems: "center",
+    backgroundColor: "#F77E21",
+    color: "#fff",
+    padding: 8,
+    paddingRight: 20,
+    paddingLeft: 20,
+    marginTop: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D61C4E"
   },
 
   title: {
-      fontSize:20,
-      fontWeight: 'bold',
-      color: "#D61C4E"
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: "#D61C4E"
 
   },
   description: {
-    fontSize:13,
+    fontSize: 13,
     color: "black",
     fontWeight: '500'
 
   },
   startTime: {
-    fontSize:13,
+    fontSize: 13,
     color: "black",
     marginTop: 3,
 
   },
   lowerPart: {
-    flexDirection:"row"
+    flexDirection: "row"
 
   },
   attendees: {
-    fontSize:13,
+    fontSize: 13,
     color: "#D61C4E",
     marginTop: 5,
-    
+
 
   },
 
   bottomtitle: {
-      padding: 10
+    padding: 10
   }
 });
 
