@@ -7,25 +7,29 @@ import dayjs from "dayjs";
 
 const HomeScreen = () => {
 
-  //const { user, setUser } = useContext(UserContext)                                          
-  const [visibleEvents, setVisibleEvents] = useState([])
-  const [eventTitle, setEventTitle] = useState('')
-  const [eventDescription, setEventDescription] = useState('')
-  const [eventTime, setEventTime] = useState(new Date)
-  const [attendees, setAttendees] = useState(0)
 
-  const userData = useSelector(selectUser)
-  const getData = async () => {
+    //const { user, setUser } = useContext(UserContext)                                          
+    const [visibleEvents, setVisibleEvents] = useState([])
+    const [eventTitle, setEventTitle] = useState('')
+    const [eventDescription, setEventDescription] = useState('')
+    const [eventTime, setEventTime] = useState(new Date) 
 
-    try {
-      console.log("here")
-      var config = {
-        headers: {
-          // 'Authorization': `Basic ${user.token}`   // user authorization
-        }
-      }
-      const response = await axios.get('http://192.168.0.100:3000/events/getevents/' + userData?.user.ID)
-      console.log(response.data)
+    
+
+    const userData = useSelector(selectUser)
+   const getData = async () => {
+
+        try {
+            var config = {
+                headers: {
+                   // 'Authorization': `Basic ${user.token}`   // user authorization
+                }
+            }
+            const response = await axios.get('http://192.168.0.66:3000/events/getevents/'+userData?.user.ID)
+            response.app
+            console.log(response.data)
+            setVisibleEvents(response.data)
+
       setVisibleEvents(response.data)
     }
     catch (error) {
@@ -37,32 +41,33 @@ const HomeScreen = () => {
     getData()
   }, [])
 
+
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.title} >Welcome to Frevent</Text>
-
-        {visibleEvents.map((data, index) => {
-          return (
-            <View key={index} style={styles.event}>
-              <Text style={styles.title} >{data.Tapahtuma}</Text>
-              <Text style={styles.description}>{data.Kuvaus}</Text>
-              <View style={styles.lowerPart}>
-                <View style={{ flex: 1, }}>
-                  <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY")}, {data.Paikka}</Text>
-                  <Text style={styles.attendees}>32 people attending</Text>
-                </View>
-                <View>
-                  <TouchableOpacity style={styles.button} /*onPress={loginRequest}*/ color="#fff">
-                    <Text>Attend</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>)
-
-        })}
-
-      </View>
+    <View style={styles.container}>
+      <Text style = {styles.title} >Welcome to Frevent</Text>
+      
+      {visibleEvents.map((data, index) => {
+        return(
+      <View key = {index} style = {styles.event}>
+        <Text style = {styles.title} >{data.Tapahtuma}</Text>
+        <Text style = {styles.description}>{data.Kuvaus}</Text>
+          <View style = {styles.lowerPart}>
+            <View style = {{flex:1,}}>
+              <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY")}, {data.Paikka}</Text>
+              <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
+            </View>
+            <View>
+            <TouchableOpacity style={styles.button} /*onPress={loginRequest}*/ color="#fff">
+                <Text>Attend</Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+      </View>)
+      
+      })}
+      
+    </View>
     </ScrollView>
   )
 }

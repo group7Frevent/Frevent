@@ -2,12 +2,9 @@ const db = require("../database");
 
 const eventDetails = {
     getEventDetails: function (userID, callback) {
-        return db.query("SELECT eventname AS Tapahtuma, description AS Kuvaus, location AS Paikka, startdate AS Ajankohta FROM events UNION SELECT eventname AS Tapahtuma, description AS Kuvaus, location AS Paikka, date AS Ajankohta FROM userEvents LEFT JOIN invitations ON userEvents.IDUserEvents=invitations.IDEvent WHERE invitations.IDUser = ? ORDER BY Ajankohta;", [userID], callback);
+        return db.query("SELECT e.eventname AS Tapahtuma, e.description AS Kuvaus, e.location AS Paikka, e.startdate AS Ajankohta, (SELECT COUNT(IDUser) FROM usersAndEvents WHERE IDEvent=e.ID) AS Osallistujia FROM events e UNION SELECT ue.eventname AS Tapahtuma, ue.description AS Kuvaus, ue.location AS Paikka, ue.date AS Ajankohta, (SELECT COUNT(IDUser) FROM userAndUserEvents WHERE IDEvent=ue.IDUserEvents) AS Osallistujia FROM userEvents ue LEFT JOIN invitations i ON ue.IDUserEvents=i.IDEvent WHERE i.IDUser = ? ORDER BY Ajankohta;", [userID], callback);
     },
 
-    getAttendees: function (eventID, callback) {
-        return db.query("SELECT COUNT(IDUser) AS Attendees FROM userAndUserEvents WHERE IDEvent = ?", [eventID], callback);  //Tähän tehtävä vielä toinen kysely laskemaan myös yritystapahtumien osallistujia
-    },
 };
 
 module.exports = eventDetails;
