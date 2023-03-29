@@ -1,17 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { API_URL } from '@env'
+import * as  ImagePicker from 'expo-image-picker'
+import { firebase } from '../../config'
+import { addUser } from '../../features/userSlice';
+import MainScreen from '../MainScreen';
 
 
-const CompanySignup = ({ setShowLogin, setShowCompanySignup }) => {
+const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [companyName, setCompanyName] = useState("");
     const [picture, setPicture] = useState('');
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    useEffect(() => {
+      image && uploadImage()
+    
+    }, [image])
+    
+
+    const pickImage = async () => {
+        // No permission request is neccessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+
+        });
+
+
+        const source = { uri: result.assets[0].uri };
+        console.log(source);
+        setImage(source);
+
+    };
+    const uploadImage = async () => {
+        setUploading(true);
+        const response = await fetch(image.uri)
+        const blob = await response.blob();
+        const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+        const ref = firebase.storage().ref().child(filename);
+        ref.put(blob).then(() => {
+            ref.getDownloadURL().then((url) => {
+                setPicture(url); // <- This is the download URL of the image
+                setUploading(false); 
+            }).catch((error) => {
+                console.log(error);
+                setUploading(false);
+            });
+        }).catch((error) => {
+            console.log(error);
+            setUploading(false);
+        });
+    };
+
+
 
     const dispatch = useDispatch();
 
@@ -21,9 +71,8 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup }) => {
             username: userName,
             password: password,
             email: email,
-            picture: "jepjep",
+            picture: picture,
             companyname: companyName,
-            accountType: "user"
         };
 
         var formBody = [];
@@ -63,10 +112,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup }) => {
 
         <View style={styles.container}>
             <Text style={styles.title}>Create an account</Text>
-            <Image
-                source={require('../../assets/regLogo.png')}
-                style={styles.logo}
-            />
+            
             <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -103,8 +149,17 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup }) => {
                 autoCapitalize="none"
                 maxLength={20}
             />
+            <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
+                    <Text style={styles.uploadText}> Select profile picture</Text>
+                </TouchableOpacity>
+
+                <View style={styles.imageContainer}>
+                {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+
+                </View>
+
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
-                <Text>Sign up</Text>
+                <Text style={styles.buttontextsign}>Sign up</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
                 setShowCompanySignup(false)
@@ -119,36 +174,36 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup }) => {
 
 const styles = StyleSheet.create({
     container: {
+        alignSelf: 'stretch',
         flex: 1,
+        paddingTop:40,
+        paddingLeft: 60,
+        paddingRight: 60,
         backgroundColor: '#FEF9A7',
-        alignItems: 'center',
         justifyContent: 'center',
     },
     input: {
-        marginTop: 10,
-        height: 50,
-        width: 300,
-        borderRadius: 15,
-        margin: 1,
-        paddingLeft: 10,
-        color: 'black',
-        backgroundColor: '#FAC213',
-
+        alignSelf: 'stretch',
+        height: 40,
+        marginBottom: 30,
+        borderBottomColor: '#F77E21',
+        borderBottomWidth: 1,
     },
     button: {
-        marginTop: 40,
-        height: 50,
-        width: 300,
-        justifyContent: 'center',
+        marginTop: 30,
+        borderRadius: 100,
+        alignSelf: 'stretch',
         alignItems: 'center',
         backgroundColor: '#F77E21',
         color: '#fff',
-        padding: 10,
-        borderRadius: 10,
+        padding: 20,
     },
     title: {
-        fontSize: 30,
-        fontWeight: 'bold',
+        marginBottom: 30,
+        fontSize: 24,
+        paddingBottom: 10,
+        borderBottomColor: '#465881',
+        borderBottomWidth: 1,
         color: '#465881',
     },
     logo: {
@@ -159,6 +214,31 @@ const styles = StyleSheet.create({
     bottomtitle: {
         padding: 10,
         fontWeight: "bold"
+    },
+    selectButton: {
+        marginLeft: 25,
+        marginBottom: 20,
+        borderRadius: 5,
+        width: 200,
+        height: 25,
+        backgroundColor: '#465881',
+        alignSelf: 'stretch',
+        alignItems: 'center',
+    },
+    uploadText: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
+    uploadedText:{
+        color: '#465881',
+        fontSize: 17,
+        marginRight: 25,
+    },
+    buttontextsign:{
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold'
     }
 });
 
