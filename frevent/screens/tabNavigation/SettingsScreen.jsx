@@ -10,7 +10,7 @@ import { addUser } from '../../features/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const SettingsScreen = ({setLogged}) => {
+const SettingsScreen = ({ setLogged }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const userData = useSelector(selectUser)
@@ -25,38 +25,38 @@ const SettingsScreen = ({setLogged}) => {
       username: username,
       password: password,
       ID: userData.user.ID,
-  };
+    };
 
-  var formBody = [];
+    var formBody = [];
 
-  for (var property in details) {
+    for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
-  }
+    }
 
-  formBody = formBody.join("&");
+    formBody = formBody.join("&");
 
-  const config = {
+    const config = {
       headers: {
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-  };
+    };
 
     axios.put(API_URL + 'settings/update/user/', formBody, config)
       .then(response => {
         console.log(response.data);
       })
       .catch(error => {
-        console.log(error);  
+        console.log(error);
       });
   };
 
   const handleLogout = async () => {
     //väliaikaisesti hakee käyttäjän id:n reduxista
     await AsyncStorage.removeItem("userData");
-    dispatch(addUser(null))
+    dispatch(addUser({}))
     setLogged(false)
   };
 

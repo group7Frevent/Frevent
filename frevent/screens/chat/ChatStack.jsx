@@ -7,7 +7,9 @@ import CustomHeader from './components/CustomHeader';
 
 const Stack = createNativeStackNavigator();
 
+
 const ChatStack = () => {
+
     return (
         <Stack.Navigator >
             <Stack.Screen name="Chats" component={ChatContainer} />
