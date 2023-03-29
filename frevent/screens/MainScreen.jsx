@@ -29,6 +29,7 @@ const MainScreen = () => {
         }
     }
     useEffect(() => {
+        //dispatch(addUser({}))
         getLoggedStatus()
     },[])
 

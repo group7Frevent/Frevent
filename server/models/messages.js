@@ -6,7 +6,7 @@ const messageController = {
             [message.senderID, message.toID, message.timestamp, message.message], callback);
     },
     getMessagesBySenderIDAndToID: function (senderID, toID, callback) {
-        return db.query("SELECT * FROM messages WHERE (senderID = ? or senderID = ?) AND (toID = ? or toID = ?)",
+        return db.query("SELECT * FROM messages WHERE (senderID = ? or senderID = ?) AND (toID = ? or toID = ?) order by timestamp",
             [senderID, toID, senderID, toID], callback)
     },
     getLatestMessageID: function (senderID, toID, callback) {
@@ -14,7 +14,7 @@ const messageController = {
             [senderID, toID, senderID, toID], callback)
     },
     getLatestMessageByID: function (ID, callback) {
-        return db.query("SELECT message, timestamp, seen FROM messages WHERE ID = ?;",
+        return db.query("SELECT message, timestamp, seen FROM messages WHERE ID = ? ;",
             [ID], callback)
     },
     getHowManyUnRead: function (senderID, toID, callback) {

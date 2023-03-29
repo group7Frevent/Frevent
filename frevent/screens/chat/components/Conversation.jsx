@@ -50,7 +50,8 @@ const Conversation = ({ route, navigation }) => {
     useEffect(() => {
 
         socket.on("getMSG", (data) => {
-            setConv(data)
+            //setConv(data)
+            getConversation(userData.user.ID, conversationID)
             //setTestIfThisWorks(data.message)
         })
     }, [socket])

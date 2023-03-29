@@ -1,6 +1,5 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-// arrow-back-outline
 import Ionic from 'react-native-vector-icons/Ionicons'
 const CustomHeader = ({ image, fname, lname, navigation: { goBack } }) => {
 

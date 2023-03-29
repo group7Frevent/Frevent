@@ -47,7 +47,6 @@ const SettingsScreen = ({ setLogged }) => {
     };
 
 
-
     axios.put(API_URL + 'settings/update/user/', formBody, config)
       .then(response => {
         console.log(response.data);
@@ -112,7 +111,7 @@ const SettingsScreen = ({ setLogged }) => {
   const handleLogout = async () => {
     //väliaikaisesti hakee käyttäjän id:n reduxista
     await AsyncStorage.removeItem("userData");
-    //dispatch(addUser(null))
+    dispatch(addUser({}))
     setLogged(false)
   };
 
