@@ -10,6 +10,8 @@ import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
 import { API_URL } from '@env'
 
+
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

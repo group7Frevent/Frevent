@@ -17,7 +17,7 @@ exports = module.exports = function (io) {
         });
 
         socket.on("send_message", (data) => {
-            //console.log(data)
+            console.log(data)
 
             messageController.addMessage(data, (dberr, dbres) => {
                 if (dberr) {

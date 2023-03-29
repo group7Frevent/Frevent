@@ -50,9 +50,11 @@ const ChatContainer = ({ navigation }) => {
         setConverstions(JSON.parse(conversations))
 
     }
-
+    const connectToSocket = async () => {
+        await socket.emit('storeClientInfo', { customId: userData.user.ID });
+    }
     useState(() => {
-        socket.emit('storeClientInfo', { customId: userData.user.ID });
+        connectToSocket()
         getAsyncData()
         // Get all conversations......
         getConversations()

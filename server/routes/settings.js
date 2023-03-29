@@ -38,6 +38,37 @@ router.put('/update/user/', function (req, res, next) {
     }
 });
 
+router.put('/update/userpicture/', function (req, res, next) {
+    if (req.body.picture) {
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        const encodedToken = parseJwt(token)
+        const id = encodedToken.userData.ID
+        const userName = encodedToken.userData.username
+        users.updateUserPicture(id, req.body.picture, (dberr, dbRes) => {
+                if (dberr) {
+                    errors.errorCode(dberr, res)
+                } else {
+                    users.getUserData(userName, (dberr, dbResult) => {
+                        if (dberr) {
+                            // If error return error
+                            errors.errorCode(dberr, res)
+                        } else {
+                            res.send(dbResult[0])
+                        }
+                    })
+                }
+            
+        })
+    } else {
+        errors.errorCode("missing params", res)
+    }
+});
+
+function parseJwt(token) {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+}
+
 function generateAccessToken(userID) {
     dotenv.config();
     return jwt.sign(userID, process.env.MY_TOKEN, { expiresIn: '300d' });

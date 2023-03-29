@@ -49,7 +49,7 @@ const MainScreen = () => {
         }
         else if (showCompanySignup) {
             return (
-                <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} />
+                <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} setLogged={setLogged} />
             )
         }
         else {

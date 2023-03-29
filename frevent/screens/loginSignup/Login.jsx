@@ -1,26 +1,37 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Modal } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CheckBox from 'expo-checkbox';
+
 
 
 const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
+    const [checkbox, setCheckbox] = useState(false)
+
 
     // Valmistelee redux
     const dispatch = useDispatch();
 
     const loginRequest = async () => {
-
+        if(checkbox){
+            var accountType = "company"
+        }
+        else{
+            var accountType = "user"
+        }
+        console.log(accountType)
         var details = {
             username: userName,
             password: password,
-            accountType: "user"
+            accountType: accountType
         };
+   
 
         var formBody = [];
 
@@ -55,7 +66,7 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
             dispatch(addUser(response.data))
             setLogged(true)
         }).catch((error) => {
-            console.log(error.response.data)
+            console.log(error)
             if (error.response.data === "wrong username") {
                 Alert.alert("Username not found");
             }
@@ -88,9 +99,15 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 onChangeText={setPassword}
                 value={password}
                 autoCapitalize='none'
-            />
+            /> 
+            <CheckBox
+           style={styles.checkbox}
+           value={checkbox}
+           onValueChange={()=>setCheckbox(!checkbox)}
+           color={checkbox ? 'green' : undefined}
+        />
             <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
-                <Text>Log In</Text>
+                <Text style= {styles.logintext}>Log In</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
                 <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
@@ -110,32 +127,34 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingLeft: 60,
+        paddingRight: 60,
         backgroundColor: '#FEF9A7',
         alignItems: 'center',
         justifyContent: 'center',
 
     },
+    checkbox:{
+        alignSelf: "stretch",
+        title: "moro"
+
+    },
     input: {
-        marginTop: 20,
-        height: 50,
-        width: 300,
-        borderRadius: 10,
-        margin: 1,
-        paddingLeft: 10,
-        color: "black",
-        backgroundColor: "#FAC213"
+        alignSelf: 'stretch',
+        height: 40,
+        marginBottom: 30,
+        borderBottomColor: '#F77E21',
+        borderBottomWidth: 1,
 
     },
     button: {
-        marginTop: 40,
-        height: 50,
-        width: 300,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#F77E21",
-        color: "#fff",
-        padding: 10,
-        borderRadius: 10,
+        marginTop: 30,
+        borderRadius: 100,
+        alignSelf: 'stretch',
+        alignItems: 'center',
+        backgroundColor: '#F77E21',
+        color: '#fff',
+        padding: 20,
     },
     image: {
         width: 250,
@@ -143,15 +162,22 @@ const styles = StyleSheet.create({
 
     },
     title: {
+        marginBottom: 30,
         fontSize: 30,
-        fontWeight: 'bold',
-        color: "#465881"
+        paddingBottom: 10,
+        borderBottomColor: '#465881',
+        borderBottomWidth: 1,
+        color: '#465881',
 
     },
     bottomtitle: {
         padding: 10,
         fontWeight: 'bold'
+    },
+    logintext:{
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold'
     }
 });
-
 export default Login
