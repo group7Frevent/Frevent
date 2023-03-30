@@ -22,11 +22,11 @@ router.get('/myfriends', async function (req, res, next) {
                 res.send(dbresult)
             }
             else {
-                errors.errorCode(dbError)
+                errors.errorCode(dbError, res)
             }
         })
     } catch (error) {
-        errors.errorCode(error)
+        errors.errorCode(error, res)
     }
 })
 
@@ -71,13 +71,83 @@ router.get('/notfriends', async function (req, res, next) {
                 res.send(returnObj)
             }
             else {
-                errors.errorCode(dbError)
+                errors.errorCode(dbError, res)
             }
         })
     } catch (error) {
-        errors.errorCode(error)
+        errors.errorCode(error, res)
     }
 })
+
+
+router.post('/addfriend', async function (req, res, next) {
+    try {
+        // Added extra middleware
+        // Get bearer token and encode it to check userID
+        const authHeader = req.headers['authorization']
+        console.log(authHeader)
+        const token = authHeader && authHeader.split(' ')[1]
+        const encodedToken = parseJwt(token)
+        friends.addFriend(encodedToken.userData.ID, req.body.friendID, (dbError, dbresult) => {
+            if (dbresult) {
+                res.send(true)
+            }
+            else {
+                errors.errorCode(dbError, res)
+            }
+        })
+    } catch (error) {
+        errors.errorCode(error, res)
+    }
+})
+
+router.post('/acceptfriend', async function (req, res, next) {
+    if (req.body.friendID) {
+        try {
+            // Added extra middleware
+            // Get bearer token and encode it to check userID
+            const authHeader = req.headers['authorization']
+            //console.log(authHeader)
+            const token = authHeader && authHeader.split(' ')[1]
+            const encodedToken = parseJwt(token)
+            friends.acceptFriend(encodedToken.userData.ID, req.body.friendID, (dbError, dbresult) => {
+                if (dbresult) {
+                    res.send(true)
+                }
+                else {
+                    errors.errorCode(dbError, res)
+                }
+            })
+        } catch (error) {
+            errors.errorCode(error, res)
+        }
+    } else {
+        res.send(false)
+    }
+})
+
+router.get('/getpendingrequests', async function (req, res, next) {
+    try {
+        // Added extra middleware
+        // Get bearer token and encode it to check userID
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        const encodedToken = parseJwt(token)
+        //console.log(encodedToken)
+        friends.getPendingRequests(encodedToken.userData.ID, (dbError, dbresult) => {
+            console.log("here")
+            if (dbresult) {
+                res.send(dbresult)
+            }
+            else {
+                errors.errorCode(dbError, res)
+            }
+        })
+    } catch (error) {
+        errors.errorCode(error, res)
+    }
+}
+)
 
 function parseJwt(token) {
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
