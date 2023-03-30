@@ -1,37 +1,35 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, TouchableHighlight } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
 import axios from 'axios';
 import dayjs from "dayjs";
-import {API_URL} from "@env"
+import { API_URL, API_URL2 } from '@env'
+import Ionic from 'react-native-vector-icons/Ionicons'
+
 
 const HomeScreen = () => {
 
 
     //const { user, setUser } = useContext(UserContext)                                          
     const [visibleEvents, setVisibleEvents] = useState([])
-    const [eventTitle, setEventTitle] = useState('')
-    const [eventDescription, setEventDescription] = useState('')
-    const [eventTime, setEventTime] = useState(new Date) 
+    var [isAttending, setIsAttending] = useState(false)
+    const [pressed, setPressed] = useState(false)
+    const [buttonIndex, setButtonIndex] = useState(-1)
+    const [attending, setAttending] = useState([])
 
-    
+
 
     const userData = useSelector(selectUser)
    const getData = async () => {
-      console.log(userData?.user.token)
         try {
             var config = {
                 headers: {
                     'Authorization': `Basic ${userData?.user.token}`   // user authorization
                 }
             }
-            console.log(API_URL + 'events/getevents/')
             const response = await axios.get(API_URL + 'events/getevents/', config)
-            console.log(response.data)
             setVisibleEvents(response.data)
-
-      setVisibleEvents(response.data)
     }
     catch (error) {
       console.log(error)
@@ -41,6 +39,28 @@ const HomeScreen = () => {
   useEffect(() => {
     getData()
   }, [])
+
+  const attendedEvents = async () => {
+    try {
+      var config = {
+          headers: {
+              'Authorization': `Basic ${userData?.user.token}`   // user authorization
+          }
+      }
+      console.log(API_URL + 'events/getAttending/')
+      const response = await axios.get(API_URL + 'events/getAttending/', config)
+      console.log(response.data)
+      setAttending(response.data)
+}
+
+catch (error) {
+console.log(error)
+}
+}
+
+useEffect(() => {
+  attendedEvents()
+}, [])
 
   const kissa = [
       {
@@ -57,30 +77,37 @@ const HomeScreen = () => {
       }
   ]
 
-  const buttonPush = (id, type) => {
+  const buttonAttend = (id, type, index) => {
+    setPressed(true)
+
+    //Tähän sql yhteys tietokanta osallistu
     console.log(`ID:  ${id} :: ${type}`)
   }
 
-  const includes = (id, type) => {
-    // Map kissa 
-    kissa && kissa.map((data, index) => {
-      //console.log(`ID:  ${id} :: ${data.id} //  ${type} :: ${data.eventType}`)
-      if(id == data.id && type == data.eventType) {
-        console.log(`ID:  ${id} :: ${type}`)
-        console.log(false)
-        return false
-      } 
-    })
-    return true
-    // return true or false
+  const buttonDontAttend = (id, type, index) => {
+    setPressed(false)
+
+    //Tähän sql yhteys tietokanta poista osallistuminen
+    console.log(`ID:  ${id} :: ${type}`)
   }
+
+
+  const includes = (id, type) => {
+    const match = attending && attending.some((data, index) => {
+      if(id == data.id && type == data.eventType) {
+        return true;
+      } 
+    });
+    return !match;
+  };
   
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <Text style = {styles.title} >Welcome to Frevent</Text>
+        <Text style = {styles.title} >Welcome!</Text>
+          <Text style = {styles.title} >Here are your upcoming events</Text>
         </View>
       
       {visibleEvents.map((data, index) => {
@@ -90,16 +117,16 @@ const HomeScreen = () => {
         <Text style = {styles.description}>{data.Kuvaus}</Text>
           <View style = {styles.lowerPart}>
             <View style = {{flex:1,}}>
-              <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY")}, {data.Paikka}</Text>
+              <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY HH.mm")}, {data.Paikka}</Text>
               <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
             </View>
             <View>
-            {console.log(includes(data?.id, data?.eventType)) ?
-                <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
+            {includes(data?.id, data?.eventType) ?
+                <TouchableOpacity style={[styles.btnNormal, pressed === true && styles.btnPressed]} onPress={() => {buttonAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
                   <Text>Attend</Text>
               </TouchableOpacity> :
-              <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
-              <Text>testi</Text>
+              <TouchableOpacity style={styles.btnPressed} onPress={() => {buttonDontAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
+              <Text><Ionic name={'checkmark'} size={15} color={'green'} /> Attending</Text>
           </TouchableOpacity>
             }
             </View>
@@ -129,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FAC213",
   },
-  button: {
+  /*button: {
     alignItems: "center",
     backgroundColor: "#F77E21",
     color: "#fff",
@@ -139,8 +166,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#D61C4E"
-  },
+    borderColor: "#D61C4E" 
+  }, */
 
   title: {
     fontSize: 20,
@@ -184,7 +211,35 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems:"center"
-  }
+  },
+
+  btnNormal: {
+    alignItems: "center",
+    backgroundColor: "#F77E21",
+    color: "#fff",
+    padding: 8,
+    paddingRight: 20,
+    paddingLeft: 20,
+    marginTop: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D61C4E",
+    activeOpacity: 1,
+  },
+
+  btnPressed: {
+    alignItems: "center",
+    backgroundColor: '#15bf34',
+    color: "#fff",
+    padding: 8,
+    paddingRight: 20,
+    paddingLeft: 20,
+    marginTop: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "green",
+    activeOpacity: 1,
+  },
 });
 
 export default HomeScreen
