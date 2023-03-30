@@ -16,3 +16,4 @@ const eventDetails = {
 
 
 module.exports = eventDetails;
+

@@ -39,7 +39,7 @@ router.put('/update/user/', function (req, res, next) {
 });
 
 router.put('/update/userpicture/', function (req, res, next) {
-    if (req.body.picture) {
+        console.log(req.body.picture)
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
         const encodedToken = parseJwt(token)
@@ -60,9 +60,6 @@ router.put('/update/userpicture/', function (req, res, next) {
                 }
             
         })
-    } else {
-        errors.errorCode("missing params", res)
-    }
 });
 
 function parseJwt(token) {

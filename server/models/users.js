@@ -19,7 +19,6 @@ const users = {
     updateUserPicture: function (ID, picture, callback) {
         return db.query("UPDATE users SET picture=? where ID=?",
             [picture, ID], callback)
-
     }
     
 
