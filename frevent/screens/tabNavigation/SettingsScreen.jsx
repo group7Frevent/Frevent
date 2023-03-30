@@ -91,6 +91,7 @@ const SettingsScreen = ({ setLogged }) => {
     ref.put(blob).then(() => {
       ref.getDownloadURL().then((url) => {
         setPicture(url);
+        //console.log(url)
         changePicture(url);
         setUploading(false);
       }).catch((error) => {
@@ -105,11 +106,13 @@ const SettingsScreen = ({ setLogged }) => {
 
 
   const changePicture = (pic) => {
+    console.log(pic)
     var details = {
-      picture: JSON.stringify(pic),
+      picture: pic,
     };
     var formBody = [];
 
+    console.log(details)
     for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
@@ -117,7 +120,7 @@ const SettingsScreen = ({ setLogged }) => {
     }
 
     formBody = formBody.join("&");
-    console.log(formBody)
+
     const config = {
       headers: {
         Accept: "application/json",
@@ -126,8 +129,9 @@ const SettingsScreen = ({ setLogged }) => {
       },
     };
 
-    axios.put('http://192.168.32.156:3000/settings/update/userpicture/', formBody, config)
+    axios.put(API_URL + 'settings/update/userpicture/', formBody, config)
       .then(response => {
+        console.log(response.data);
         dispatch(addUser(response.data))
       })
       .catch(error => {

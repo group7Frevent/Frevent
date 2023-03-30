@@ -28,6 +28,10 @@ const friends = {
     getPendingRequests: (userID, callback) => {
         return db.query("SELECT ID, username, fname, lname, birthdate ,picture, email FROM users u where u.id in (SELECT userID FROM friends WHERE friendID = ? AND status='pending');",
             [userID], callback)
+    },
+    removeFriend: (userID, friendID, callback) => {
+        return db.query("DELETE FROM friends WHERE (userID = ? or friendID = ? ) AND (userID = ? or friendID = ? )",
+            [userID, userID, friendID, friendID], callback)
     }
 }
 

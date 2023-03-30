@@ -149,6 +149,31 @@ router.get('/getpendingrequests', async function (req, res, next) {
 }
 )
 
+router.post('/removefriend', async function (req, res, next) {
+    if (req.body.friendID) {
+        try {
+            // Added extra middleware
+            // Get bearer token and encode it to check userID
+            const authHeader = req.headers['authorization']
+            const token = authHeader && authHeader.split(' ')[1]
+            const encodedToken = parseJwt(token)
+            friends.removeFriend(encodedToken.userData.ID, req.body.friendID, (dbError, dbresult) => {
+                if (dbresult) {
+                    res.send(true)
+                }
+                else {
+                    errors.errorCode(dbError, res)
+                }
+            })
+        } catch (error) {
+            errors.errorCode(error, res)
+        }
+    } else {
+        res.send(false)
+    }
+})
+
+
 function parseJwt(token) {
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
