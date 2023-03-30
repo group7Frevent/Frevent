@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import axios from 'axios';
 import { useSelector } from 'react-redux'
@@ -9,13 +9,21 @@ import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as  ImagePicker from 'expo-image-picker'
+import { firebase } from '../../config'
 
 const SettingsScreen = ({ setLogged }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null)
+  const [picture, setPicture] = useState('');
   const userData = useSelector(selectUser)
   const navigation = useNavigation();
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    image && uploadImage()
+
+  }, [image])
 
   // Valmistelee redux
   const dispatch = useDispatch();
@@ -68,20 +76,39 @@ const SettingsScreen = ({ setLogged }) => {
       quality: 1,
 
     });
+
+
     const source = { uri: result.assets[0].uri };
     console.log(source);
     setImage(source);
+
+  };
+  const uploadImage = async () => {
+    setUploading(true);
+    const response = await fetch(image.uri)
+    const blob = await response.blob();
+    const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+    const ref = firebase.storage().ref().child(filename);
+    ref.put(blob).then(() => {
+      ref.getDownloadURL().then((url) => {
+        setPicture(url);
+        changePicture(url);
+        setUploading(false);
+      }).catch((error) => {
+        console.log(error);
+        setUploading(false);
+      });
+    }).catch((error) => {
+      console.log(error);
+      setUploading(false);
+    });
   };
 
 
-
-
-  const changePicture = () => {
+  const changePicture = (pic) => {
     var details = {
-      picture: picture,
-      ID: userData.user.ID,
+      picture: JSON.stringify(pic),
     };
-
     var formBody = [];
 
     for (var property in details) {
@@ -91,7 +118,7 @@ const SettingsScreen = ({ setLogged }) => {
     }
 
     formBody = formBody.join("&");
-
+    console.log(formBody)
     const config = {
       headers: {
         Accept: "application/json",
@@ -100,13 +127,15 @@ const SettingsScreen = ({ setLogged }) => {
       },
     };
 
-    axios.put(API_URL + 'settings/update/userpicture/', formBody, config)
+    axios.put('http://192.168.32.156:3000/settings/update/userpicture/', formBody, config)
       .then(response => {
-        console.log(response.data);
+        dispatch(addUser(response.data))
       })
       .catch(error => {
         console.log(error);
       });
+
+
   };
 
   const handleLogout = async () => {
