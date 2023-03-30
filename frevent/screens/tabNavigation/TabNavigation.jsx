@@ -1,4 +1,6 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import {
+    View, Text, SafeAreaView, ViewPropTypes,
+} from 'react-native'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'

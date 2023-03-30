@@ -5,8 +5,9 @@ import { selectUser } from '../../../features/userSlice'
 import axios from 'axios'
 import { API_URL } from "@env"
 import FriendBox from './FriendBox'
-import CustomHeader from './CustomHeader'
 import { TouchableOpacity } from 'react-native'
+import { useIsFocused } from "@react-navigation/native";
+import CustomHeader2 from './CustomHeader2'
 
 const MyFriendsFeed = ({ navigation }) => {
     const [friends, setFriends] = useState([])
@@ -20,7 +21,6 @@ const MyFriendsFeed = ({ navigation }) => {
                     'Authorization': `Basic ${userData?.user.token}`   // user authorization
                 }
             }
-            console.log(API_URL + 'friends/myfriends/')
             const response = await axios.get(API_URL + 'friends/myfriends/', config)
             setFriends(response.data)
 
@@ -30,12 +30,14 @@ const MyFriendsFeed = ({ navigation }) => {
         }
     }
 
+
     useEffect(() => {
         getFriends()
-    }, [])
+
+    }, [useIsFocused])
     return (
         <View>
-            <CustomHeader navigation={navigation} />
+            <CustomHeader2 navigation={navigation} />
             {friends && friends.map((data, index) => {
                 return (
                     <TouchableOpacity onPress={() => navigation.navigate("fiendFriends")}>

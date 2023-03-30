@@ -9,6 +9,7 @@ import { socket } from '../../../socket';
 import { useIsFocused } from "@react-navigation/native";
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomHeader2 from './CustomHeader2';
 
 const ChatContainer = ({ navigation }) => {
 
@@ -60,7 +61,7 @@ const ChatContainer = ({ navigation }) => {
         getConversations()
     }, [socket])
 
-    
+
 
     useEffect(() => {
         getAsyncData()
@@ -108,6 +109,7 @@ const ChatContainer = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <CustomHeader2 navigation={navigation} />
             <ScrollView style={styles.ScrollView}>
 
                 {converstions && converstions.map((data, index) => {
