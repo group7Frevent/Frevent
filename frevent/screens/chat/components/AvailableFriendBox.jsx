@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_URL } from '@env';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../features/userSlice';
-
+import Ionic from 'react-native-vector-icons/Ionicons'
 
 const AvailableFriendBox = ({ data }) => {
 

@@ -1,10 +1,14 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import { API_URL } from '@env'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../../features/userSlice'
+import Ionic from 'react-native-vector-icons/Ionicons'
+
+
+// trash-outline
 
 const PenginRequestBox = ({ data }) => {
     const [confirm, setConfirm] = useState(false)
@@ -45,9 +49,15 @@ const PenginRequestBox = ({ data }) => {
             })
     }
 
+    useEffect(() => {
+        console.log(data)
+    }, [])
+
+
     return (
         <View>
             <View style={styles.container}>
+
                 <Image
                     style={styles.profileImg}
                     source={{
@@ -68,17 +78,28 @@ const PenginRequestBox = ({ data }) => {
                 </View>
             </View>
             <View style={styles.line} />
+        </View >
+    )
+}
+
+const ActionContent = () => {
+    return (
+        <View>
+            <Text>
+                Delete
+            </Text>
         </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
         width: "100%",
         flexDirection: "row",
         alignSelf: 'stretch',
-        padding: 5,
         alignItems: "center",
+        height: 70,
     },
     profileImg: {
         width: 50,
@@ -106,8 +127,11 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     status: {
-        marginRight: 10
-    }
+        marginRight: 10,
+        flexDirection: "row",
+        gap: 10
+    },
+
 });
 
 export default PenginRequestBox
