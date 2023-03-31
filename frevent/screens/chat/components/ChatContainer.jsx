@@ -9,6 +9,7 @@ import { socket } from '../../../socket';
 import { useIsFocused } from "@react-navigation/native";
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomHeader2 from './CustomHeader2';
 
 const ChatContainer = ({ navigation }) => {
 
@@ -50,9 +51,11 @@ const ChatContainer = ({ navigation }) => {
         setConverstions(JSON.parse(conversations))
 
     }
-
+    const connectToSocket = async () => {
+        await socket.emit('storeClientInfo', { customId: userData.user.ID });
+    }
     useState(() => {
-        socket.emit('storeClientInfo', { customId: userData.user.ID });
+        connectToSocket()
         getAsyncData()
         // Get all conversations......
         getConversations()
@@ -106,6 +109,7 @@ const ChatContainer = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <CustomHeader2 navigation={navigation} />
             <ScrollView style={styles.ScrollView}>
 
                 {converstions && converstions.map((data, index) => {

@@ -1,4 +1,6 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import {
+    View, Text, SafeAreaView, ViewPropTypes,
+} from 'react-native'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -10,10 +12,13 @@ import FriendsScreen from "./FriendsScreen";
 import SettingsScreen from "./SettingsScreen";
 import HomeScreen from "./HomeScreen";
 import ChatStack from '../chat/ChatStack'
+import MyFriendsStack from '../myFriends/MyFriendsStack'
+//import MyFriends from '../Friends/components/MyFriends'
+
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = ({setLogged}) => {
+const TabNavigation = ({ setLogged }) => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 
@@ -24,13 +29,13 @@ const TabNavigation = ({setLogged}) => {
             screenOptions={({ route }) => ({
 
                 tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-        tabBarStyle: [
-          {
-            display: "flex"
-          },
-          null
-        ],
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: [
+                    {
+                        display: "flex"
+                    },
+                    null
+                ],
 
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -53,11 +58,11 @@ const TabNavigation = ({setLogged}) => {
             }
         >
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="My Events" component={EventsScreen} />
-            <Tab.Screen name="Friends" component={FriendsScreen} />
+            <Tab.Screen name="My Events" component={FriendsScreen} />
+            <Tab.Screen options={{ headerShown: false }} name="Friends" component={MyFriendsStack} />
             <Tab.Screen options={{ headerShown: false }} name="Chat" component={ChatStack} />
             <Tab.Screen name="Settings" >
-                {props => <SettingsScreen {...props} setLogged={setLogged}/>}
+                {props => <SettingsScreen {...props} setLogged={setLogged} />}
             </Tab.Screen>
         </Tab.Navigator>
 

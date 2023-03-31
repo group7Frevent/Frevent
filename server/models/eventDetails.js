@@ -6,6 +6,14 @@ const eventDetails = {
         , [userID], callback);
     },
 
+    getAttending: function (userID, callback) {
+        return db.query("SELECT uaue.IDEvent AS IDEvent, ue.eventType AS eventType FROM userAndUserEvents uaue LEFT JOIN userEvents ue ON uaue.IDEvent = ue.IDUserEvents WHERE IDUser = ? UNION SELECT uae.IDEvent AS IDEvent, e.eventType AS eventType FROM usersAndEvents uae LEFT JOIN events e ON uae.IDEvent = e.ID WHERE IDUser = ?"
+        , [userID, userID], callback);
+    },
+
 };
 
+
+
 module.exports = eventDetails;
+

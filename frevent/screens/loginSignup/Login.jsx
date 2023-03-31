@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -19,10 +19,10 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
     const dispatch = useDispatch();
 
     const loginRequest = async () => {
-        if(checkbox){
+        if (checkbox) {
             var accountType = "company"
         }
-        else{
+        else {
             var accountType = "user"
         }
         console.log(accountType)
@@ -31,7 +31,7 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
             password: password,
             accountType: accountType
         };
-   
+
 
         var formBody = [];
 
@@ -99,7 +99,6 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 onChangeText={setPassword}
                 value={password}
                 autoCapitalize='none'
-            /> 
 
             <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
             <CheckBox
@@ -108,11 +107,9 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
            onValueChange={()=>setCheckbox(!checkbox)} // toggle checkbox
            color={checkbox ? 'green' : undefined} // custom color for unchecked state
             />
-             
-        
-
+            
             <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
-                <Text style= {styles.logintext}>Log In</Text>
+                <Text style={styles.logintext}>Log In</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
                 <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
     },
-    checkbox:{
+    checkbox: {
         alignSelf: "stretch",
         title: "moro"
 
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontWeight: 'bold'
     },
-    logintext:{
+    logintext: {
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold'

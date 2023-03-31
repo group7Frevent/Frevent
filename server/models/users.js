@@ -15,7 +15,15 @@ const users = {
         return db.query("UPDATE users SET username=?, password=? where ID=?",
             [body.username, hash, body.ID], callback)
 
+    },
+    updateUserPicture: function (ID, picture, callback) {
+        return db.query("UPDATE users SET picture=? where ID=?",
+            [picture, ID], callback)
     }
+    
+
+
+    
 };
 
 module.exports = users;
