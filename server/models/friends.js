@@ -2,7 +2,7 @@ const db = require("../database");
 
 const friends = {
     getFriends: (userID, callback) => {
-        return db.query("SELECT friendID FROM friends WHERE userID = ? AND status='confirmed' UNION SELECT userID FROM friends WHERE friendID = ?",
+        return db.query("SELECT friendID FROM friends WHERE userID = ? AND status='confirmed' UNION SELECT userID FROM friends WHERE friendID = ? AND status='confirmed'",
             [userID, userID], callback)
     },
     getFirendsAndData: (userID, callback) => {
