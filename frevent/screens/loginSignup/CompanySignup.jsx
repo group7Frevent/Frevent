@@ -7,7 +7,6 @@ import { API_URL } from '@env'
 import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
 import { addUser } from '../../features/userSlice';
-import MainScreen from '../MainScreen';
 
 
 const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
