@@ -2,20 +2,22 @@ import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 're
 import React, { useEffect, useState } from 'react'
 import PenginRequestBox from './PenginRequestBox'
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { API_URL } from '@env'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../../features/userSlice'
+import axios from 'axios'
+
 
 const PendingRequest = ({ route, navigation }) => {
     const { pending } = route.params
-    const [listData, setListData] = useState(
-        Array(20)
-            .fill('')
-            .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))
-    );
+    const [listData, setListData] = useState([])
+
+    const userData = useSelector(selectUser)
 
     useEffect(() => {
         const emptyArray = []
         pending.map((item, index) =>
             emptyArray.push({ key: `${index}`, ...item }))
-        console.log(Array(20).fill('').map((_, i) => ({ key: `${i}`, text: `item #${i}` })))
         setListData(emptyArray)
     }, [])
 
@@ -26,21 +28,57 @@ const PendingRequest = ({ route, navigation }) => {
         }
     };
 
-    const deleteRow = (rowMap, rowKey) => {
-        closeRow(rowMap, rowKey);
-        const newData = [...listData];
-        const prevIndex = listData.findIndex(item => item.key === rowKey);
-        newData.splice(prevIndex, 1);
-        setListData(newData);
+
+    ////////////////////////////////////////////////////////////////////////
+    const deleteRequest = (rowMap, rowKey, item) => {
+        var details = {
+            friendID: item?.ID
+        };
+
+        //console.log(item?.ID)
+        var formBody = [];
+
+        for (var property in details) {
+            var encodedKey = encodeURIComponent(property);
+            var encodedValue = encodeURIComponent(details[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+
+        formBody = formBody.join("&");
+
+        const config = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+                'Authorization': `Basic ${userData?.user.token}`
+            },
+        };
+
+        axios.post(API_URL + 'friends/removefriend', formBody, config)
+            .then((response) => {
+                if (response.data == true) {
+                    closeRow(rowMap, rowKey);
+                    const newData = [...listData];
+                    const prevIndex = listData.findIndex(item => item.key === rowKey);
+                    newData.splice(prevIndex, 1);
+                    setListData(newData);
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////
+    const deleteRow = (rowMap, rowKey, item) => {
+        deleteRequest(rowMap, rowKey, item);
+
     };
 
-    const onRowDidOpen = rowKey => {
-        console.log('This row opened', rowKey);
-    };
 
     const renderItem = data => (
         <TouchableHighlight
-            onPress={() => console.log('You touched me')}
             style={styles.rowFront}
             underlayColor={'#AAA'}
         >
@@ -54,7 +92,7 @@ const PendingRequest = ({ route, navigation }) => {
 
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => deleteRow(rowMap, data.item.key)}
+                onPress={() => deleteRow(rowMap, data.item.key, data.item)}
             >
                 <Text style={styles.backTextWhite}>Delete</Text>
             </TouchableOpacity>
@@ -71,7 +109,6 @@ const PendingRequest = ({ route, navigation }) => {
                 previewRowKey={'0'}
                 previewOpenValue={-40}
                 previewOpenDelay={3000}
-                onRowDidOpen={(foo, bar) => console.log("on row did open", foo, !!bar)}
                 disableRightSwipe
             />
         </View>
@@ -98,7 +135,7 @@ const styles = StyleSheet.create({
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#f2f2f2',
+        backgroundColor: 'red',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -121,116 +158,5 @@ const styles = StyleSheet.create({
         right: 0,
     },
 });
-/*const { pending } = route.params
-const [listData, setListData] = React.useState(pending)
-const swipeListRef = React.useRef(null);
 
-const renderItem = data => (
-    <TouchableHighlight
-        onPress={() => console.log('You touched me')}
-        style={styles.rowFront}
-        underlayColor={'#AAA'}
-    >
-
-        <PenginRequestBox data={data.item} />
-    </TouchableHighlight>
-);
-
-const closeRoww = () => {
-    swipeListRef.current.closeAllOpenRows();
-    //console.log(swipeListRef.current)
-};
-
-
-const deleteRow = (rowMap, rowKey) => {
-    const newData = [...listData];
-    //console.log(pending)
-    const prevIndex = listData.findIndex(item => item.ID === rowKey.item.ID);
-    //console.log(prevIndex)
-    newData.splice(prevIndex, 1);
-    closeRoww()
-    //setListData(newData);
-};
-
-
-const renderHiddenItem = (data, rowMap) => (
-    <View style={styles.rowBack}>
-
-        <TouchableOpacity
-            style={[styles.backRightBtn, styles.backRightBtnRight]}
-            onPress={() => deleteRow(rowMap, data)}
-        >
-            <Text style={styles.backTextWhite}>Delete</Text>
-        </TouchableOpacity>
-    </View>
-);
-return (
-    <View>
-        <SwipeListView
-            ref={swipeListRef}
-            data={listData}
-            renderItem={renderItem}
-            renderHiddenItem={renderHiddenItem}
-            leftOpenValue={0}
-            rightOpenValue={-75}
-            previewRowKey={'0'}
-            previewOpenValue={-40}
-            previewOpenDelay={3000}
-            onRowDidOpen={(foo, bar) => console.log("on row did open", foo, !!bar)}
-            disableRightSwipe
-        />
-    </View>
-)
-}
-
-
-const styles = StyleSheet.create({
-container: {
-    backgroundColor: 'white',
-    flex: 1,
-},
-backTextWhite: {
-    color: '#FFF',
-},
-rowFront: {
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 15,
-    height: 70,
-},
-rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-},
-backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-},
-backRightBtnLeft: {
-    backgroundColor: 'tomato',
-    right: 75,
-},
-backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 0,
-},
-});
-/*
-{pending.map((item, index) => {
-return (
-    <PenginRequestBox data={item} />
-)
-})}
-*/
 export default PendingRequest
