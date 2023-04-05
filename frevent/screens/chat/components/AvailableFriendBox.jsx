@@ -36,9 +36,7 @@ const AvailableFriendBox = ({ data }) => {
             },
         };
         axios.post(API_URL + 'friends/addfriend/', formBody, config).then(response => {
-            console.log(response.data)
             if (response.data == true) {
-                console.log("here")
                 data.status = "pending"
                 setStatus("pending")
             }
