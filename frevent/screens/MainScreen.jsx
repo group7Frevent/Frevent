@@ -8,12 +8,14 @@ import CompanySignup from './loginSignup/CompanySignup'
 import TabNavigation from './tabNavigation/TabNavigation';
 import HomeScreen from './tabNavigation/HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CompanyTabBar from './CompanyPortal/CompanyTabBar';
 
 const MainScreen = () => {
 
     const [logged, setLogged] = useState(false)
     const [showLogin, setShowLogin] = useState(true)
     const [showCompanySignup, setShowCompanySignup] = useState(false)
+    const [companylogged, setCompanyLogged] = useState(false)
 
     // Valmistelee redux
     const dispatch = useDispatch();
@@ -28,23 +30,46 @@ const MainScreen = () => {
             setLogged(true)
         }
     }
+    const getCompanyLoggedStatus = async () => {
+
+        const userData = await AsyncStorage.getItem("companyData")
+        const parsedJsonData = JSON.parse(userData)
+        if(parsedJsonData?.token) {
+            console.log(parsedJsonData)
+            dispatch(addUser(parsedJsonData))
+            setCompanyLogged(true)
+        }
+    }
     useEffect(() => {
         //dispatch(addUser({}))
         getLoggedStatus()
     },[])
+    useEffect(() => {
+        //dispatch(addUser({}))
+        getCompanyLoggedStatus()
+    },[])
 
-    if (logged) {
+    if(companylogged) {
+        return (
+            <>
+            <CompanyTabBar setCompanyLogged={setCompanyLogged} />
+            </>
+        )
+    }
+    else
+    
+     if (logged) {
         // Renderöidään etusivu */
         return (
             <>
                 <TabNavigation setLogged={setLogged} />
             </>
-
         )
-    } else {
+    }
+     else {
         if (showLogin) {
             return (
-                <Login setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
+                <Login setCompanyLogged={setCompanyLogged} setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
             )
         }
         else if (showCompanySignup) {

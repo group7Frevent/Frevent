@@ -57,6 +57,7 @@ const SettingsScreen = ({setLogged}) => {
     //väliaikaisesti hakee käyttäjän id:n reduxista
     await AsyncStorage.removeItem("userData");
     dispatch(addUser(null))
+    console.log("Logged out")
     setLogged(false)
   };
 

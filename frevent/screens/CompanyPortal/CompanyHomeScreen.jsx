@@ -6,7 +6,7 @@ import axios from 'axios';
 import dayjs from "dayjs";
 import {API_URL} from "@env"
 
-const HomeScreen = () => {
+const CompanyHomeScreen = () => {
 
 
     //const { user, setUser } = useContext(UserContext)                                          
@@ -187,4 +187,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeScreen
+export default CompanyHomeScreen
