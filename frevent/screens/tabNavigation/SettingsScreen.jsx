@@ -10,6 +10,7 @@ import { addUser } from '../../features/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
+import {Linking, Platform} from 'react-native';
 
 const SettingsScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("");
@@ -20,6 +21,22 @@ const SettingsScreen = ({ route, navigation }) => {
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
   const { setLogged } = route.params;
+
+  const goToNotifSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:notifications');
+    } else {
+      Linking.sendIntent("android.settings.NOTIFICATION_SETTINGS");
+    }
+  };
+
+  const goToLocSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:location');
+    } else {
+      Linking.sendIntent("android.settings.LOCATION_SOURCE_SETTINGS");
+    }
+  };
 
   useEffect(() => {
     image && uploadImage()
@@ -112,11 +129,16 @@ const SettingsScreen = ({ route, navigation }) => {
     setLogged(false)
   };
 
+  //get current username
+  useEffect(() => {
+    setUsername(userData.user.username)
+  }, [userData.user.username])
+
 
   return (
 
     <View style={styles.container}>
-
+      <Text style={styles.usernamelabel}>{username}</Text>
       <View style={styles.imageContainer}>
         <Image
           style={styles.profileImg}
@@ -130,6 +152,14 @@ const SettingsScreen = ({ route, navigation }) => {
 
       <TouchableOpacity onPress={()=>navigation.navigate("profile")}>
         <Text style={styles.button}>Profile settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={goToNotifSettings}>
+        <Text style={styles.button}>Notification settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={goToLocSettings}>
+        <Text style={styles.button}>Location settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleLogout}>
@@ -171,10 +201,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
+  imageContainer: {
+    borderRadius: 100,
+    overflow: "hidden",
+    marginTop: 20,
+    marginBottom: 20,
+  },
   profileImg: {
-    width: 100,
-    height: 100,
-  }
+    width: 150,
+    height: 150,
+  },
+  selectButton: {
+    backgroundColor: 'tomato',
+    color: 'black',
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 20,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  usernamelabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default SettingsScreen;
