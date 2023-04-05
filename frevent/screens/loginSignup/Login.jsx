@@ -99,7 +99,7 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 onChangeText={setPassword}
                 value={password}
                 autoCapitalize='none'
-
+            />
             <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
             <CheckBox
            style={styles.checkbox} // style for the container

@@ -13,6 +13,7 @@ import SettingsScreen from "./SettingsScreen";
 import HomeScreen from "./HomeScreen";
 import ChatStack from '../chat/ChatStack'
 import MyFriendsStack from '../myFriends/MyFriendsStack'
+import SettingsStack from './SettingsStack'
 //import MyFriends from '../Friends/components/MyFriends'
 
 
@@ -62,7 +63,7 @@ const TabNavigation = ({ setLogged }) => {
             <Tab.Screen options={{ headerShown: false }} name="Friends" component={MyFriendsStack} />
             <Tab.Screen options={{ headerShown: false }} name="Chat" component={ChatStack} />
             <Tab.Screen name="Settings" >
-                {props => <SettingsScreen {...props} setLogged={setLogged} />}
+                {props => <SettingsStack {...props} setLogged={setLogged} />}
             </Tab.Screen>
         </Tab.Navigator>
 
