@@ -100,12 +100,14 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 value={password}
                 autoCapitalize='none'
             />
+            <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
             <CheckBox
-                style={styles.checkbox}
-                value={checkbox}
-                onValueChange={() => setCheckbox(!checkbox)}
-                color={checkbox ? 'green' : undefined}
+           style={styles.checkbox} // style for the container
+           value={checkbox} // boolean value
+           onValueChange={()=>setCheckbox(!checkbox)} // toggle checkbox
+           color={checkbox ? 'green' : undefined} // custom color for unchecked state
             />
+            
             <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
                 <Text style={styles.logintext}>Log In</Text>
             </TouchableOpacity>
@@ -138,6 +140,11 @@ const styles = StyleSheet.create({
         alignSelf: "stretch",
         title: "moro"
 
+    },
+    checkboxtext: {
+        alignSelf: 'stretch',
+        height: 20,
+        fontWeight: 'bold',
     },
     input: {
         alignSelf: 'stretch',

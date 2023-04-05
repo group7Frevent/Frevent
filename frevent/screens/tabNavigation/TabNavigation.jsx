@@ -12,8 +12,11 @@ import FriendsScreen from "./FriendsScreen";
 import SettingsScreen from "./SettingsScreen";
 import HomeScreen from "./HomeScreen";
 import ChatStack from '../chat/ChatStack'
+
 import MyEventsStack from '../myEvents/MyEventsStack'
-//import MyFriends from '../Friends/components/MyFriends'
+import MyFriendsStack from '../myFriends/MyFriendsStack'
+import SettingsStack from './SettingsStack'
+
 
 
 const Tab = createBottomTabNavigator();
@@ -61,7 +64,7 @@ const TabNavigation = ({ setLogged }) => {
             <Tab.Screen name="My Events" component={MyEventsStack} />
             <Tab.Screen options={{ headerShown: false }} name="Chat" component={ChatStack} />
             <Tab.Screen name="Settings" >
-                {props => <SettingsScreen {...props} setLogged={setLogged} />}
+                {props => <SettingsStack {...props} setLogged={setLogged} />}
             </Tab.Screen>
         </Tab.Navigator>
 
