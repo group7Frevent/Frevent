@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'reac
 import axios from 'axios';
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
-import { useNavigation } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
 import { API_URL } from "@env"
 import { useDispatch } from "react-redux";
 import { addUser } from '../../features/userSlice';
@@ -11,14 +11,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
 
-const SettingsScreen = ({ setLogged }) => {
+const SettingsScreen = ({ route, navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null)
   const [picture, setPicture] = useState('');
   const userData = useSelector(selectUser)
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
+  const { setLogged } = route.params;
 
   useEffect(() => {
     image && uploadImage()
@@ -27,42 +28,6 @@ const SettingsScreen = ({ setLogged }) => {
 
   // Valmistelee redux
   const dispatch = useDispatch();
-
-  const handleSaveChanges = () => {
-
-    var details = {
-      username: username,
-      password: password,
-      ID: userData.user.ID,
-    };
-
-    var formBody = [];
-
-    for (var property in details) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-
-    formBody = formBody.join("&");
-
-    const config = {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': `Basic ${userData?.user.token}`   // user authorization
-      },
-    };
-
-
-    axios.put(API_URL + 'settings/update/user/', formBody, config)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
 
   //////////////////////////////////////////
 
@@ -142,7 +107,6 @@ const SettingsScreen = ({ setLogged }) => {
   };
 
   const handleLogout = async () => {
-    //väliaikaisesti hakee käyttäjän id:n reduxista
     await AsyncStorage.removeItem("userData");
     dispatch(addUser({}))
     setLogged(false)
@@ -160,31 +124,17 @@ const SettingsScreen = ({ setLogged }) => {
             uri: userData.user.picture,
           }} />
       </View>
-
-      <Text style={styles.label}>New Username</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <Text style={styles.label}>New Password</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity onPress={handleSaveChanges}>
-        <Text style={styles.button}>Save Changes</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text style={styles.button}>Logout</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
         <Text style={styles.uploadText}> Change profile picture</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={()=>navigation.navigate("profile")}>
+        <Text style={styles.button}>Profile settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleLogout}>
+        <Text style={styles.button}>Logout</Text>
+      </TouchableOpacity>
 
 
     </View>
@@ -214,11 +164,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'tomato',
     color: 'black',
-    padding: 10,
+    padding: 15,
     borderRadius: 5,
     marginBottom: 20,
     width: '100%',
     textAlign: 'center',
+    marginTop: 10,
   },
   profileImg: {
     width: 100,
