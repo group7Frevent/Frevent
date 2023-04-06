@@ -76,7 +76,6 @@ const ChatContainer = ({ navigation }) => {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        console.log(API_URL)
         axios.put(API_URL + "messages/setSeen/" + data.ID + "/" + userData.user.ID, {}, config)
             .then((response) => {
                 response.data.sort((a, b) => {
@@ -99,7 +98,6 @@ const ChatContainer = ({ navigation }) => {
             }).catch((e) => {
                 console.log(e.response.data)
             })
-        //console.log("here" + userData.user.ID + data.ID + userData.user.token)
         navigation.navigate("Conversation", {
             conversationID: data.ID,
             conversationdata: data

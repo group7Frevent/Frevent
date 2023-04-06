@@ -27,7 +27,7 @@ const Conversation = ({ route, navigation }) => {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        
+
         axios.get(API_URL + "messages/getmsg/" + senderID + "/" + toID, config)
             .then(response => {
                 AsyncStorage.setItem(`${userData.user.ID}/${conversationID}`, JSON.stringify(response?.data));
@@ -48,7 +48,6 @@ const Conversation = ({ route, navigation }) => {
     }, [])
 
     useEffect(() => {
-
         socket.on("getMSG", (data) => {
             //setConv(data)
             getConversation(userData.user.ID, conversationID)
@@ -75,7 +74,6 @@ const Conversation = ({ route, navigation }) => {
         }
 
         socket.emit("send_message", data)
-        //console.log(newDate)
         setConv([...conv, data])
         setMsg("")
     }
@@ -170,20 +168,3 @@ var styles = StyleSheet.create({
     }
 });
 export default Conversation
-/*
-<KeyboardAvoidingView
->
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
-
-        <TextInput
-            style={styles.newInput}
-            onChangeText={setMsg}
-            value={msg}
-            placeholder="Message..."
-            returnKeyType="send" />
-        <TouchableOpacity onPress={sendMsg}>
-            <Text>Send</Text>
-        </TouchableOpacity>
-
-    </View>
-</KeyboardAvoidingView>*/

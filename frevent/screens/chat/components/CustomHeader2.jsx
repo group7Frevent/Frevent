@@ -23,11 +23,9 @@ const CustomHeader2 = ({ navigation }) => {
             'Authorization': `Basic ${userData?.user.token}`   // user authorization
         }
     }
-    console.log(API_URL + 'friends/getpendingrequests')
     const getFriendRequests = async () => {
         axios.get(API_URL + 'friends/getpendingrequests', config)
             .then(response => {
-                console.log(response.data)
                 setPendingRequestsArray(response.data)
                 setPendingRequests(response.data.length)
             }).catch(error => {
