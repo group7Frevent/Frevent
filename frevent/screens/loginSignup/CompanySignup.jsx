@@ -9,7 +9,7 @@ import { firebase } from '../../config'
 import { addUser } from '../../features/userSlice';
 
 
-const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
+const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -99,7 +99,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setLogged(true)
+            setCompanyLogged(true)
         }).catch((error) => {
             console.log(error)
         })

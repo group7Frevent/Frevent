@@ -93,16 +93,6 @@ const CompanyHomeScreen = () => {
               <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY")}, {data.Paikka}</Text>
               <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
             </View>
-            <View>
-            {console.log(includes(data?.id, data?.eventType)) ?
-                <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
-                  <Text>Attend</Text>
-              </TouchableOpacity> :
-              <TouchableOpacity style={styles.button} onPress={() => buttonPush(data?.id, data?.eventType)} color="#fff" key={index}>
-              <Text>testi</Text>
-          </TouchableOpacity>
-            }
-            </View>
           </View>
       </View>)
       

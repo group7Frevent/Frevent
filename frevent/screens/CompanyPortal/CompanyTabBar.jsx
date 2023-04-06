@@ -11,7 +11,7 @@ import CompanySettingsScreen from "./CompanySettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
-const CompanyTabNavigation = ({setLogged}) => {
+const CompanyTabNavigation = ({setCompanyLogged}) => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
         
@@ -49,7 +49,7 @@ const CompanyTabNavigation = ({setLogged}) => {
             <Tab.Screen name="Home" component={CompanyHomeScreen} />
             <Tab.Screen name="My Events" component={CompanyEventsScreen} />
             <Tab.Screen name="Settings" >
-                {props => <CompanySettingsScreen {...props} setLogged={setLogged}/>}
+                {props => <CompanySettingsScreen {...props} setCompanyLogged={setCompanyLogged}/>}
             </Tab.Screen>
         </Tab.Navigator>
 
