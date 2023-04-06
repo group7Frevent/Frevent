@@ -9,7 +9,7 @@ import CheckBox from 'expo-checkbox';
 
 
 
-const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
+const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [checkbox, setCheckbox] = useState(false)
@@ -51,20 +51,21 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
         };
 
 
-
+       
         const requestUrl = API_URL + 'auth/login/'
-
-
-
-
 
         axios.post(requestUrl, formBody, config).then((response) => {
             // Login succeed
             console.log(response.data)
+            console.log(accountType)
             // Tallennetaan tiedot reduxiin
             AsyncStorage.setItem("userData", JSON.stringify(response?.data));
             dispatch(addUser(response.data))
-            setLogged(true)
+            if (accountType === "user") {
+            setLogged(true)}
+            else {
+                setCompanyLogged(true)
+            }
         }).catch((error) => {
             console.log(error)
             if (error.response.data === "wrong username") {
@@ -74,6 +75,8 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 Alert.alert("Wrong password");
             }
         })
+        
+
 
 
     }
@@ -99,7 +102,9 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
                 onChangeText={setPassword}
                 value={password}
                 autoCapitalize='none'
+                
             />
+
             <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
             <CheckBox
            style={styles.checkbox} // style for the container

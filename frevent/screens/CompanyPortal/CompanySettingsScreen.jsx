@@ -10,7 +10,7 @@ import { addUser } from '../../features/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const SettingsScreen = ({setLogged}) => {
+const SettingsScreen = ({setCompanyLogged}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const userData = useSelector(selectUser)
@@ -55,9 +55,10 @@ const SettingsScreen = ({setLogged}) => {
 
   const handleLogout = async () => {
     //väliaikaisesti hakee käyttäjän id:n reduxista
-    await AsyncStorage.removeItem("userData");
+    await AsyncStorage.removeItem("companyData");
     dispatch(addUser(null))
-    setLogged(false)
+    console.log("Logged out")
+    setCompanyLogged(false)
   };
 
   return (
