@@ -13,11 +13,7 @@ const HomeScreen = () => {
 
     //const { user, setUser } = useContext(UserContext)                                          
     const [visibleEvents, setVisibleEvents] = useState([])
-    var [isAttending, setIsAttending] = useState(false)
-    const [pressed, setPressed] = useState(false)
-    const [buttonIndex, setButtonIndex] = useState(-1)
     const [attending, setAttending] = useState([])
-
 
 
     const userData = useSelector(selectUser)
@@ -40,6 +36,8 @@ const HomeScreen = () => {
     getData()
   }, [])
 
+
+
   const attendedEvents = async () => {
     try {
       var config = {
@@ -47,9 +45,7 @@ const HomeScreen = () => {
               'Authorization': `Basic ${userData?.user.token}`   // user authorization
           }
       }
-      console.log(API_URL + 'events/getAttending/')
       const response = await axios.get(API_URL + 'events/getAttending/', config)
-      console.log(response.data)
       setAttending(response.data)
 }
 
@@ -62,30 +58,55 @@ useEffect(() => {
   attendedEvents()
 }, [])
 
-  const kissa = [
-      {
-        id: 2,
-        eventType: "cus"
-      },
-      {
-        id: 3,
-        eventType: "cus"
-      },
-      {
-        id: 2,
-        eventType: "com"
-      }
-  ]
+  
 
-  const buttonAttend = (id, type, index) => {
-    setPressed(true)
 
-    //Tähän sql yhteys tietokanta osallistu
-    console.log(`ID:  ${id} :: ${type}`)
-  }
+const buttonAttend = (id, type, index) => {
+
+  const specs = {
+    IDEvent: id,
+    eventType: type
+  };
+  
+  const config = {
+    headers: {
+      'Authorization': `Basic ${userData?.user.token}`
+    }
+  };
+  
+  axios.post('http://192.168.0.66:3000/' + 'events/postAttendance/', specs, config)
+    .then(response => {
+      console.log('Event attendance registered succesfully')
+    })
+    .catch(error => {
+      console.log(error)
+    });
+
+  attendedEvents()
+  getData()
+}
 
   const buttonDontAttend = (id, type, index) => {
-    setPressed(false)
+
+    axios.delete('http://192.168.0.66:3000/events/deleteAttendance/', {
+      headers: {
+        'Authorization': `Basic ${userData?.user.token}`
+      },
+      data: {
+        IDEvent: id,
+        eventType: type
+      }
+    })
+      .then(response => {
+        console.log('Event attendance deleted successfully')
+      })
+      .catch(error => {
+        console.log(error)
+      });
+  
+    attendedEvents()
+    getData()
+    
 
     //Tähän sql yhteys tietokanta poista osallistuminen
     console.log(`ID:  ${id} :: ${type}`)
@@ -94,7 +115,7 @@ useEffect(() => {
 
   const includes = (id, type) => {
     const match = attending && attending.some((data, index) => {
-      if(id == data.id && type == data.eventType) {
+      if(id == data.IDEvent && type == data.eventType) {
         return true;
       } 
     });
@@ -122,7 +143,7 @@ useEffect(() => {
             </View>
             <View>
             {includes(data?.id, data?.eventType) ?
-                <TouchableOpacity style={[styles.btnNormal, pressed === true && styles.btnPressed]} onPress={() => {buttonAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
+                <TouchableOpacity style={styles.btnNormal} onPress={() => {buttonAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
                   <Text>Attend</Text>
               </TouchableOpacity> :
               <TouchableOpacity style={styles.btnPressed} onPress={() => {buttonDontAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
@@ -156,24 +177,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FAC213",
   },
-  /*button: {
-    alignItems: "center",
-    backgroundColor: "#F77E21",
-    color: "#fff",
-    padding: 8,
-    paddingRight: 20,
-    paddingLeft: 20,
-    marginTop: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#D61C4E" 
-  }, */
 
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: "#D61C4E",
-    
 
   },
   description: {

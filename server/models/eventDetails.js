@@ -11,6 +11,25 @@ const eventDetails = {
         , [userID, userID], callback);
     },
 
+    attendEvent: function (userID, IDEvent, eventType, callback) {
+        if (eventType === 'com'){
+        return db.query("INSERT INTO usersAndEvents (IDUser, IDEvent) VALUES (?,?)"
+        , [userID, IDEvent], callback);}
+        else {
+            return db.query("INSERT INTO userAndUserEvents (IDUser, IDEvent) VALUES (?,?)"
+        , [userID, IDEvent], callback);
+        }
+    },
+
+    deleteAttendance: function (userID, IDEvent, eventType, callback) {
+        if (eventType === 'com'){
+        return db.query("DELETE FROM usersAndEvents WHERE IDUser = ? AND IDEvent = ?"
+        , [userID, IDEvent], callback);}
+        else {
+            return db.query("DELETE FROM userAndUserEvents WHERE IDUser = ? AND IDEvent = ?"
+        , [userID, IDEvent], callback);
+        }
+    },
 };
 
 
