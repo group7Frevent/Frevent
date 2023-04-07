@@ -14,7 +14,6 @@ import HomeScreen from "./HomeScreen";
 import ChatStack from '../chat/ChatStack'
 
 import MyEventsStack from '../myEvents/MyEventsStack'
-import MyFriendsStack from '../myFriends/MyFriendsStack'
 import SettingsStack from './SettingsStack'
 
 
