@@ -74,7 +74,7 @@ const buttonAttend = (id, type, index) => {
     }
   };
   
-  axios.post('http://192.168.0.66:3000/' + 'events/postAttendance/', specs, config)
+  axios.post(API_URL + 'events/postAttendance/', specs, config)
     .then(response => {
       console.log('Event attendance registered succesfully')
     })
@@ -88,7 +88,7 @@ const buttonAttend = (id, type, index) => {
 
   const buttonDontAttend = (id, type, index) => {
 
-    axios.delete('http://192.168.0.66:3000/events/deleteAttendance/', {
+    axios.delete(API_URL + 'events/deleteAttendance/', {
       headers: {
         'Authorization': `Basic ${userData?.user.token}`
       },
