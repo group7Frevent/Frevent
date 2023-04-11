@@ -6,7 +6,7 @@ const friends = {
             [userID, userID], callback)
     },
     getFirendsAndData: (userID, callback) => {
-        return db.query("SELECT ID, username, fname, lname, birthdate ,picture, email FROM users u where u.id in (SELECT friendID FROM friends WHERE userID = ? AND status='confirmed' UNION SELECT userID FROM friends WHERE friendID = ?);",
+        return db.query("SELECT ID, username, fname, lname, birthdate ,picture, email FROM users u where u.id in (SELECT friendID FROM friends WHERE userID = ? AND status='confirmed' UNION SELECT userID FROM friends WHERE friendID = ? AND status='confirmed');",
             [userID, userID], callback)
     },
     getAvailableUsersAndData: (userID, callback) => {

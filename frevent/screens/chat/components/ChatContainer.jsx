@@ -21,7 +21,14 @@ const ChatContainer = ({ navigation }) => {
     const userData = useSelector(selectUser)
 
     const getConversations = () => {
-        axios.get(API_URL + "messages/friends/" + userData.user.ID).then((response) => {
+
+        const config = {
+            headers: {
+                'Authorization': `Basic ${userData?.user.token}`,
+            },
+        };
+
+        axios.get(API_URL + "messages/friends/", config).then((response) => {
 
             response.data.sort((a, b) => {
                 // Turn your strings into dates, and then subtract them
