@@ -51,7 +51,7 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
         };
 
 
-       
+
         const requestUrl = API_URL + 'auth/login/'
 
         axios.post(requestUrl, formBody, config).then((response) => {
@@ -62,7 +62,8 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
             AsyncStorage.setItem("userData", JSON.stringify(response?.data));
             dispatch(addUser(response.data))
             if (accountType === "user") {
-            setLogged(true)}
+                setLogged(true)
+            }
             else {
                 setCompanyLogged(true)
             }
@@ -75,7 +76,7 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
                 Alert.alert("Wrong password");
             }
         })
-        
+
 
 
 
@@ -102,17 +103,17 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
                 onChangeText={setPassword}
                 value={password}
                 autoCapitalize='none'
-                
+
             />
 
             <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
             <CheckBox
-           style={styles.checkbox} // style for the container
-           value={checkbox} // boolean value
-           onValueChange={()=>setCheckbox(!checkbox)} // toggle checkbox
-           color={checkbox ? 'green' : undefined} // custom color for unchecked state
+                style={styles.checkbox} // style for the container
+                value={checkbox} // boolean value
+                onValueChange={() => setCheckbox(!checkbox)} // toggle checkbox
+                color={checkbox ? 'green' : undefined} // custom color for unchecked state
             />
-            
+
             <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
                 <Text style={styles.logintext}>Log In</Text>
             </TouchableOpacity>

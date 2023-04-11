@@ -38,12 +38,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/auth', authRoute)
+
+
+app.use(authenticateToken);
 app.use('/messages', messageRoute)
 app.use('/events', eventsRouter)
 app.use('/settings', settingsRoute)
 app.use('/friends', friendsRoute)
 
-//app.use(authenticateToken);
 
 
 
@@ -51,8 +53,6 @@ function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
 
-    console.log("token = " + token);
-    console.log("Here")
     if (token == null) return res.sendStatus(401)
 
     jwt.verify(token, process.env.MY_TOKEN, (err, user) => {
