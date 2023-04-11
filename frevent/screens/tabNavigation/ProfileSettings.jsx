@@ -18,31 +18,31 @@ const ProfileSettings = () => {
       username: username,
       password: password,
       ID: userData.user.ID,
-  };
+    };
 
-  var formBody = [];
+    var formBody = [];
 
-  for (var property in details) {
+    for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
-  }
+    }
 
-  formBody = formBody.join("&");
+    formBody = formBody.join("&");
 
-  const config = {
+    const config = {
       headers: {
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-  };
+    };
 
     axios.put(API_URL + 'settings/update/user/', formBody, config)
       .then(response => {
         console.log(response.data);
       })
       .catch(error => {
-        console.log(error);  
+        console.log(error);
       });
   };
 

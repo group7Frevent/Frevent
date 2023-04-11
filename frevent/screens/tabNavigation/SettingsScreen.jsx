@@ -10,7 +10,7 @@ import { addUser } from '../../features/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as  ImagePicker from 'expo-image-picker'
 import { firebase } from '../../config'
-import {Linking, Platform} from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const SettingsScreen = ({ route, navigation }) => {
@@ -137,125 +137,125 @@ const SettingsScreen = ({ route, navigation }) => {
 
 
   return (
-<View>
-  <ScrollView style= {{backgroundColor:'#FEF9A7'}}>
-  <View style={{padding: 10,width: '100%', backgroundColor:'#FAC213', height:100}}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={{ backgroundColor: '#FEF9A7', flex: 1 }}>
+        <View style={{ padding: 10, width: '100%', backgroundColor: '#FAC213', height: 100 }}>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            style={styles.profileImg}
+            source={{
+              uri: userData.user.picture,
+            }} ></Image>
+          <Text style={{ fontSize: 25, fontWeight: 'bold', padding: 10 }}>{username}</Text>
+        </View>
+        <View style={{
+          alignSelf: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: '#FAC213',
+          width: '90%',
+          padding: 20,
+          paddingbottom: 22,
+          borderRadius: 10,
+          shadowOpacity: 80,
+          elevation: 15,
+          marginTop: 10,
+        }}>
+          <Image source={require('../../assets/user.png')}
+            style={{ width: 25, height: 25 }}></Image>
+          <TouchableOpacity onPress={pickImage} >
+            <Text style={styles.button}>Change profile picture</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{
+          alignSelf: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: '#FAC213',
+          width: '90%',
+          padding: 20,
+          paddingbottom: 22,
+          borderRadius: 10,
+          shadowOpacity: 100,
+          elevation: 15,
+          marginTop: 15,
+        }}>
+          <Image source={require('../../assets/profilesettings.png')}
+            style={{ width: 25, height: 25 }}></Image>
+          <TouchableOpacity onPress={() => navigation.navigate("profile")}>
+            <Text style={styles.button}>Profile settings</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{
+          alignSelf: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: '#FAC213',
+          width: '90%',
+          padding: 20,
+          paddingbottom: 22,
+          borderRadius: 10,
+          shadowOpacity: 80,
+          elevation: 5,
+          marginTop: 15,
+        }}>
+          <Image source={require('../../assets/notification.png')}
+            style={{ width: 25, height: 25 }}></Image>
+          <TouchableOpacity onPress={goToNotifSettings}>
+            <Text style={styles.button}>Notification settings</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{
+          alignSelf: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: '#FAC213',
+          width: '90%',
+          padding: 20,
+          paddingbottom: 22,
+          borderRadius: 10,
+          shadowOpacity: 80,
+          elevation: 15,
+          marginTop: 15,
+
+        }}>
+          <Image source={require('../../assets/settings.png')}
+            style={{ width: 25, height: 25 }}></Image>
+          <TouchableOpacity onPress={goToLocSettings}>
+            <Text style={styles.button}>Location settings</Text>
+          </TouchableOpacity>
+
+        </View>
+        <TouchableOpacity onPress={handleLogout}
+          style={{
+            alignSelf: 'center',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            backgroundColor: '#fff',
+            width: '90%',
+            padding: 20,
+            paddingbottom: 22,
+            borderRadius: 10,
+            shadowOpacity: 40,
+            elevation: 5,
+            marginTop: 20,
+            marginBottom: 15,
+            backgroundColor: '#000'
+          }}
+        >
+          <Text style={{ fontSize: 15, color: '#fff', fontWeight: 'bold', marginLeft: 10 }}>Logout</Text>
+
+        </TouchableOpacity>
+
+
+
+      </ScrollView>
     </View>
-    <View style={{alignItems:'center'}}>
-    <Image
-          style={styles.profileImg}
-          source={{
-            uri: userData.user.picture,
-          }} ></Image>
-          <Text style={{fontSize:25, fontWeight:'bold', padding:10}}>{username}</Text>
-    </View>
-    <View style= {{
-      alignSelf:'center',
-      flexDirection:'row',
-      justifyContent: 'center',
-      backgroundColor:'#FAC213',
-      width: '90%',
-      padding: 20,
-      paddingbottom: 22,
-      borderRadius: 10,
-      shadowOpacity: 80,
-      elevation: 15,
-      marginTop: 10,
-    }}>
-    <Image source={require('../../assets/user.png')}
-    style={{ width:25, height:25}}></Image>
-    <TouchableOpacity onPress={pickImage} >
-    <Text style={styles.button}>Change profile picture</Text>
-      </TouchableOpacity>
-      </View>
 
-      <View style= {{
-      alignSelf:'center',
-      flexDirection:'row',
-      justifyContent: 'center',
-      backgroundColor:'#FAC213',
-      width: '90%',
-      padding: 20,
-      paddingbottom: 22,
-      borderRadius: 10,
-      shadowOpacity: 100,
-      elevation: 15,
-      marginTop: 15,
-    }}>
-    <Image source={require('../../assets/profilesettings.png')}
-    style={{ width:25, height:25}}></Image>
-    <TouchableOpacity onPress={()=>navigation.navigate("profile")}>
-        <Text style={styles.button}>Profile settings</Text>
-      </TouchableOpacity>
-      </View>
-
-      <View style= {{
-      alignSelf:'center',
-      flexDirection:'row',
-      justifyContent: 'center',
-      backgroundColor:'#FAC213',
-      width: '90%',
-      padding: 20,
-      paddingbottom: 22,
-      borderRadius: 10,
-      shadowOpacity: 80,
-      elevation: 15,
-      marginTop:15,
-    }}>
-    <Image source={require('../../assets/notification.png')}
-    style={{ width:25, height:25}}></Image>
-     <TouchableOpacity onPress={goToNotifSettings}>
-        <Text style={styles.button}>Notification settings</Text>
-      </TouchableOpacity>
-      </View>
-
-      <View style= {{
-      alignSelf:'center',
-      flexDirection:'row',
-      justifyContent: 'center',
-      backgroundColor:'#FAC213',
-      width: '90%',
-      padding: 20,
-      paddingbottom: 22,
-      borderRadius: 10,
-      shadowOpacity: 80,
-      elevation: 15,
-      marginTop:15,
-      
-    }}>
-    <Image source={require('../../assets/settings.png')}
-    style={{ width:25, height:25}}></Image>
-     <TouchableOpacity onPress={goToLocSettings}>
-        <Text style={styles.button}>Location settings</Text>
-      </TouchableOpacity>
-      </View>
-
-      <View style= {{
-      alignSelf:'center',
-      flexDirection:'row',
-      justifyContent: 'center',
-      backgroundColor:'#fff',
-      width: '90%',
-      padding: 20,
-      paddingbottom: 22,
-      borderRadius: 10,
-      shadowOpacity: 80,
-      elevation: 15,
-      marginTop: 20,
-      marginBottom: 15,
-      backgroundColor: '#000'
-    }}>
-     <TouchableOpacity onPress={handleLogout}>
-        <Text style={{fontSize:15, color: '#fff', fontWeight: 'bold', marginLeft: 10}}>Logout</Text>
-      </TouchableOpacity>
-
-      </View>
-
-    
-
-  </ScrollView>
-</View>
-   
   );
 };
 
@@ -268,10 +268,10 @@ const styles = StyleSheet.create({
     marginTop: -70,
   },
   button: {
-    fontSize:16,
+    fontSize: 16,
     color: '#000',
     marginLeft: 10,
-    
+
   }
 
 });
