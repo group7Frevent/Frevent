@@ -33,15 +33,15 @@ router.get('/getevents/', async (req, res) => {
                         }
 
                     })
-                }
+                } 
 
 
 
                 for (let i = 0; i < tempArray.length; i++) {
                     await getGoogleLocations(tempArray[i].Paikka, i)
                 }
-
-                res.send(tempArray)
+                    
+                res.send(dbresult) 
             }
             else {
                 res.send(dbError)
