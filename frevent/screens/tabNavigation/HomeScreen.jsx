@@ -6,26 +6,27 @@ import axios from 'axios';
 import dayjs from "dayjs";
 import { API_URL, API_URL2 } from '@env'
 import Ionic from 'react-native-vector-icons/Ionicons'
+import openMap from 'react-native-open-maps';
 
 
 const HomeScreen = () => {
 
 
-    //const { user, setUser } = useContext(UserContext)                                          
-    const [visibleEvents, setVisibleEvents] = useState([])
-    const [attending, setAttending] = useState([])
+  //const { user, setUser } = useContext(UserContext)                                          
+  const [visibleEvents, setVisibleEvents] = useState([])
+  const [attending, setAttending] = useState([])
 
 
-    const userData = useSelector(selectUser)
-   const getData = async () => {
-        try {
-            var config = {
-                headers: {
-                    'Authorization': `Basic ${userData?.user.token}`   // user authorization
-                }
-            }
-            const response = await axios.get(API_URL + 'events/getevents/', config)
-            setVisibleEvents(response.data)
+  const userData = useSelector(selectUser)
+  const getData = async () => {
+    try {
+      var config = {
+        headers: {
+          'Authorization': `Basic ${userData?.user.token}`   // user authorization
+        }
+      }
+      const response = await axios.get(API_URL + 'events/getevents/', config)
+      setVisibleEvents(response.data)
     }
     catch (error) {
       console.log(error)
@@ -41,50 +42,50 @@ const HomeScreen = () => {
   const attendedEvents = async () => {
     try {
       var config = {
-          headers: {
-              'Authorization': `Basic ${userData?.user.token}`   // user authorization
-          }
+        headers: {
+          'Authorization': `Basic ${userData?.user.token}`   // user authorization
+        }
       }
       const response = await axios.get(API_URL + 'events/getAttending/', config)
       setAttending(response.data)
-}
-
-catch (error) {
-console.log(error)
-}
-}
-
-useEffect(() => {
-  attendedEvents()
-}, [])
-
-  
-
-
-const buttonAttend = (id, type, index) => {
-
-  const specs = {
-    IDEvent: id,
-    eventType: type
-  };
-  
-  const config = {
-    headers: {
-      'Authorization': `Basic ${userData?.user.token}`
     }
-  };
-  
-  axios.post(API_URL + 'events/postAttendance/', specs, config)
-    .then(response => {
-      console.log('Event attendance registered succesfully')
-    })
-    .catch(error => {
-      console.log(error)
-    });
 
-  attendedEvents()
-  getData()
-}
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    attendedEvents()
+  }, [])
+
+
+
+
+  const buttonAttend = (id, type, index) => {
+
+    const specs = {
+      IDEvent: id,
+      eventType: type
+    };
+
+    const config = {
+      headers: {
+        'Authorization': `Basic ${userData?.user.token}`
+      }
+    };
+
+    axios.post(API_URL + 'events/postAttendance/', specs, config)
+      .then(response => {
+        console.log('Event attendance registered succesfully')
+      })
+      .catch(error => {
+        console.log(error)
+      });
+
+    attendedEvents()
+    getData()
+  }
 
   const buttonDontAttend = (id, type, index) => {
 
@@ -103,10 +104,10 @@ const buttonAttend = (id, type, index) => {
       .catch(error => {
         console.log(error)
       });
-  
+
     attendedEvents()
     getData()
-    
+
 
     //Tähän sql yhteys tietokanta poista osallistuminen
     console.log(`ID:  ${id} :: ${type}`)
@@ -115,48 +116,51 @@ const buttonAttend = (id, type, index) => {
 
   const includes = (id, type) => {
     const match = attending && attending.some((data, index) => {
-      if(id == data.IDEvent && type == data.eventType) {
+      if (id == data.IDEvent && type == data.eventType) {
         return true;
-      } 
+      }
     });
     return !match;
   };
-  
+
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-        <Text style = {styles.title} >Welcome!</Text>
-          <Text style = {styles.title} >Here are your upcoming events</Text>
+          <Text style={styles.title} >Welcome!</Text>
+          <Text style={styles.title} >Here are your upcoming events</Text>
         </View>
-      
-      {visibleEvents.map((data, index) => {
-        return(
-      <View key = {index} style = {styles.event}>
-        <Text style = {styles.title} >{data.Tapahtuma}</Text>
-        <Text style = {styles.description}>{data.Kuvaus}</Text>
-          <View style = {styles.lowerPart}>
-            <View style = {{flex:1,}}>
-              <Text style = {styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY HH.mm")}, {data.Paikka}</Text>
-              <Text style = {styles.attendees}>{data.Osallistujia} attending</Text>
-            </View>
-            <View>
-            {includes(data?.id, data?.eventType) ?
-                <TouchableOpacity style={styles.btnNormal} onPress={() => {buttonAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
-                  <Text>Attend</Text>
-              </TouchableOpacity> :
-              <TouchableOpacity style={styles.btnPressed} onPress={() => {buttonDontAttend(data?.id, data?.eventType, index)}} color="#fff" key={index}>
-              <Text><Ionic name={'checkmark'} size={15} color={'green'} /> Attending</Text>
-          </TouchableOpacity>
-            }
-            </View>
-          </View>
-      </View>)
-      
-      })}
-      
-    </ScrollView>
+
+        {visibleEvents.map((data, index) => {
+          return (
+            <View key={index} style={styles.event}>
+              <Text style={styles.title} >{data.Tapahtuma}</Text>
+              <Text style={styles.description}>{data.Kuvaus}</Text>
+              <View style={styles.lowerPart}>
+                <View style={{ flex: 1, }}>
+                  <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY HH.mm")}, </Text>
+                  <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng })}>
+                    <Text>{data.Paikka}</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.attendees}>{data.Osallistujia} attending</Text>
+                </View>
+                <View>
+                  {includes(data?.id, data?.eventType) ?
+                    <TouchableOpacity style={styles.btnNormal} onPress={() => { buttonAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
+                      <Text>Attend</Text>
+                    </TouchableOpacity> :
+                    <TouchableOpacity style={styles.btnPressed} onPress={() => { buttonDontAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
+                      <Text><Ionic name={'checkmark'} size={15} color={'green'} /> Attending</Text>
+                    </TouchableOpacity>
+                  }
+                </View>
+              </View>
+            </View>)
+
+        })}
+
+      </ScrollView>
     </View>
   )
 }
@@ -211,14 +215,14 @@ const styles = StyleSheet.create({
   bottomtitle: {
     padding: 10
   },
-  scrollView:{
+  scrollView: {
     flex: 1,
     alignSelf: 'stretch',
   },
   header: {
     flex: 1,
     justifyContent: "center",
-    alignItems:"center"
+    alignItems: "center"
   },
 
   btnNormal: {

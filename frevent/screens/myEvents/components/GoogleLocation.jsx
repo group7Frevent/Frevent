@@ -16,7 +16,7 @@ const GoogleLocation = ({ width, setLocation }) => {
                     placeholder='Search'
                     listViewDisplayed={false}
                     onPress={(data, details = null) => {
-                        //console.log(data, details)
+                        console.log(data, details)
                         setLocation(data, details);
                     }}
                     onFail={error => console.error(error)}
