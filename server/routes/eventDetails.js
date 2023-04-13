@@ -26,7 +26,7 @@ router.get('/getevents/', async (req, res) => {
                             const data = await response.json()
                             tempArray[index].Paikka = data.result.formatted_address
                             tempArray[index].googleLocation = { lat: data.result.geometry.location.lat, lng: data.result.geometry.location.lng, url: data.result.url }
-                            console.log(data)
+                            //console.log(data)
                             resolve(data)
                         } catch (error) {
                             reject(error)
@@ -48,7 +48,7 @@ router.get('/getevents/', async (req, res) => {
             }
         })
     } catch (error) {
-        errors.errorCode(error)
+        errors.errorCode(error, res)
     }
 
 })
@@ -78,7 +78,7 @@ router.get('/getAttending/', async (req, res) => {
             }
         })
     } catch (error) {
-        errors.errorCode(error)
+        errors.errorCode(error, res)
     }
 
 })
@@ -175,11 +175,30 @@ router.post('/postUserEvent/', async (req, res) => {
                     }
                 })
         } catch (error) {
-            errors.errorCode(error)
+            errors.errorCode(error, res)
         }
     }
     else {
         errors.errorCode("wrong params", res)
+    }
+})
+
+router.get('/myevents/', async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        const encodedToken = parseJwt(token)
+
+        eventDetails.getMyEvents(encodedToken.userData.ID, (dbError, dbresult) => {
+            if (dbresult) {
+                res.send(dbresult)
+            }
+            else {
+                res.send(dbError)
+            }
+        })
+    } catch (error) {
+        errors.errorCode(error, res)
     }
 })
 

@@ -39,6 +39,10 @@ const eventDetails = {
     inviteUserToEvent: function (IDEvent, IDUser, callback) {
         return db.query("INSERT INTO invitations (IDEvent, IDUser) VALUES (?,?)"
             , [IDEvent, IDUser], callback);
+    },
+    getMyEvents: function (userID, callback) {
+        return db.query("SELECT * FROM userEvents WHERE ownerID = ?"
+            , [userID], callback);
     }
 };
 
