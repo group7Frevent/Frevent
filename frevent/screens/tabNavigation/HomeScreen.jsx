@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, TouchableHighlight } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -15,6 +15,7 @@ const HomeScreen = () => {
   //const { user, setUser } = useContext(UserContext)                                          
   const [visibleEvents, setVisibleEvents] = useState([])
   const [attending, setAttending] = useState([])
+  const [attendSwitch, setAttendSwitch] = useState(2)
 
 
   const userData = useSelector(selectUser)
@@ -35,7 +36,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+
+    attendedEvents()
+
+  }, [attendSwitch])
 
 
 
@@ -57,7 +61,8 @@ const HomeScreen = () => {
 
   useEffect(() => {
     attendedEvents()
-  }, [])
+
+  }, [attendSwitch])
 
 
 
@@ -83,8 +88,7 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-    attendedEvents()
-    getData()
+      setAttendSwitch((Math.random()*100)+1)
   }
 
   const buttonDontAttend = (id, type, index) => {
@@ -105,12 +109,7 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-    attendedEvents()
-    getData()
-
-
-    //Tähän sql yhteys tietokanta poista osallistuminen
-    console.log(`ID:  ${id} :: ${type}`)
+      setAttendSwitch((Math.random()*100)+1)
   }
 
 
@@ -135,17 +134,26 @@ const HomeScreen = () => {
         {visibleEvents.map((data, index) => {
           return (
             <View key={index} style={styles.event}>
-              <Text style={styles.title} >{data.Tapahtuma}</Text>
+              <View style = {styles.upperPart}>
+                <View style={{flex:1,}}>
+              <Text style={styles.title}>{data.Tapahtuma}</Text>
               <Text style={styles.description}>{data.Kuvaus}</Text>
+              </View>
+              <View style={styles.creatorContainer}>
+                <Text style={styles.startTime}>{data.Organizer}</Text>
+                <Image style={styles.creatorPic} source={{uri: data.ProfilePic,}} >
+                </Image>
+              </View>
+              </View>
               <View style={styles.lowerPart}>
                 <View style={{ flex: 1, }}>
-                  <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY HH.mm")}, </Text>
+                  <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY, H:mm")}, </Text>
                   <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng })}>
-                    <Text>{data.Paikka}</Text>
+                    <Text>{data.Paikka} <Ionic name={'locate'} size={15} color={'black'}/></Text>
                   </TouchableOpacity>
                   <Text style={styles.attendees}>{data.Osallistujia} attending</Text>
                 </View>
-                <View>
+                <View style={styles.buttonContainer}>
                   {includes(data?.id, data?.eventType) ?
                     <TouchableOpacity style={styles.btnNormal} onPress={() => { buttonAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
                       <Text>Attend</Text>
@@ -201,15 +209,36 @@ const styles = StyleSheet.create({
 
   },
   lowerPart: {
-    flexDirection: "row"
+    flexDirection: "row",
+    //backgroundColor: 'red',
 
   },
+  upperPart: {
+    flexDirection: "row",
+    //backgroundColor: 'yellow',
+
+  },
+  creatorContainer:{
+   // backgroundColor: 'green',
+    justifyContent: 'center',
+    maxWidth: '30%',
+    paddingLeft: 5,
+    textAlign: 'left',
+    alignItems: 'center',
+  },
+  
+  buttonContainer: {
+   // backgroundColor: 'blue',
+    flexDirection: 'column-reverse',
+    paddingBottom: 5,
+    paddingLeft: 5,
+    width: '33%',
+  },
+
   attendees: {
     fontSize: 13,
     color: "#D61C4E",
     marginTop: 5,
-
-
   },
 
   bottomtitle: {
@@ -230,8 +259,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F77E21",
     color: "#fff",
     padding: 8,
-    paddingRight: 20,
-    paddingLeft: 20,
+    paddingRight: 10,
+    paddingLeft: 10,
     marginTop: 5,
     borderRadius: 10,
     borderWidth: 1,
@@ -244,13 +273,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#15bf34',
     color: "#fff",
     padding: 8,
-    paddingRight: 20,
-    paddingLeft: 20,
+    paddingRight: 10,
+    paddingLeft: 10,
     marginTop: 5,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "green",
     activeOpacity: 1,
+  },
+
+  creatorPic: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
   },
 });
 
