@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CompanyEventsScreen from "./CompanyEventsScreen";
 import CompanyHomeScreen from "./CompanyHomeScreen";
-import CompanySettingsScreen from "./CompanySettingsScreen";
+import CompanySettingsStack from "./CompanySettingsStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +49,7 @@ const CompanyTabNavigation = ({setCompanyLogged}) => {
             <Tab.Screen name="Home" component={CompanyHomeScreen} />
             <Tab.Screen name="My Events" component={CompanyEventsScreen} />
             <Tab.Screen name="Settings" >
-                {props => <CompanySettingsScreen {...props} setCompanyLogged={setCompanyLogged}/>}
+                {props => <CompanySettingsStack {...props} setCompanyLogged={setCompanyLogged}/>}
             </Tab.Screen>
         </Tab.Navigator>
 
