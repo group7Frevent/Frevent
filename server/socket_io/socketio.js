@@ -1,6 +1,6 @@
 var clients = [];
 var messageController = require('../models/messages')
-
+var moment = require('moment-timezone');
 
 exports = module.exports = function (io) {
     // Create connection to Socket.io
@@ -17,7 +17,8 @@ exports = module.exports = function (io) {
         });
 
         socket.on("send_message", (data) => {
-            console.log(data)
+            data.timestamp = moment().tz("Europe/Helsinki").format();
+
 
             messageController.addMessage(data, (dberr, dbres) => {
                 if (dberr) {

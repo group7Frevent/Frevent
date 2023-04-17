@@ -41,8 +41,16 @@ const eventDetails = {
             , [IDEvent, IDUser], callback);
     },
     getMyEvents: function (userID, callback) {
-        return db.query("SELECT * FROM userEvents WHERE ownerID = ?"
+        return db.query("SELECT IDUserEvents, eventname ,description ,ownerID ,location, date , eventType, (SELECT COUNT(IDuserAndUserEvents) FROM userAndUserEvents WHERE IDEvent=IDUserEvents) as attendees FROM userEvents WHERE ownerID = ?"
             , [userID], callback);
+    },
+    getAttendees: function (IDEvent, callback) {
+        return db.query("SELECT users.ID, users.username, users.fname, users.lname, users.birthdate, users.picture, users.email FROM users INNER JOIN userAndUserEvents ON userAndUserEvents.IDUser=users.ID WHERE IDEvent=?;"
+            , [IDEvent], callback);
+    },
+    deleteEvent: function (IDEvent, ownerID, callback) {
+        return db.query("CALL deleteEvent(?, ?);"
+            , [IDEvent, ownerID], callback);
     }
 };
 

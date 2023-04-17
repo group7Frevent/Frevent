@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CheckBox from 'expo-checkbox';
 
-const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex }) => {
+const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex, showParticipants }) => {
 
     // Init date var
     const [date, setDate] = useState(Date)
@@ -20,7 +20,7 @@ const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex })
                         uri: data?.picture,
                     }} />
                 <View style={styles.texts}>
-                    <View style={!events ? styles.topRow : styles.textIfEvents}>
+                    <View style={!events && !showParticipants ? styles.topRow : styles.textIfEvents}>
                         <Text style={styles.sender}>{data?.fname} {data?.lname}</Text>
                         {unread > 0 &&
                             <View style={styles.numberBox}>
@@ -28,7 +28,7 @@ const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex })
                             </View>
                         }
                     </View>
-                    {!events &&
+                    {!events && !showParticipants &&
                         <View style={styles.msgAndClock}>
                             <Text>{data?.message ? data?.message : "Start chatting!"}</Text>
                             <Text style={unread > 0 ? { color: "#f77f1b", fontWeight: 700 } : {}}>{date !== "NaN seconds ago" && date}</Text>
@@ -37,6 +37,7 @@ const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex })
                 </View>
                 {events &&
                     <View style={styles.checkboxContainer}>
+                        <Text>{events}</Text>
                         <CheckBox
                             style={styles.checkbox} // style for the container
                             value={checkbox} // boolean value

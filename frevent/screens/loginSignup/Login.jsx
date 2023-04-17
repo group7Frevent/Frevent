@@ -68,7 +68,7 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
                 setCompanyLogged(true)
             }
         }).catch((error) => {
-            console.log(error)
+            console.log(error.response.data)
             if (error.response.data === "wrong username") {
                 Alert.alert("Username not found");
             }
