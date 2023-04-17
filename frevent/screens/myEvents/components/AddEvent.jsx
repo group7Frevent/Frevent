@@ -106,9 +106,8 @@ const AddEvent = ({ navigation, route }) => {
         };
 
         axios.post(API_URL + 'events/postUserEvent', formBody, config).then((response) => {
-            console.log(response.data)
             if (response.data?.affectedRows > 0) {
-                console.log("success")
+                navigation.goBack()
             }
 
         }).catch((error) => {

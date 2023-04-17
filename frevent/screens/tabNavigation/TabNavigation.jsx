@@ -61,7 +61,7 @@ const TabNavigation = ({ setLogged }) => {
         >
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen options={{ headerShown: false }} name="My Events" component={MyEventsStack} />
-            <Tab.Screen name="Chat" component={ChatStack} />
+            <Tab.Screen name="Chat" options={{ headerShown: false }} component={ChatStack} />
             <Tab.Screen name="Settings" >
                 {props => <SettingsStack {...props} setLogged={setLogged} />}
             </Tab.Screen>
