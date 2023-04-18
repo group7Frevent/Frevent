@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { selectUser } from '../../../features/userSlice'
 import { API_URL } from '@env'
 import axios from 'axios'
-import openMap from 'react-native-open-maps';
+import createOpenLink from 'react-native-open-maps';
 import dayjs from "dayjs";
 import { useIsFocused } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -16,6 +16,7 @@ const AddEventshome = ({ route, navigation }) => {
     const [eventData, setEventData] = useState([])
     const userData = useSelector(selectUser)
     const isFocused = useIsFocused();
+    const [spinner, setSpinner] = useState(false)
     ////////////////////////////////////////////////////////
 
     const getEvents = async () => {
@@ -27,12 +28,14 @@ const AddEventshome = ({ route, navigation }) => {
 
         axios.get(API_URL + "events/myevents", config).then((response) => {
             setEventData(response.data)
+            setSpinner(false)
         }).catch((error) => {
             console.log(error)
         })
     }
 
     useEffect(() => {
+        setSpinner(true)
         getEvents()
     }, [isFocused])
 
@@ -91,7 +94,7 @@ const AddEventshome = ({ route, navigation }) => {
     return (
         <View>
             <Spinner
-                visible={eventData.length < 1}
+                visible={spinner}
                 textContent={'Loading...'}
                 textStyle={styles.spinnerTextStyle}
             />
@@ -103,6 +106,7 @@ const AddEventshome = ({ route, navigation }) => {
             <ScrollView>
 
                 {eventData.map((data, index) => {
+                    console.log(data)
                     return (
                         <View key={index} style={styles.event}>
                             <View style={{ flexDirection: "row" }}>
@@ -117,7 +121,7 @@ const AddEventshome = ({ route, navigation }) => {
                                     <View style={styles.lowerPart}>
                                         <View>
                                             <Text style={styles.startTime}>{dayjs(data.date).format("D MMM YYYY, H:mm")}, </Text>
-                                            <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng })}>
+                                            <TouchableOpacity onPress={() => createOpenLink({ query: data.location, provider: "google" })}>
                                                 <Text>{data.location} <Ionic name={'locate'} size={15} color={'black'} /></Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() => navigation.navigate("Show participants", { eventID: data.IDUserEvents })}>

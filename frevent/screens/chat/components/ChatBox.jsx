@@ -64,7 +64,7 @@ function timeSince(date) {
 
     const date2 = new Date();
 
-    const newDate = addHours(date2, 2);
+    const newDate = addHours(date2, 3);
 
     var seconds = Math.floor((newDate - date) / 1000);
     var interval = seconds / 31536000;

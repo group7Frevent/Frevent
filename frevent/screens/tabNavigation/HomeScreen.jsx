@@ -132,6 +132,7 @@ const HomeScreen = () => {
         </View>
 
         {visibleEvents.map((data, index) => {
+          console.log(data.ProfilePic)
           return (
             <View key={index} style={styles.event}>
               <View style={styles.upperPart}>
@@ -141,8 +142,10 @@ const HomeScreen = () => {
                 </View>
                 <View style={styles.creatorContainer}>
                   <Text style={styles.startTime}>{data.Organizer}</Text>
-                  <Image style={styles.creatorPic} source={{ uri: data.ProfilePic, }} >
-                  </Image>
+                  {
+                    data.ProfilePic &&
+                    <Image style={styles.creatorPic} source={{ uri: data.ProfilePic }} />
+                  }
                 </View>
               </View>
               <View style={styles.lowerPart}>
