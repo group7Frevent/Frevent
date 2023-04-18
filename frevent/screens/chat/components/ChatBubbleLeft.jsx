@@ -38,6 +38,7 @@ const ChatBubbleLeft = ({ text, timestamp }) => {
 
 function timeSince(date) {
 
+
     function addHours(date, hours) {
         date.setHours(date.getHours() + hours);
 
@@ -46,11 +47,12 @@ function timeSince(date) {
 
     const date2 = new Date();
 
-    const newDate = addHours(date2, 2);
+    const newDate = addHours(date2, 3);
 
     var seconds = Math.floor((newDate - date) / 1000);
     var interval = seconds / 31536000;
 
+    //console.log(`CahtBubbleLeft.js: date: ${date}`)
     if (interval > 50) {
         return "NaN seconds ago";
     }

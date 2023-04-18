@@ -68,8 +68,15 @@ const styles = StyleSheet.create({
         width: '90%',
         padding: 20,
         borderRadius: 10,
-        shadowOpacity: 100,
-        elevation: 15,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
         marginTop: 15,
         position: 'absolute',
         bottom: 10,
