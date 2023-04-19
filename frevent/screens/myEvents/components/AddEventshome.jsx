@@ -129,6 +129,11 @@ const AddEventshome = ({ route, navigation }) => {
 
     return (
         <>
+            <Spinner
+                visible={spinner}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
 
             {!userData.user.IDcompany &&
                 <TouchableOpacity style={styles.addEvent} onPress={() => navigation.navigate("Add Event")}>

@@ -7,9 +7,6 @@ import { selectUser } from '../../features/userSlice'
 import Ionic from 'react-native-vector-icons/Ionicons'
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import EventsScreen from "./EventsScreen";
-import FriendsScreen from "./FriendsScreen";
-import SettingsScreen from "./SettingsScreen";
 import HomeScreen from "./HomeScreen";
 import ChatStack from '../chat/ChatStack'
 
@@ -20,7 +17,7 @@ import SettingsStack from './SettingsStack'
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = ({ setLogged }) => {
+const TabNavigation = () => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 
@@ -59,12 +56,10 @@ const TabNavigation = ({ setLogged }) => {
 
             }
         >
-            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
             <Tab.Screen options={{ headerShown: false }} name="My Events" component={MyEventsStack} />
             <Tab.Screen name="Chat" options={{ headerShown: false }} component={ChatStack} />
-            <Tab.Screen name="Settings" >
-                {props => <SettingsStack {...props} setLogged={setLogged} />}
-            </Tab.Screen>
+            <Tab.Screen name="Settings" component={SettingsStack} />
         </Tab.Navigator>
 
     )
