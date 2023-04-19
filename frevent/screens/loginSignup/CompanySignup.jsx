@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { firebase } from '../../config'
 import { addUser } from '../../features/userSlice';
 
 
-const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) => {
+const CompanySignup = ({ setScreen }) => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -19,10 +19,10 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
     const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
-      image && uploadImage()
-    
+        image && uploadImage()
+
     }, [image])
-    
+
 
     const pickImage = async () => {
         // No permission request is neccessary for launching the image library
@@ -49,7 +49,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
         ref.put(blob).then(() => {
             ref.getDownloadURL().then((url) => {
                 setPicture(url); // <- This is the download URL of the image
-                setUploading(false); 
+                setUploading(false);
             }).catch((error) => {
                 console.log(error);
                 setUploading(false);
@@ -99,7 +99,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setCompanyLogged(true)
+            setScreen("companyHome")
         }).catch((error) => {
             console.log(error)
         })
@@ -111,7 +111,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
 
         <View style={styles.container}>
             <Text style={styles.title}>Create an account</Text>
-            
+
             <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -133,6 +133,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
             />
             <TextInput
                 style={styles.input}
+                type="email"
                 placeholder="Email"
                 placeholderTextColor="#465881"
                 onChangeText={setEmail}
@@ -149,21 +150,18 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setCompanyLogged}) 
                 maxLength={20}
             />
             <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
-                    <Text style={styles.uploadText}> Select profile picture</Text>
-                </TouchableOpacity>
+                <Text style={styles.uploadText}> Select profile picture</Text>
+            </TouchableOpacity>
 
-                <View style={styles.imageContainer}>
+            <View style={styles.imageContainer}>
                 {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
 
-                </View>
+            </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
                 <Text style={styles.buttontextsign}>Sign up</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-                setShowCompanySignup(false)
-                setShowLogin(true)
-            }}
+            <TouchableOpacity onPress={() => setScreen("login")}
                 color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: 'stretch',
         flex: 1,
-        paddingTop:40,
+        paddingTop: 40,
         paddingLeft: 60,
         paddingRight: 60,
         backgroundColor: '#FEF9A7',
@@ -229,12 +227,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold'
     },
-    uploadedText:{
+    uploadedText: {
         color: '#465881',
         fontSize: 17,
         marginRight: 25,
     },
-    buttontextsign:{
+    buttontextsign: {
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold'

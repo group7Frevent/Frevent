@@ -13,7 +13,7 @@ import AddEvent from '../myEvents/components/AddEvent'
 
 const Tab = createBottomTabNavigator();
 
-const CompanyTabNavigation = ({ setCompanyLogged }) => {
+const CompanyTabNavigation = () => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 
@@ -48,9 +48,8 @@ const CompanyTabNavigation = ({ setCompanyLogged }) => {
         >
             <Tab.Screen name="My Events" options={{ headerShown: false }} component={MyEventsStack} />
             <Tab.Screen name="Add event" component={AddEvent} />
-            <Tab.Screen name="Settings" >
-                {props => <CompanySettingsStack {...props} setCompanyLogged={setCompanyLogged} />}
-            </Tab.Screen>
+            <Tab.Screen name="Settings" component={CompanySettingsStack} />
+
         </Tab.Navigator>
 
     )

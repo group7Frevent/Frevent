@@ -21,7 +21,6 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   const userData = useSelector(selectUser)
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
-  const { setCompanyLogged } = route.params;
 
   const goToNotifSettings = () => {
     if (Platform.OS === 'ios') {
@@ -124,8 +123,7 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   };
 
   const handleLogout = async () => {
-    setCompanyLogged(false)
-    await AsyncStorage.removeItem("companyData");
+    await AsyncStorage.removeItem("userData");
     dispatch(addUser({}))
   };
 
