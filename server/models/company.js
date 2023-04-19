@@ -12,6 +12,10 @@ const company = {
         return db.query("UPDATE company SET username=?, password=? where IDcompany=?",
             [body.username, hash, body.IDcompany], callback)
     },
+    updateCompanyPicture: function (ID, picture, callback) {
+        return db.query("UPDATE company SET picture=? where IDcompany=?",
+            [picture, ID], callback)
+    }
 };
 
 module.exports = company;
