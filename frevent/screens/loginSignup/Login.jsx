@@ -53,7 +53,6 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
 
 
         const requestUrl = API_URL + 'auth/login/'
-
         axios.post(requestUrl, formBody, config).then((response) => {
             // Login succeed
             console.log(response.data)
