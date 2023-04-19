@@ -21,11 +21,32 @@ const ShowParticipants = ({ route, navigation }) => {
 
         axios.get(API_URL + "events/getAttendees/" + route.params.eventID, config).then((response) => {
             setParticipants(response.data)
-        }).catch((error) => { })
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
+
+    const getParticipantsCompany = async () => {
+        const config = {
+            headers: {
+                'Authorization': `Basic ${userData?.user.token}`,
+            }
+        }
+        axios.get(API_URL + "events/getAttendees/company/" + route.params.eventID, config).then((response) => {
+            setParticipants(response.data)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+
     useEffect(() => {
-        getParticipants()
+        if (userData.user.IDcompany) {
+            getParticipantsCompany()
+        } else {
+            getParticipants()
+        }
     }, [])
     return (
         <View>

@@ -61,7 +61,6 @@ const CompanySettingsScreen = ({ route, navigation }) => {
 
 
     const source = { uri: result.assets[0].uri };
-    console.log(source);
     setImage(source);
 
   };
@@ -78,24 +77,20 @@ const CompanySettingsScreen = ({ route, navigation }) => {
         changePicture(url);
         setUploading(false);
       }).catch((error) => {
-        console.log(error);
         setUploading(false);
       });
     }).catch((error) => {
-      console.log(error);
       setUploading(false);
     });
   };
 
 
   const changePicture = (pic) => {
-    console.log(pic)
     var details = {
       picture: pic,
     };
     var formBody = [];
 
-    console.log(details)
     for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
@@ -103,6 +98,9 @@ const CompanySettingsScreen = ({ route, navigation }) => {
     }
 
     formBody = formBody.join("&");
+
+
+
 
     const config = {
       headers: {
@@ -125,9 +123,9 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   };
 
   const handleLogout = async () => {
+    setCompanyLogged(false)
     await AsyncStorage.removeItem("companyData");
     dispatch(addUser({}))
-    setCompanyLogged(false)
   };
 
   //get current username
