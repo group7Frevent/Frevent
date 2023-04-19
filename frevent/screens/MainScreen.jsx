@@ -19,22 +19,30 @@ const MainScreen = () => {
 
     // Valmistelee redux
     const dispatch = useDispatch();
-    
+
     const getLoggedStatus = async () => {
 
         const userData = await AsyncStorage.getItem("userData")
         const parsedJsonData = JSON.parse(userData)
-        if(parsedJsonData?.token) {
+        if (parsedJsonData?.token) {
             console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
-            setLogged(true)
+            if (parsedJsonData.IDcompany) {
+                setCompanyLogged(true)
+                setLogged(true)
+            } else {
+                setLogged(true)
+
+            }
         }
     }
+
+
     const getCompanyLoggedStatus = async () => {
 
         const userData = await AsyncStorage.getItem("companyData")
         const parsedJsonData = JSON.parse(userData)
-        if(parsedJsonData?.token) {
+        if (parsedJsonData?.token) {
             console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
             setCompanyLogged(true)
@@ -43,46 +51,46 @@ const MainScreen = () => {
     useEffect(() => {
         //dispatch(addUser({}))
         getLoggedStatus()
-    },[])
+    }, [])
     useEffect(() => {
         //dispatch(addUser({}))
         getCompanyLoggedStatus()
-    },[])
+    }, [])
 
-    if(companylogged) {
+    if (companylogged) {
         return (
             <>
-            <CompanyTabBar setCompanyLogged={setCompanyLogged} />
+                <CompanyTabBar setCompanyLogged={setCompanyLogged} />
             </>
         )
     }
     else
-    
-     if (logged) {
-        // Renderöidään etusivu */
-        return (
-            <>
-                <TabNavigation setLogged={setLogged} />
-            </>
-        )
-    }
-     else {
-        if (showLogin) {
+
+        if (logged) {
+            // Renderöidään etusivu */
             return (
-                <Login setCompanyLogged={setCompanyLogged} setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
-            )
-        }
-        else if (showCompanySignup) {
-            return (
-                <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} setCompanyLogged={setCompanyLogged} setLogged={setLogged} />
+                <>
+                    <TabNavigation setLogged={setLogged} />
+                </>
             )
         }
         else {
-            return (
-                <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
-            )
+            if (showLogin) {
+                return (
+                    <Login setCompanyLogged={setCompanyLogged} setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
+                )
+            }
+            else if (showCompanySignup) {
+                return (
+                    <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} setCompanyLogged={setCompanyLogged} setLogged={setLogged} />
+                )
+            }
+            else {
+                return (
+                    <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
+                )
+            }
         }
-    }
 }
 
 export default MainScreen

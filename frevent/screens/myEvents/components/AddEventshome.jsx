@@ -7,7 +7,7 @@ import { selectUser } from '../../../features/userSlice'
 import { API_URL } from '@env'
 import axios from 'axios'
 import createOpenLink from 'react-native-open-maps';
-import dayjs from "dayjs";
+import moment from 'moment-timezone';
 import { useIsFocused } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -34,9 +34,42 @@ const AddEventshome = ({ route, navigation }) => {
         })
     }
 
+    /////////////////////////////////////////////////
+    const getCompanyEvents = async () => {
+        const config = {
+            headers: {
+                'Authorization': `Basic ${userData?.user.token}`,
+            }
+        }
+
+        axios.get(API_URL + "events/myevents/company", config).then((response) => {
+            setEventData(response.data)
+            setSpinner(false)
+        }).catch((error) => {
+            console.log(error)
+            setSpinner(false)
+
+        })
+    }
+
+    /////////////////////////////////////////////////
+
     useEffect(() => {
-        setSpinner(true)
-        getEvents()
+        if (userData.user.IDcompany) {
+            setSpinner(true)
+            getCompanyEvents()
+        } else {
+            setSpinner(true)
+            getEvents()
+        }
+    }, [])
+
+    useEffect(() => {
+        if (userData.user.IDcompany) {
+            getCompanyEvents()
+        } else {
+            getEvents()
+        }
     }, [isFocused])
 
 
@@ -78,9 +111,12 @@ const AddEventshome = ({ route, navigation }) => {
                 text: 'OK', onPress: () => {
 
                     axios.delete(API_URL + "events/deleteEvent/" + eventID, config).then((response) => {
-                        console.log(response.data)
                         if (response.data == "Event deleted") {
-                            getEvents()
+                            if (userData.user.IDcompany) {
+                                getCompanyEvents()
+                            } else {
+                                getEvents()
+                            }
                         }
                     }).catch((error) => {
                         console.log(error.response.data)
@@ -92,57 +128,59 @@ const AddEventshome = ({ route, navigation }) => {
     }
 
     return (
-        <View>
-            <Spinner
-                visible={spinner}
-                textContent={'Loading...'}
-                textStyle={styles.spinnerTextStyle}
-            />
-            <TouchableOpacity style={styles.addEvent} onPress={() => navigation.navigate("Add Event")}>
-                <Animated.View style={{ transform: [{ rotate }] }}>
-                    <Ionic name="add" size={28} color={"white"} />
-                </Animated.View>
-            </TouchableOpacity>
-            <ScrollView>
+        <>
 
-                {eventData.map((data, index) => {
-                    console.log(data)
-                    return (
-                        <View key={index} style={styles.event}>
-                            <View style={{ flexDirection: "row" }}>
-                                <View style={{ flex: 1 }}>
+            {!userData.user.IDcompany &&
+                <TouchableOpacity style={styles.addEvent} onPress={() => navigation.navigate("Add Event")}>
+                    <Animated.View style={{ transform: [{ rotate }] }}>
+                        <Ionic name="add" size={28} color={"white"} />
+                    </Animated.View>
+                </TouchableOpacity>
+            }
+            <View style={{ flex: 1 }}>
+                <ScrollView >
 
-                                    <View style={styles.upperPart}>
-                                        <View style={{ flex: 1, }}>
-                                            <Text style={styles.title}>{data.eventname}</Text>
-                                            <Text style={styles.description}>{data?.description}</Text>
+                    {eventData.map((data, index) => {
+                        console.log(data)
+                        return (
+                            <View key={index} style={styles.event}>
+                                <View style={{ flexDirection: "row" }}>
+                                    <View style={{ flex: 1 }}>
+
+                                        <View style={styles.upperPart}>
+                                            <View style={{ flex: 1, }}>
+                                                <Text style={styles.title}>{data.eventname}</Text>
+                                                <Text style={styles.description}>{data?.description}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={styles.lowerPart}>
+                                            <View>
+                                                <Text style={styles.startTime}>{moment(data.date).tz("UTC").format('llll')}, </Text>
+                                                <TouchableOpacity onPress={() => createOpenLink({ query: data.location, provider: "google" })}>
+                                                    <Text>{data.location} <Ionic name={'locate'} size={15} color={'black'} /></Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => navigation.navigate("Show participants", { eventID: data.ID })}>
+                                                    <Text style={styles.attendees}>{data.attendees} attending</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={styles.buttonContainer}>
+                                            </View>
                                         </View>
                                     </View>
-                                    <View style={styles.lowerPart}>
-                                        <View>
-                                            <Text style={styles.startTime}>{dayjs(data.date).format("D MMM YYYY, H:mm")}, </Text>
-                                            <TouchableOpacity onPress={() => createOpenLink({ query: data.location, provider: "google" })}>
-                                                <Text>{data.location} <Ionic name={'locate'} size={15} color={'black'} /></Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => navigation.navigate("Show participants", { eventID: data.IDUserEvents })}>
-                                                <Text style={styles.attendees}>{data.attendees} attending</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.buttonContainer}>
-                                        </View>
+                                    <View style={styles.creatorContainer}>
+                                        <TouchableOpacity onPress={() => deleteEvent(data.ID)}>
+                                            <Ionic name="trash" size={28} color={"red"} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={styles.creatorContainer}>
-                                    <TouchableOpacity onPress={() => deleteEvent(data.IDUserEvents)}>
-                                        <Ionic name="trash" size={28} color={"red"} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>)
+                            </View>)
 
-                })}
-            </ScrollView>
-        </View>
+                    })}
+                </ScrollView>
+            </View>
+        </>
+
+
     )
 }
 

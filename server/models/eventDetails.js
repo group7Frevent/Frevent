@@ -36,20 +36,36 @@ const eventDetails = {
         return db.query("INSERT INTO userEvents ( eventname, description, ownerID, location, date, eventType) VALUES (?,?,?,?,?,'cus')"
             , [eventname, description, userID, location, date], callback);
     },
+    createCompanyEvent: function (requestbody, companyID, callback) {
+        return db.query("INSERT INTO events (eventname, description, companyID, location, startdate, eventType) VALUES (?, ?, ?, ?, ?, 'com')"
+            , [requestbody.eventName, requestbody.eventDescription, companyID, requestbody.eventLocation, requestbody.eventDate], callback);
+    },
     inviteUserToEvent: function (IDEvent, IDUser, callback) {
         return db.query("INSERT INTO invitations (IDEvent, IDUser) VALUES (?,?)"
             , [IDEvent, IDUser], callback);
     },
     getMyEvents: function (userID, callback) {
-        return db.query("SELECT IDUserEvents, eventname ,description ,ownerID ,location, date , eventType, (SELECT COUNT(IDuserAndUserEvents) FROM userAndUserEvents WHERE IDEvent=IDUserEvents) as attendees FROM userEvents WHERE ownerID = ?"
+        return db.query("SELECT IDUserEvents as ID, eventname ,description ,ownerID ,location, date , eventType, (SELECT COUNT(IDuserAndUserEvents) FROM userAndUserEvents WHERE IDEvent=IDUserEvents) as attendees FROM userEvents WHERE ownerID = ?"
             , [userID], callback);
+    },
+    getMyEventsCompany: function (companyID, callback) {
+        return db.query("SELECT ID, eventname ,description ,companyID as ownerID ,location, startdate as date , eventType, (SELECT COUNT(IDUsersAndEvents) FROM usersAndEvents WHERE IDEvent=ID) as attendees FROM events WHERE companyID = ?"
+            , [companyID], callback);
     },
     getAttendees: function (IDEvent, callback) {
         return db.query("SELECT users.ID, users.username, users.fname, users.lname, users.birthdate, users.picture, users.email FROM users INNER JOIN userAndUserEvents ON userAndUserEvents.IDUser=users.ID WHERE IDEvent=?;"
             , [IDEvent], callback);
     },
+    getAttendeesCompany: function (IDEvent, callback) {
+        return db.query("SELECT users.ID, users.username, users.fname, users.lname, users.birthdate, users.picture, users.email FROM users INNER JOIN usersAndEvents ON usersAndEvents.IDUser=users.ID WHERE IDEvent=?"
+            , [IDEvent], callback);
+    },
     deleteEvent: function (IDEvent, ownerID, callback) {
         return db.query("CALL deleteEvent(?, ?);"
+            , [IDEvent, ownerID], callback);
+    },
+    deleteEventCompany: function (IDEvent, ownerID, callback) {
+        return db.query("CALL deleteEventComp(?, ?);"
             , [IDEvent, ownerID], callback);
     }
 };

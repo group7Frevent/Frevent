@@ -8,36 +8,36 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CompanyEventsScreen from "./CompanyEventsScreen";
 import CompanyHomeScreen from "./CompanyHomeScreen";
 import CompanySettingsStack from "./CompanySettingsStack";
+import MyEventsStack from '../myEvents/MyEventsStack'
+import AddEvent from '../myEvents/components/AddEvent'
 
 const Tab = createBottomTabNavigator();
 
-const CompanyTabNavigation = ({setCompanyLogged}) => {
+const CompanyTabNavigation = ({ setCompanyLogged }) => {
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
-        
+
     return (
 
         <Tab.Navigator
-
             screenOptions={({ route }) => ({
 
                 tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-        tabBarStyle: [
-          {
-            display: "flex"
-          },
-          null
-        ],
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: [
+                    {
+                        display: "flex"
+                    },
+                    null
+                ],
 
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-
-                    if (route.name === 'Home') {
+                    if (route.name === 'My Events') {
                         iconName = focused ? 'home' : 'home-outline';
-                    } else if (route.name === 'My Events') {
+                    } else if (route.name === 'Add event') {
                         iconName = focused ? 'calendar' : 'calendar-outline';
-                    }  else if (route.name === 'Settings') {
+                    } else if (route.name === 'Settings') {
                         iconName = focused ? 'settings' : 'settings-outline';
                     }
                     return <Ionic name={iconName} size={size} color={color} />;
@@ -46,10 +46,10 @@ const CompanyTabNavigation = ({setCompanyLogged}) => {
 
             }
         >
-            <Tab.Screen name="Home" component={CompanyHomeScreen} />
-            <Tab.Screen name="My Events" component={CompanyEventsScreen} />
+            <Tab.Screen name="My Events" options={{ headerShown: false }} component={MyEventsStack} />
+            <Tab.Screen name="Add event" component={AddEvent} />
             <Tab.Screen name="Settings" >
-                {props => <CompanySettingsStack {...props} setCompanyLogged={setCompanyLogged}/>}
+                {props => <CompanySettingsStack {...props} setCompanyLogged={setCompanyLogged} />}
             </Tab.Screen>
         </Tab.Navigator>
 

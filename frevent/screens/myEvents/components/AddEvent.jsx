@@ -76,15 +76,25 @@ const AddEvent = ({ navigation, route }) => {
         const invites = choosedPeople.filter((item) => item.checked == true).map((item) => item.ID)
         console.log(invites)
 
+        if (userData.user.IDcompany) {
+            var details = {
+                eventName: eventName,
+                eventDate: date,
+                eventDescription: description,
+                eventLocation: location.place_id,
+                eventType: "com",
+            };
+        } else {
+            var details = {
+                eventName: eventName,
+                eventDate: date,
+                eventDescription: description,
+                eventLocation: location.place_id,
+                eventType: "cus",
+                invites: JSON.stringify(invites)
+            };
+        }
 
-        var details = {
-            eventName: eventName,
-            eventDate: date,
-            eventDescription: description,
-            eventLocation: location.place_id,
-            eventType: "cus",
-            invites: JSON.stringify(invites)
-        };
 
 
         var formBody = [];
@@ -105,14 +115,25 @@ const AddEvent = ({ navigation, route }) => {
             },
         };
 
-        axios.post(API_URL + 'events/postUserEvent', formBody, config).then((response) => {
-            if (response.data?.affectedRows > 0) {
-                navigation.goBack()
-            }
+        if (userData.user.IDcompany) {
+            axios.post(API_URL + 'events/postCompanyEvent', formBody, config).then((response) => {
+                if (response.data?.affectedRows > 0) {
+                    navigation.navigate("My Events")
+                }
 
-        }).catch((error) => {
-            console.log(error)
-        })
+            }).catch((error) => {
+                console.log(error.data)
+            })
+        } else {
+            axios.post(API_URL + 'events/postUserEvent', formBody, config).then((response) => {
+                if (response.data?.affectedRows > 0) {
+                    navigation.goBack()
+                }
+
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
 
     }
 
@@ -145,35 +166,49 @@ const AddEvent = ({ navigation, route }) => {
                 <TouchableOpacity style={styles.inviteButton} onPress={() => setOpen(!open)}>
                     <Text style={{ marginLeft: 10, fontSize: 15 }}>{date}</Text>
                 </TouchableOpacity>
+                {!userData.user.IDcompany &&
+                    <>
+                        {howManyChecked > 0 ?
+                            choosedPeople.map((item, index) => {
+                                if (item.checked) {
+                                    return (
+                                        <>
+                                            <Text style={styles.texts}>Invite people</Text>
+                                            <TouchableOpacity
+                                                style={styles.choosePeople}
+                                                onPress={navigateToChoosePeople}
+                                            >
+                                                <Image
+                                                    key={index}
+                                                    style={styles.profileImg}
+                                                    source={{
+                                                        uri: item?.picture,
+                                                    }} />
+                                            </TouchableOpacity>
+                                        </>
+                                    )
+                                }
+                            })
+                            :
+                            <>
+                                <Text style={styles.texts}>Invite people</Text>
+                                <TouchableOpacity
+                                    style={styles.choosePeople}
+                                    onPress={navigateToChoosePeople}
+                                >
+                                    <Text style={styles.texts}>Choose people to invite</Text>
+                                </TouchableOpacity>
+                            </>
+                        }
+                    </>
+                }
 
-                <Text style={styles.texts}>Invite people</Text>
-                <TouchableOpacity
-                    style={styles.choosePeople}
-                    onPress={navigateToChoosePeople}
-                >
-                    {howManyChecked > 0 ?
-                        choosedPeople.map((item, index) => {
-                            if (item.checked) {
-                                return (
-                                    <Image
-                                        key={index}
-                                        style={styles.profileImg}
-                                        source={{
-                                            uri: item?.picture,
-                                        }} />
-                                )
-                            }
-                        })
-                        :
-                        <Text style={styles.texts}>Choose people to invite</Text>
-                    }
-
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.submitButton}
                     onPress={() => submit()}
                 >
                     <Text style={styles.texts}>Submit</Text>
                 </TouchableOpacity>
+
             </ScrollView>
 
             <Modal
