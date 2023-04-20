@@ -9,10 +9,7 @@ import Ionic from 'react-native-vector-icons/Ionicons'
 import openMap from 'react-native-open-maps';
 
 
-const HomeScreen = () => {
-
-
-  //const { user, setUser } = useContext(UserContext)                                          
+const HomeScreen = () => {                                      
   const [visibleEvents, setVisibleEvents] = useState([])
   const [attending, setAttending] = useState([])
   const [attendSwitch, setAttendSwitch] = useState(2)
@@ -87,7 +84,7 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-      setAttendSwitch((Math.random()*100)+1)
+      setAttendSwitch((Math.random()*100)+1)                                    //Update switch to render page again
   }
 
   const buttonDontAttend = (id, type, index) => {
@@ -108,7 +105,7 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-      setAttendSwitch((Math.random()*100)+1)
+      setAttendSwitch((Math.random()*100)+1)                          //Update switch to render page again
   }
 
 
@@ -209,16 +206,13 @@ const styles = StyleSheet.create({
   },
   lowerPart: {
     flexDirection: "row",
-    //backgroundColor: 'red',
 
   },
   upperPart: {
     flexDirection: "row",
-    //backgroundColor: 'yellow',
 
   },
   creatorContainer:{
-   // backgroundColor: 'green',
     justifyContent: 'center',
     maxWidth: '30%',
     paddingLeft: 5,
@@ -227,7 +221,6 @@ const styles = StyleSheet.create({
   },
   
   buttonContainer: {
-   // backgroundColor: 'blue',
     flexDirection: 'column-reverse',
     paddingBottom: 5,
     paddingLeft: 5,
