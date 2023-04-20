@@ -7,37 +7,37 @@ import { selectUser } from '../../features/userSlice'
 import { API_URL } from "@env"
 import { useDispatch } from "react-redux";
 
-const CompanyProfileSettings = () => {
+const CompanyProfileSettings = () => { // <- This is the component that is rendered when the user navigates to the settings screen
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const userData = useSelector(selectUser)
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = () => {  // <- This is the function that is called when the user presses the button, it sends a request to the backend to update the user's details
 
-    var details = {
+    var details = {  // <- This is the object that is sent to the backend
       username: username,
       password: password,
       IDcompany: userData.user.IDcompany,
     };
 
-    var formBody = [];
+    var formBody = []; // <- This is the form body that is sent to the backend
 
-    for (var property in details) {
+    for (var property in details) { 
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
     }
 
-    formBody = formBody.join("&");
+    formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-    const config = {
+    const config = { // <- This is the config object that is sent to the backend
       headers: {
         Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
       },
     };
 
-    axios.put(API_URL + 'settings/update/company/', formBody, config)
+    axios.put(API_URL + 'settings/update/company/', formBody, config) // <- This is the axios request that is sent to the backend
       .then(response => {
         console.log(response.data);
       })

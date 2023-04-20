@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-navigation'
 
-const HomeScreenHeader = () => {
+const HomeScreenHeader = () => {    // Home screen header
     return (
         <View style={styles.container} >
             <SafeAreaView>
@@ -12,7 +12,7 @@ const HomeScreenHeader = () => {
     )
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ // Styles
     container: {
         height: 100,
         justifyContent: 'flex-end',

@@ -13,7 +13,7 @@ import { firebase } from '../../config'
 import { Linking, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const SettingsScreen = ({ route, navigation }) => {
+const SettingsScreen = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the settings screen
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null)
@@ -22,7 +22,7 @@ const SettingsScreen = ({ route, navigation }) => {
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
 
-  const goToNotifSettings = () => {
+  const goToNotifSettings = () => { // <- This is the function that is called when the user presses the button, it opens the notification settings
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:notifications');
     } else {
@@ -30,25 +30,25 @@ const SettingsScreen = ({ route, navigation }) => {
     }
   };
 
-  const goToLocSettings = () => {
+  const goToLocSettings = () => { // <- This is the function that is called when the user presses the button, it opens the location settings
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:location');
     } else {
       Linking.sendIntent("android.settings.LOCATION_SOURCE_SETTINGS");
     }
   };
-
-  useEffect(() => {
+ 
+  useEffect(() => { // <- This is the effect hook
     image && uploadImage()
 
   }, [image])
 
-  // Valmistelee redux
-  const dispatch = useDispatch();
+ 
+  const dispatch = useDispatch(); // <- This is the redux hook that is used to dispatch actions to the redux store
 
   //////////////////////////////////////////
 
-  const pickImage = async () => {
+  const pickImage = async () => { // <- This is the function that is called when the user presses the button, it launches the image library
     // No permission request is neccessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -59,12 +59,12 @@ const SettingsScreen = ({ route, navigation }) => {
     });
 
 
-    const source = { uri: result.assets[0].uri };
+    const source = { uri: result.assets[0].uri }; // <- This is the uri of the image that the user selected
     console.log(source);
     setImage(source);
 
   };
-  const uploadImage = async () => {
+  const uploadImage = async () => { // <- This is the function that is called when the user presses the button, it launches the image library
     setUploading(true);
     const response = await fetch(image.uri)
     const blob = await response.blob();
@@ -87,23 +87,23 @@ const SettingsScreen = ({ route, navigation }) => {
   };
 
 
-  const changePicture = (pic) => {
+  const changePicture = (pic) => { // <- This is the function that is called when the user presses the button, it launches the image library, it sends the image to the backend, and updates the redux store
     console.log(pic)
     var details = {
       picture: pic,
     };
     var formBody = [];
 
-    console.log(details)
+    console.log(details) // <- This is the object that is sent to the backend
     for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
     }
 
-    formBody = formBody.join("&");
-
-    const config = {
+    formBody = formBody.join("&"); // <- This is the form body that is sent to the backend, it contains the image
+ 
+    const config = { // <- This is the config object that is sent to the backend, it contains the authorization token
       headers: {
         Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -111,7 +111,7 @@ const SettingsScreen = ({ route, navigation }) => {
       },
     };
 
-    axios.put(API_URL + 'settings/update/userpicture/', formBody, config)
+    axios.put(API_URL + 'settings/update/userpicture/', formBody, config) // <- This is the axios request that is sent to the backend, it contains the form body and the config object
       .then(response => {
         console.log(response.data);
         dispatch(addUser(response.data))
@@ -123,19 +123,19 @@ const SettingsScreen = ({ route, navigation }) => {
 
   };
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("userData");
+  const handleLogout = async () => { // <- This is the function that is called when the user presses the button, it logs the user out, and clears the redux store
+    await AsyncStorage.removeItem("userData"); 
     dispatch(addUser({}))
   };
 
-  //get current username
-  useEffect(() => {
+
+  useEffect(() => { // <- This is the effect hook, it sets the username state to the username that is stored in the redux store
     setUsername(userData.user.username)
   }, [userData.user.username])
 
-
+//styles
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}> 
       <ScrollView style={{ backgroundColor: '#FEF9A7', flex: 1 }}>
         <View style={{ padding: 10, width: '100%', backgroundColor: '#FAC213', height: 100 }}>
         </View>
@@ -200,7 +200,7 @@ const SettingsScreen = ({ route, navigation }) => {
           elevation: 5,
           marginTop: 15,
         }}>
-          <Image source={require('../../assets/notification.png')}
+          <Image source={require('../../assets/notification.png')} 
             style={{ width: 25, height: 25 }}></Image>
           <TouchableOpacity onPress={goToNotifSettings}>
             <Text style={styles.button}>Notification settings</Text>
