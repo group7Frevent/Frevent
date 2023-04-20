@@ -9,7 +9,7 @@ import { firebase } from '../../config'
 import { addUser } from '../../features/userSlice';
 
 
-const CompanySignup = ({ setScreen }) => {
+const CompanySignup = ({ route, navigation }) => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -99,7 +99,6 @@ const CompanySignup = ({ setScreen }) => {
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setScreen("companyHome")
         }).catch((error) => {
             console.log(error)
         })
@@ -161,7 +160,7 @@ const CompanySignup = ({ setScreen }) => {
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
                 <Text style={styles.buttontextsign}>Sign up</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setScreen("login")}
+            <TouchableOpacity onPress={() => navigation.goBack()}
                 color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>

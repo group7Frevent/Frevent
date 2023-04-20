@@ -9,7 +9,7 @@ import CheckBox from 'expo-checkbox';
 import Spinner from 'react-native-loading-spinner-overlay'
 
 
-const Login = ({ setScreen }) => {
+const Login = ({ route, navigation }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [checkbox, setCheckbox] = useState(false)
@@ -62,12 +62,6 @@ const Login = ({ setScreen }) => {
             AsyncStorage.setItem("userData", JSON.stringify(response?.data));
             dispatch(addUser(response.data))
             setSpinner(false)
-            if (accountType === "user") {
-                setScreen("home")
-            }
-            else {
-                setScreen("companyHome")
-            }
         }).catch((error) => {
             console.log(error.response.data)
             setSpinner(false)
@@ -92,8 +86,8 @@ const Login = ({ setScreen }) => {
                 textStyle={styles.spinnerTextStyle}
             />
             <View style={styles.container}>
-                <Text style={styles.title} >Welcome to Frevent</Text>
-                <Image style={styles.image} source={require("../../assets/kaverit.png")} />
+
+                <Image style={styles.image} source={require("../../assets/FreventLogo.png")} />
                 <TextInput
                     style={styles.input}
                     placeholder="Username"
@@ -124,10 +118,10 @@ const Login = ({ setScreen }) => {
                 <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
                     <Text style={styles.logintext}>Log In</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setScreen("signup")} color="#fff">
+                <TouchableOpacity onPress={() => navigation.navigate("Signup")} color="#fff">
                     <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setScreen("companySignup")} color="#fff">
+                <TouchableOpacity onPress={() => navigation.navigate("CompanySignup")} color="#fff">
                     <Text style={styles.bottomtitle} > Create your company account here!</Text>
                 </TouchableOpacity>
 
@@ -175,8 +169,9 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     image: {
-        width: 250,
-        height: 200,
+        width: 300,
+        height: 100,
+
 
     },
     title: {

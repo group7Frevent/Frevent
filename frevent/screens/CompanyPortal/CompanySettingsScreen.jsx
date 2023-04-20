@@ -108,9 +108,8 @@ const CompanySettingsScreen = ({ route, navigation }) => {
         'Authorization': `Basic ${userData?.user.token}`   // user authorization
       },
     };
-    
-    console.log(userData.user.token)
-    axios.put("http://192.168.32.156:3000/" + 'settings/update/companypicture/', formBody, config)
+
+    axios.put(API_URL + 'settings/update/companypicture/', formBody, config)
       .then(response => {
         console.log(response.data);
         dispatch(addUser(response.data))
