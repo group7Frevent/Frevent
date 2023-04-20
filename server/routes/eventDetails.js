@@ -12,22 +12,24 @@ router.get('/getevents/', async (req, res) => {
         const token = authHeader && authHeader.split(' ')[1]
         const encodedToken = parseJwt(token)
 
-        eventDetails.getEventDetails(encodedToken.userData.ID, async (dbError, dbresult) => {
+        eventDetails.getEventDetails(encodedToken.userData.ID, async (dbError, dbresult) => {                                       //Router to get event details and google locations
             if (dbresult) {
                 const tempArray = dbresult
 
 
                 const getGoogleLocations = async (placeID, index) => {
                     return new Promise(async (resolve, reject) => {
-                        try {
+                        try {                                                                                                                               
                             const googleKey = process.env.GOOGLE_MAP_API_KEY
                             const googleUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeID}&key=${googleKey}`
                             const response = await fetch(googleUrl)
                             const data = await response.json()
                             tempArray[index].Paikka = data.result.formatted_address
                             tempArray[index].googleLocation = { lat: data.result.geometry.location.lat, lng: data.result.geometry.location.lng, url: data.result.url }
+
                             tempArray[index].placeID = placeID
                             //console.log(data)
+
                             resolve(data)
                         } catch (error) {
                             reject(error)
@@ -54,12 +56,11 @@ router.get('/getevents/', async (req, res) => {
 })
 
 
-
 router.get('/getAttending/', async (req, res) => {
 
     try {
 
-        const authHeader = req.headers['authorization']
+        const authHeader = req.headers['authorization']                                                     //Router to get users attendance on upcoming events
         const token = authHeader && authHeader.split(' ')[1]
         const encodedToken = parseJwt(token)
 
@@ -83,7 +84,7 @@ router.post('/postAttendance/', async (req, res) => {
 
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
-        const encodedToken = parseJwt(token)
+        const encodedToken = parseJwt(token)                                                                                //Router for user to attend an event
 
         eventDetails.attendEvent(encodedToken.userData.ID, req.body.IDEvent, req.body.eventType, (dbError, dbresult) => {
             if (dbresult) {
@@ -104,7 +105,7 @@ router.delete('/deleteAttendance/', async (req, res) => {
     try {
 
         const authHeader = req.headers['authorization']
-        const token = authHeader && authHeader.split(' ')[1]
+        const token = authHeader && authHeader.split(' ')[1]                                                                    //Router for user to cancel attendance to an event
         const encodedToken = parseJwt(token)
 
         eventDetails.deleteAttendance(encodedToken.userData.ID, req.body.IDEvent, req.body.eventType, (dbError, dbresult) => {
@@ -125,7 +126,7 @@ router.post('/postUserEvent/', async (req, res) => {
     if (
         req.body.eventName &&
         req.body.eventDate &&
-        req.body.eventLocation &&
+        req.body.eventLocation &&                                                                                                           //Router to create an event
         req.body.eventDescription &&
         req.body.eventType
     ) {
@@ -215,7 +216,7 @@ router.post('/postCompanyEvent/', async (req, res) => {
 router.get('/myevents/', async (req, res) => {
     try {
         const authHeader = req.headers['authorization']
-        const token = authHeader && authHeader.split(' ')[1]
+        const token = authHeader && authHeader.split(' ')[1]                                                                //Router to get users events
         const encodedToken = parseJwt(token)
 
         eventDetails.getMyEvents(encodedToken.userData.ID, async (dbError, dbresult) => {
