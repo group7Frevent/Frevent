@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -28,8 +28,9 @@ const HomeScreen = () => {
       }
       const response = await axios.get(API_URL + 'events/getevents/', config)
       setVisibleEvents(response.data)
+      console.log(response.data)
     }
-    catch (error) {
+    catch (error) {                                                     //Fetch event data
       console.log(error)
     }
   }
@@ -50,7 +51,7 @@ const HomeScreen = () => {
           'Authorization': `Basic ${userData?.user.token}`   // user authorization
         }
       }
-      const response = await axios.get(API_URL + 'events/getAttending/', config)
+      const response = await axios.get(API_URL + 'events/getAttending/', config)      //Fetching events that the current user is already attending to
       setAttending(response.data)
     }
 
@@ -63,8 +64,6 @@ const HomeScreen = () => {
     attendedEvents()
 
   }, [attendSwitch])
-
-
 
 
   const buttonAttend = (id, type, index) => {
@@ -80,7 +79,7 @@ const HomeScreen = () => {
       }
     };
 
-    axios.post(API_URL + 'events/postAttendance/', specs, config)
+    axios.post(API_URL + 'events/postAttendance/', specs, config)                     //Posting attendance to an event
       .then(response => {
         console.log('Event attendance registered succesfully')
       })
@@ -93,7 +92,7 @@ const HomeScreen = () => {
 
   const buttonDontAttend = (id, type, index) => {
 
-    axios.delete(API_URL + 'events/deleteAttendance/', {
+    axios.delete(API_URL + 'events/deleteAttendance/', {                    //Cancel attendance to an event
       headers: {
         'Authorization': `Basic ${userData?.user.token}`
       },
@@ -114,7 +113,7 @@ const HomeScreen = () => {
 
 
   const includes = (id, type) => {
-    const match = attending && attending.some((data, index) => {
+    const match = attending && attending.some((data, index) => {                    //Check if user has already registered for this event
       if (id == data.IDEvent && type == data.eventType) {
         return true;
       }
@@ -122,7 +121,7 @@ const HomeScreen = () => {
     return !match;
   };
 
-
+                                                                                                        //Map through events and render mainfeed. Check if event button should be "attend" or "attending"
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -148,12 +147,12 @@ const HomeScreen = () => {
               <View style={styles.lowerPart}>
                 <View style={{ flex: 1, }}>
                   <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY, H:mm")}, </Text>
-                  <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng })}>
+                  <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng, endPlaceId: data.placeID})}>
                     <Text>{data.Paikka} <Ionic name={'locate'} size={15} color={'black'}/></Text>
                   </TouchableOpacity>
                   <Text style={styles.attendees}>{data.Osallistujia} attending</Text>
                 </View>
-                <View style={styles.buttonContainer}>
+                <View style={styles.buttonContainer}>                                                         
                   {includes(data?.id, data?.eventType) ?
                     <TouchableOpacity style={styles.btnNormal} onPress={() => { buttonAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
                       <Text>Attend</Text>
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FEF9A7',
-    alignItems: 'center',
+    alignItems: 'center',                                                     //CSS styles
     justifyContent: 'center',
 
   },
