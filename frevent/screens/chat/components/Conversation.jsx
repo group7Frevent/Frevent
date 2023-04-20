@@ -12,6 +12,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import CustomHeader from './CustomHeader';
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from "moment";
 
 const Conversation = ({ route, navigation }) => {
     const { conversationID, conversationdata } = route.params;
@@ -64,7 +65,8 @@ const Conversation = ({ route, navigation }) => {
         }
         const date = new Date();
 
-        const newDate = addHours(date, 2);
+        const newDate = addHours(date, 3);
+
 
         const data = {
             message: msg,

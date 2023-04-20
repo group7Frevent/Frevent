@@ -21,7 +21,6 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   const userData = useSelector(selectUser)
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
-  const { setCompanyLogged } = route.params;
 
   const goToNotifSettings = () => {
     if (Platform.OS === 'ios') {
@@ -61,7 +60,6 @@ const CompanySettingsScreen = ({ route, navigation }) => {
 
 
     const source = { uri: result.assets[0].uri };
-    console.log(source);
     setImage(source);
 
   };
@@ -78,24 +76,20 @@ const CompanySettingsScreen = ({ route, navigation }) => {
         changePicture(url);
         setUploading(false);
       }).catch((error) => {
-        console.log(error);
         setUploading(false);
       });
     }).catch((error) => {
-      console.log(error);
       setUploading(false);
     });
   };
 
 
   const changePicture = (pic) => {
-    console.log(pic)
     var details = {
       picture: pic,
     };
     var formBody = [];
 
-    console.log(details)
     for (var property in details) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
@@ -104,6 +98,9 @@ const CompanySettingsScreen = ({ route, navigation }) => {
 
     formBody = formBody.join("&");
 
+
+
+
     const config = {
       headers: {
         Accept: "application/json",
@@ -111,8 +108,9 @@ const CompanySettingsScreen = ({ route, navigation }) => {
         'Authorization': `Basic ${userData?.user.token}`   // user authorization
       },
     };
-
-    axios.put(API_URL + 'settings/update/userpicture/', formBody, config)
+    
+    console.log(userData.user.token)
+    axios.put("http://192.168.32.156:3000/" + 'settings/update/companypicture/', formBody, config)
       .then(response => {
         console.log(response.data);
         dispatch(addUser(response.data))
@@ -125,9 +123,8 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   };
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("companyData");
+    await AsyncStorage.removeItem("userData");
     dispatch(addUser({}))
-    setCompanyLogged(false)
   };
 
   //get current username

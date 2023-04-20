@@ -6,19 +6,20 @@ import { addUser } from '../../features/userSlice';
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from 'expo-checkbox';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 
-
-const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
+const Login = ({ setScreen }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [checkbox, setCheckbox] = useState(false)
-
+    const [spinner, setSpinner] = useState(false)
 
     // Valmistelee redux
     const dispatch = useDispatch();
 
     const loginRequest = async () => {
+        setSpinner(true)
         if (checkbox) {
             var accountType = "company"
         }
@@ -53,7 +54,6 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
 
 
         const requestUrl = API_URL + 'auth/login/'
-
         axios.post(requestUrl, formBody, config).then((response) => {
             // Login succeed
             console.log(response.data)
@@ -61,14 +61,16 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
             // Tallennetaan tiedot reduxiin
             AsyncStorage.setItem("userData", JSON.stringify(response?.data));
             dispatch(addUser(response.data))
+            setSpinner(false)
             if (accountType === "user") {
-                setLogged(true)
+                setScreen("home")
             }
             else {
-                setCompanyLogged(true)
+                setScreen("companyHome")
             }
         }).catch((error) => {
-            console.log(error)
+            console.log(error.response.data)
+            setSpinner(false)
             if (error.response.data === "wrong username") {
                 Alert.alert("Username not found");
             }
@@ -83,51 +85,54 @@ const Login = ({ setLogged, setCompanyLogged, setShowRegister, setShowCompanySig
     }
 
     return (
-
-        <View style={styles.container}>
-            <Text style={styles.title} >Welcome to Frevent</Text>
-            <Image style={styles.image} source={require("../../assets/kaverit.png")} />
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                placeholderTextColor="grey"
-                onChangeText={setUserName}
-                value={userName}
-                autoCapitalize='none'
+        <>
+            <Spinner
+                visible={spinner}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="grey"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize='none'
+            <View style={styles.container}>
+                <Text style={styles.title} >Welcome to Frevent</Text>
+                <Image style={styles.image} source={require("../../assets/kaverit.png")} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Username"
+                    placeholderTextColor="grey"
+                    onChangeText={setUserName}
+                    value={userName}
+                    autoCapitalize='none'
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor="grey"
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    autoCapitalize='none'
 
-            />
+                />
 
-            <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
-            <CheckBox
-                style={styles.checkbox} // style for the container
-                value={checkbox} // boolean value
-                onValueChange={() => setCheckbox(!checkbox)} // toggle checkbox
-                color={checkbox ? 'green' : undefined} // custom color for unchecked state
-            />
+                <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
+                <CheckBox
+                    style={styles.checkbox} // style for the container
+                    value={checkbox} // boolean value
+                    onValueChange={() => setCheckbox(!checkbox)} // toggle checkbox
+                    color={checkbox ? 'green' : undefined} // custom color for unchecked state
+                />
 
-            <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
-                <Text style={styles.logintext}>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
-                <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-                setShowCompanySignup(true)
-                setShowLogin(false)
-            }} color="#fff">
-                <Text style={styles.bottomtitle} > Create your company account here!</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
+                    <Text style={styles.logintext}>Log In</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setScreen("signup")} color="#fff">
+                    <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setScreen("companySignup")} color="#fff">
+                    <Text style={styles.bottomtitle} > Create your company account here!</Text>
+                </TouchableOpacity>
 
-        </View>
+            </View>
+        </>
 
     )
 }

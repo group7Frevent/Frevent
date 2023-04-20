@@ -1,4 +1,3 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, selectUser } from '../features/userSlice';
@@ -6,96 +5,78 @@ import Login from './loginSignup/Login';
 import Signup from './loginSignup/Signup';
 import CompanySignup from './loginSignup/CompanySignup'
 import TabNavigation from './tabNavigation/TabNavigation';
-import HomeScreen from './tabNavigation/HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompanyTabBar from './CompanyPortal/CompanyTabBar';
 
 const MainScreen = () => {
-
-    const [logged, setLogged] = useState(false)
-    const [showLogin, setShowLogin] = useState(true)
-    const [showCompanySignup, setShowCompanySignup] = useState(false)
-    const [companylogged, setCompanyLogged] = useState(false)
+    const [screen, setScreen] = useState("login")
 
     // Valmistelee redux
     const dispatch = useDispatch();
-    
+
+    const userData = useSelector(selectUser)
+
+
     const getLoggedStatus = async () => {
 
         const userData = await AsyncStorage.getItem("userData")
         const parsedJsonData = JSON.parse(userData)
-        if(parsedJsonData?.token) {
+        if (parsedJsonData?.token) {
             console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
-            setLogged(true)
-        }
-    }
-    const getCompanyLoggedStatus = async () => {
+            if (parsedJsonData.IDcompany) {
+                setScreen("companyHome")
+            } else {
+                setScreen("home")
 
-        const userData = await AsyncStorage.getItem("companyData")
-        const parsedJsonData = JSON.parse(userData)
-        if(parsedJsonData?.token) {
-            console.log(parsedJsonData)
-            dispatch(addUser(parsedJsonData))
-            setCompanyLogged(true)
+            }
         }
     }
+
+
+
     useEffect(() => {
         //dispatch(addUser({}))
         getLoggedStatus()
-    },[])
-    useEffect(() => {
-        //dispatch(addUser({}))
-        getCompanyLoggedStatus()
-    },[])
+    }, [])
 
-    if(companylogged) {
+
+    useEffect(() => {
+        if (!userData?.user?.token) {
+            setScreen("login")
+        }
+    }, [userData])
+
+
+    if (screen === "login") {
         return (
-            <>
-            <CompanyTabBar setCompanyLogged={setCompanyLogged} />
-            </>
+            <Login setScreen={setScreen} />
         )
     }
-    else
-    
-     if (logged) {
-        // Renderöidään etusivu */
+
+    if (screen === "signup") {
         return (
-            <>
-                <TabNavigation setLogged={setLogged} />
-            </>
+            <Signup setScreen={setScreen} />
         )
     }
-     else {
-        if (showLogin) {
-            return (
-                <Login setCompanyLogged={setCompanyLogged} setLogged={setLogged} setShowRegister={setShowLogin} setShowCompanySignup={setShowCompanySignup} setShowLogin={setShowLogin} />
-            )
-        }
-        else if (showCompanySignup) {
-            return (
-                <CompanySignup setShowLogin={setShowLogin} setShowCompanySignup={setShowCompanySignup} setCompanyLogged={setCompanyLogged} setLogged={setLogged} />
-            )
-        }
-        else {
-            return (
-                <Signup setLogged={setLogged} setShowLogin={setShowLogin} />
-            )
-        }
+
+    if (screen === "companySignup") {
+        return (
+            <CompanySignup setScreen={setScreen} />
+        )
+    }
+
+    if (screen === "home") {
+        return (
+            <TabNavigation />
+        )
+    }
+
+    if (screen === "companyHome") {
+        return (
+            <CompanyTabBar />
+        )
     }
 }
 
 export default MainScreen
-
-/*const setTestRedux = () => {
-    const testUserData = {
-        userID: 23,
-        username: "Sepon",
-        imageUrl: "http://sddsadsads",
-        token: "dsaijdhsiaudhgysuahdsadasdsadadsa",
-        type: "user"
-    }
-
-    dispatch(addUser(testUserData))}*/
-
-

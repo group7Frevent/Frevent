@@ -1,19 +1,19 @@
 import * as React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileSettings from './ProfileSettings';
 import SettingsScreen from './SettingsScreen';
 
 
 const Stack = createNativeStackNavigator();
 
-const SettingsStack = ({setLogged}) => {
+const SettingsStack = () => {
   return (
-    
-      <Stack.Navigator>
-        <Stack.Screen name="SettingsScreen" initialParams={{setLogged:setLogged}} component={SettingsScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="profile" component={ProfileSettings}/>
-      </Stack.Navigator>
-    
+
+    <Stack.Navigator>
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="profile" component={ProfileSettings} />
+    </Stack.Navigator>
+
   );
 };
 

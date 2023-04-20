@@ -101,6 +101,37 @@ router.put('/update/company/', function (req, res, next) {
     }
 });
 
+router.put('/update/companypicture/', function (req, res, next) {
+    console.log(req.body.picture)
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const encodedToken = parseJwt(token)
+    const id = encodedToken.userData.IDcompany
+    const userName = encodedToken.userData.username
+    console.log("here")
+    company.updateCompanyPicture(id, req.body.picture, (dberr, dbRes) => {
+        if (dberr) { 
+            errors.errorCode(dberr, res)
+        } else {
+            console.log(dbRes)
+            company.getCompanyData(userName, (dberr, dbResult) => {
+                if (dberr) {
+                    // If error return error
+                    errors.errorCode(dberr, res)
+                } else {
+                    const token = generateAccessToken({ userData: dbResult[0] });
+                    dbResult[0].token = token
+                    // Delete password field
+                    delete dbResult[0].password
+
+                    res.send(dbResult[0])
+                }
+            })
+        }
+
+    })
+});
+
 function parseJwt(token) {
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }

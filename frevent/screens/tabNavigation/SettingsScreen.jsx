@@ -21,7 +21,6 @@ const SettingsScreen = ({ route, navigation }) => {
   const userData = useSelector(selectUser)
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
-  const { setLogged } = route.params;
 
   const goToNotifSettings = () => {
     if (Platform.OS === 'ios') {
@@ -127,7 +126,6 @@ const SettingsScreen = ({ route, navigation }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem("userData");
     dispatch(addUser({}))
-    setLogged(false)
   };
 
   //get current username

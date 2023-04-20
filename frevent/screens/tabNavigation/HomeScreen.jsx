@@ -6,7 +6,8 @@ import axios from 'axios';
 import dayjs from "dayjs";
 import { API_URL, API_URL2 } from '@env'
 import Ionic from 'react-native-vector-icons/Ionicons'
-import openMap from 'react-native-open-maps';
+import HomeScreenHeader from './HomeScreenHeader';
+import createOpenLink from 'react-native-open-maps';
 
 
 const HomeScreen = () => {                                      
@@ -84,7 +85,10 @@ const HomeScreen = () => {
         console.log(error)
       });
 
+
       setAttendSwitch((Math.random()*100)+1)                                    //Update switch to render page again
+
+
   }
 
   const buttonDontAttend = (id, type, index) => {
@@ -105,7 +109,10 @@ const HomeScreen = () => {
         console.log(error)
       });
 
+
       setAttendSwitch((Math.random()*100)+1)                          //Update switch to render page again
+
+
   }
 
 
@@ -120,52 +127,59 @@ const HomeScreen = () => {
 
                                                                                                         //Map through events and render mainfeed. Check if event button should be "attend" or "attending"
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
-          <Text style={styles.title} >Welcome!</Text>
-          <Text style={styles.title} >Here are your upcoming events</Text>
-        </View>
 
-        {visibleEvents.map((data, index) => {
-          return (
-            <View key={index} style={styles.event}>
-              <View style = {styles.upperPart}>
-                <View style={{flex:1,}}>
-              <Text style={styles.title}>{data.Tapahtuma}</Text>
-              <Text style={styles.description}>{data.Kuvaus}</Text>
-              </View>
-              <View style={styles.creatorContainer}>
-                <Text style={styles.startTime}>{data.Organizer}</Text>
-                <Image style={styles.creatorPic} source={{uri: data.ProfilePic,}} >
-                </Image>
-              </View>
-              </View>
-              <View style={styles.lowerPart}>
-                <View style={{ flex: 1, }}>
-                  <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY, H:mm")}, </Text>
-                  <TouchableOpacity onPress={() => openMap({ latitude: data.googleLocation.lat, longitude: data.googleLocation.lng, endPlaceId: data.placeID})}>
-                    <Text>{data.Paikka} <Ionic name={'locate'} size={15} color={'black'}/></Text>
-                  </TouchableOpacity>
-                  <Text style={styles.attendees}>{data.Osallistujia} attending</Text>
+    <>
+      <HomeScreenHeader />
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          {/*
+            <View style={styles.header}>
+            <Text style={styles.title} >Welcome!</Text>
+            <Text style={styles.title} >Here are your upcoming events</Text>
+            </View>
+            */}
+          {visibleEvents.map((data, index) => {
+            return (
+              <View key={index} style={styles.event}>
+                <View style={styles.upperPart}>
+                  <View style={{ flex: 1, }}>
+                    <Text style={styles.title}>{data.Tapahtuma}</Text>
+                    <Text style={styles.description}>{data.Kuvaus}</Text>
+                  </View>
+                  <View style={styles.creatorContainer}>
+                    {
+                      data.ProfilePic &&
+                      <Image style={styles.creatorPic} source={{ uri: data.ProfilePic }} />
+                    }
+                    <Text style={styles.startTime}>{data.Organizer}</Text>
+                  </View>
                 </View>
-                <View style={styles.buttonContainer}>                                                         
-                  {includes(data?.id, data?.eventType) ?
-                    <TouchableOpacity style={styles.btnNormal} onPress={() => { buttonAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
-                      <Text>Attend</Text>
-                    </TouchableOpacity> :
-                    <TouchableOpacity style={styles.btnPressed} onPress={() => { buttonDontAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
-                      <Text><Ionic name={'checkmark'} size={15} color={'green'} /> Attending</Text>
+                <View style={styles.lowerPart}>
+                  <View style={{ flex: 1, }}>
+                    <Text style={styles.startTime}>{dayjs(data.Ajankohta).format("D MMM YYYY, H:mm")}, </Text>
+                    <TouchableOpacity onPress={() => createOpenLink({ query: data.Paikka, provider: "google" })}>
+                      <Text>{data.Paikka} <Ionic name={'locate'} size={15} color={'black'} /></Text>
                     </TouchableOpacity>
-                  }
+                    <Text style={styles.attendees}>{data.Osallistujia} attending</Text>
+                  </View>
+                  <View style={styles.buttonContainer}>
+                    {includes(data?.id, data?.eventType) ?
+                      <TouchableOpacity style={styles.btnNormal} onPress={() => { buttonAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
+                        <Text>Attend</Text>
+                      </TouchableOpacity> :
+                      <TouchableOpacity style={styles.btnPressed} onPress={() => { buttonDontAttend(data?.id, data?.eventType, index) }} color="#fff" key={index}>
+                        <Text><Ionic name={'checkmark'} size={15} color={'green'} /> Attending</Text>
+                      </TouchableOpacity>
+                    }
+                  </View>
                 </View>
-              </View>
-            </View>)
+              </View>)
 
-        })}
+          })}
 
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   )
 }
 
@@ -212,14 +226,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
   },
-  creatorContainer:{
+
+  creatorContainer: {
+    // backgroundColor: 'green',
     justifyContent: 'center',
     maxWidth: '30%',
     paddingLeft: 5,
     textAlign: 'left',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
-  
+
   buttonContainer: {
     flexDirection: 'column-reverse',
     paddingBottom: 5,
