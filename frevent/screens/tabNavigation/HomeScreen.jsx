@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -10,10 +10,7 @@ import HomeScreenHeader from './HomeScreenHeader';
 import createOpenLink from 'react-native-open-maps';
 
 
-const HomeScreen = () => {
-
-
-  //const { user, setUser } = useContext(UserContext)                                          
+const HomeScreen = () => {                                      
   const [visibleEvents, setVisibleEvents] = useState([])
   const [attending, setAttending] = useState([])
   const [attendSwitch, setAttendSwitch] = useState(2)
@@ -29,8 +26,9 @@ const HomeScreen = () => {
       }
       const response = await axios.get(API_URL + 'events/getevents/', config)
       setVisibleEvents(response.data)
+      console.log(response.data)
     }
-    catch (error) {
+    catch (error) {                                                     //Fetch event data
       console.log(error)
     }
   }
@@ -51,7 +49,7 @@ const HomeScreen = () => {
           'Authorization': `Basic ${userData?.user.token}`   // user authorization
         }
       }
-      const response = await axios.get(API_URL + 'events/getAttending/', config)
+      const response = await axios.get(API_URL + 'events/getAttending/', config)      //Fetching events that the current user is already attending to
       setAttending(response.data)
     }
 
@@ -64,8 +62,6 @@ const HomeScreen = () => {
     attendedEvents()
 
   }, [attendSwitch])
-
-
 
 
   const buttonAttend = (id, type, index) => {
@@ -81,7 +77,7 @@ const HomeScreen = () => {
       }
     };
 
-    axios.post(API_URL + 'events/postAttendance/', specs, config)
+    axios.post(API_URL + 'events/postAttendance/', specs, config)                     //Posting attendance to an event
       .then(response => {
         console.log('Event attendance registered succesfully')
       })
@@ -89,12 +85,15 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-    setAttendSwitch((Math.random() * 100) + 1)
+
+      setAttendSwitch((Math.random()*100)+1)                                    //Update switch to render page again
+
+
   }
 
   const buttonDontAttend = (id, type, index) => {
 
-    axios.delete(API_URL + 'events/deleteAttendance/', {
+    axios.delete(API_URL + 'events/deleteAttendance/', {                    //Cancel attendance to an event
       headers: {
         'Authorization': `Basic ${userData?.user.token}`
       },
@@ -110,12 +109,15 @@ const HomeScreen = () => {
         console.log(error)
       });
 
-    setAttendSwitch((Math.random() * 100) + 1)
+
+      setAttendSwitch((Math.random()*100)+1)                          //Update switch to render page again
+
+
   }
 
 
   const includes = (id, type) => {
-    const match = attending && attending.some((data, index) => {
+    const match = attending && attending.some((data, index) => {                    //Check if user has already registered for this event
       if (id == data.IDEvent && type == data.eventType) {
         return true;
       }
@@ -123,8 +125,9 @@ const HomeScreen = () => {
     return !match;
   };
 
-
+                                                                                                        //Map through events and render mainfeed. Check if event button should be "attend" or "attending"
   return (
+
     <>
       <HomeScreenHeader />
       <View style={styles.container}>
@@ -183,7 +186,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: '#FEF9A7',
+    alignItems: 'center',                                                     //CSS styles
     justifyContent: 'center',
 
   },
@@ -216,14 +220,13 @@ const styles = StyleSheet.create({
   },
   lowerPart: {
     flexDirection: "row",
-    //backgroundColor: 'red',
 
   },
   upperPart: {
     flexDirection: "row",
-    //backgroundColor: 'yellow',
 
   },
+
   creatorContainer: {
     // backgroundColor: 'green',
     justifyContent: 'center',
@@ -234,7 +237,6 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    // backgroundColor: 'blue',
     flexDirection: 'column-reverse',
     paddingBottom: 5,
     paddingLeft: 5,
