@@ -129,7 +129,8 @@ const Signup = ({ route, navigation }) => {
     return (
 
         <View style={styles.container}>
-
+            <ScrollView style={{width:'100%'}}>
+                <View style= {{paddingLeft:60, paddingRight:60}}>
             <Text style={styles.title}>Create an account</Text>
 
             <TextInput
@@ -216,8 +217,8 @@ const Signup = ({ route, navigation }) => {
             <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
-
-
+            </View>
+        </ScrollView>
         </View>
 
     );
@@ -230,10 +231,9 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: 'stretch',
         flex: 1,
-        paddingLeft: 60,
-        paddingRight: 60,
         backgroundColor: '#FEF9A7',
         justifyContent: 'center',
+        paddingTop: 50,
     },
     input: {
         alignSelf: 'stretch',
