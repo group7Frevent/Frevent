@@ -7,8 +7,10 @@ import CompanySignup from './loginSignup/CompanySignup'
 import TabNavigation from './tabNavigation/TabNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompanyTabBar from './CompanyPortal/CompanyTabBar';
+import AuthStack from './loginSignup/AuthStack';
 
 const MainScreen = () => {
+
     const [screen, setScreen] = useState("login")
 
     // Valmistelee redux
@@ -21,9 +23,12 @@ const MainScreen = () => {
 
         const userData = await AsyncStorage.getItem("userData")
         const parsedJsonData = JSON.parse(userData)
+
         if (parsedJsonData?.token) {
             console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
+
+
             if (parsedJsonData.IDcompany) {
                 setScreen("companyHome")
             } else {
@@ -44,17 +49,23 @@ const MainScreen = () => {
     useEffect(() => {
         if (!userData?.user?.token) {
             setScreen("login")
+        } else {
+            if (userData?.user?.IDcompany) {
+                setScreen("companyHome")
+            } else {
+                setScreen("home")
+            }
         }
     }, [userData])
 
 
     if (screen === "login") {
         return (
-            <Login setScreen={setScreen} />
+            <AuthStack />
         )
     }
 
-    if (screen === "signup") {
+    /*if (screen === "signup") {
         return (
             <Signup setScreen={setScreen} />
         )
@@ -65,6 +76,7 @@ const MainScreen = () => {
             <CompanySignup setScreen={setScreen} />
         )
     }
+    */
 
     if (screen === "home") {
         return (

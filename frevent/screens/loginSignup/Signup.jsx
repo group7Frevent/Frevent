@@ -15,7 +15,7 @@ import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const Signup = ({ setScreen }) => {
+const Signup = ({ route, navigation }) => {
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -120,7 +120,6 @@ const Signup = ({ setScreen }) => {
             // Tallennetaan tiedot reduxiin
             AsyncStorage.setItem("userData", JSON.stringify(response?.data[0]));
             dispatch(addUser(response.data[0]))
-            setScreen("home")
         }).catch((error) => {
             console.log(error)
         })
@@ -214,7 +213,7 @@ const Signup = ({ setScreen }) => {
                 <Text style={styles.buttonText}>Sign up</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setScreen("login")} color="#fff">
+            <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
 

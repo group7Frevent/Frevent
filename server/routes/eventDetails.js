@@ -17,30 +17,6 @@ router.get('/getevents/', async (req, res) => {
                 const tempArray = dbresult
 
 
-                const getGoogleLocations = async (placeID, index) => {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const googleKey = process.env.GOOGLE_MAP_API_KEY
-                            const googleUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeID}&key=${googleKey}`
-                            const response = await fetch(googleUrl)
-                            const data = await response.json()
-                            tempArray[index].Paikka = data.result.formatted_address
-                            tempArray[index].googleLocation = { lat: data.result.geometry.location.lat, lng: data.result.geometry.location.lng, url: data.result.url }
-                            tempArray[index].placeID = placeID
-                            //console.log(data)
-                            resolve(data)
-                        } catch (error) {
-                            reject(error)
-                        }
-
-                    })
-                }
-
-
-                for (let i = 0; i < tempArray.length; i++) {
-                    await getGoogleLocations(tempArray[i].Paikka, i)
-                }
-
                 res.send(tempArray)
             }
             else {
@@ -223,29 +199,6 @@ router.get('/myevents/', async (req, res) => {
                 const tempArray = dbresult
 
 
-                const getGoogleLocations = async (placeID, index) => {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const googleKey = process.env.GOOGLE_MAP_API_KEY
-                            const googleUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeID}&key=${googleKey}`
-                            const response = await fetch(googleUrl)
-                            const data = await response.json()
-                            tempArray[index].location = data.result?.formatted_address
-                            tempArray[index].googleLocation = { lat: data.result.geometry.location.lat, lng: data.result.geometry.location.lng, url: data.result.url }
-                            //console.log(data)
-                            resolve(data)
-                        } catch (error) {
-                            reject(error)
-                        }
-
-                    })
-                }
-
-
-                for (let i = 0; i < tempArray.length; i++) {
-                    await getGoogleLocations(tempArray[i].location, i)
-                }
-
                 res.send(tempArray)
             }
             else {
@@ -267,30 +220,6 @@ router.get('/myevents/company', async (req, res) => {
         eventDetails.getMyEventsCompany(encodedToken.userData.IDcompany, async (dbError, dbresult) => {
             if (dbresult) {
                 const tempArray = dbresult
-
-
-                const getGoogleLocations = async (placeID, index) => {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const googleKey = process.env.GOOGLE_MAP_API_KEY
-                            const googleUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeID}&key=${googleKey}`
-                            const response = await fetch(googleUrl)
-                            const data = await response.json()
-                            tempArray[index].location = data.result?.formatted_address
-                            tempArray[index].googleLocation = { lat: data.result.geometry.location.lat, lng: data.result.geometry.location.lng, url: data.result.url }
-                            //console.log(data)
-                            resolve(data)
-                        } catch (error) {
-                            reject(error)
-                        }
-
-                    })
-                }
-
-
-                for (let i = 0; i < tempArray.length; i++) {
-                    await getGoogleLocations(tempArray[i].location, i)
-                }
 
                 res.send(tempArray)
             }

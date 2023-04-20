@@ -81,7 +81,7 @@ const AddEvent = ({ navigation, route }) => {
                 eventName: eventName,
                 eventDate: date,
                 eventDescription: description,
-                eventLocation: location.place_id,
+                eventLocation: location.description,
                 eventType: "com",
             };
         } else {
@@ -89,7 +89,7 @@ const AddEvent = ({ navigation, route }) => {
                 eventName: eventName,
                 eventDate: date,
                 eventDescription: description,
-                eventLocation: location.place_id,
+                eventLocation: location.description,
                 eventType: "cus",
                 invites: JSON.stringify(invites)
             };
@@ -168,38 +168,38 @@ const AddEvent = ({ navigation, route }) => {
                 </TouchableOpacity>
                 {!userData.user.IDcompany &&
                     <>
-                        {howManyChecked > 0 ?
-                            choosedPeople.map((item, index) => {
-                                if (item.checked) {
-                                    return (
-                                        <>
-                                            <Text style={styles.texts}>Invite people</Text>
-                                            <TouchableOpacity
-                                                style={styles.choosePeople}
-                                                onPress={navigateToChoosePeople}
-                                            >
+                        <Text style={styles.texts}>Invite people</Text>
+                        <TouchableOpacity
+                            style={styles.choosePeople}
+                            onPress={navigateToChoosePeople}
+                        >
+                            {howManyChecked > 0 ?
+                                choosedPeople.map((item, index) => {
+                                    if (item.checked) {
+                                        return (
+                                            <>
                                                 <Image
                                                     key={index}
                                                     style={styles.profileImg}
                                                     source={{
                                                         uri: item?.picture,
                                                     }} />
-                                            </TouchableOpacity>
-                                        </>
-                                    )
-                                }
-                            })
-                            :
-                            <>
-                                <Text style={styles.texts}>Invite people</Text>
-                                <TouchableOpacity
-                                    style={styles.choosePeople}
-                                    onPress={navigateToChoosePeople}
-                                >
-                                    <Text style={styles.texts}>Choose people to invite</Text>
-                                </TouchableOpacity>
-                            </>
-                        }
+                                            </>
+                                        )
+                                    }
+                                })
+                                :
+                                <>
+                                    <Text style={styles.texts}>Invite people</Text>
+                                    <TouchableOpacity
+                                        style={styles.choosePeople}
+                                        onPress={navigateToChoosePeople}
+                                    >
+                                        <Text style={styles.texts}>Choose people to invite</Text>
+                                    </TouchableOpacity>
+                                </>
+                            }
+                        </TouchableOpacity>
                     </>
                 }
 
