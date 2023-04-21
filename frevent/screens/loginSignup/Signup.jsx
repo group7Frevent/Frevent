@@ -12,10 +12,10 @@ import { API_URL } from '@env'
 
 
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // <- This is the library that is used to store data locally
 
 
-const Signup = ({ setShowLogin, setLogged }) => {
+const Signup = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the signup screen
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -27,13 +27,13 @@ const Signup = ({ setShowLogin, setLogged }) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
-    useEffect(() => {
-      image && uploadImage()
-    
-    }, [image])
-    
+    useEffect(() => { // <- This is the effect hook
+        image && uploadImage()
 
-    const pickImage = async () => {
+    }, [image])
+
+
+    const pickImage = async () => { // <- This is the function that is called when the user presses the button, it opens the image picker
         // No permission request is neccessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -44,12 +44,12 @@ const Signup = ({ setShowLogin, setLogged }) => {
         });
 
 
-        const source = { uri: result.assets[0].uri };
+        const source = { uri: result.assets[0].uri }; // <- This is the image that is selected by the user, it is stored in the state
         console.log(source);
         setImage(source);
 
     };
-    const uploadImage = async () => {
+    const uploadImage = async () => { // <- This is the function that is called when the user presses the button, it uploads the image to the firebase storage
         setUploading(true);
         const response = await fetch(image.uri)
         const blob = await response.blob();
@@ -58,7 +58,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
         ref.put(blob).then(() => {
             ref.getDownloadURL().then((url) => {
                 setPicture(url); // <- This is the download URL of the image
-                setUploading(false); 
+                setUploading(false);
             }).catch((error) => {
                 console.log(error);
                 setUploading(false);
@@ -75,13 +75,12 @@ const Signup = ({ setShowLogin, setLogged }) => {
 
 
 
-    // Valmistelee redux
-    const dispatch = useDispatch();
+
+    const dispatch = useDispatch(); // <- This is the dispatch function that is used to dispatch actions to the redux store
 
 
 
-    const handleSignup = () => {
-        // Rekisteröinnin logiikka tähän
+    const handleSignup = () => { // <- This is the function that is called when the user presses the signup button
 
         var details = {
             username: userName,
@@ -94,45 +93,46 @@ const Signup = ({ setShowLogin, setLogged }) => {
             accountType: "user"
         };
 
-        var formBody = [];
-
-        for (var property in details) {
+        var formBody = []; // <- This is the form body that is sent to the backend
+ 
+        for (var property in details) { // <- This is the loop that is used to create the form body
             var encodedKey = encodeURIComponent(property);
             var encodedValue = encodeURIComponent(details[property]);
             formBody.push(encodedKey + "=" + encodedValue);
         }
 
-        formBody = formBody.join("&");
+        formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-        const config = {
+        const config = { // <- This is the configuration of the request
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         };
 
-        const requestUrl = API_URL + 'auth/register/user'
+        const requestUrl = API_URL + 'auth/register/user' // <- This is the url of the backend
 
 
-        axios.post(requestUrl, formBody, config).then((response) => {
+        axios.post(requestUrl, formBody, config).then((response) => { // <- This is the axios request that is sent to the backend
             // Login succeed
             //console.log(response.data)
             // Tallennetaan tiedot reduxiin
             AsyncStorage.setItem("userData", JSON.stringify(response?.data[0]));
             dispatch(addUser(response.data[0]))
-            setLogged(true)
         }).catch((error) => {
             console.log(error)
         })
 
     };
-
+    // styles for the component start here after the return statement
     return (
-        
+
         <View style={styles.container}>
-        
+
+            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} >
+
                 <Text style={styles.title}>Create an account</Text>
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder="UserName"
@@ -178,6 +178,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
+                    type={'email'}
                     underlineColorAndroid={'transparent'}
                     placeholderTextColor="#465881"
                     onChangeText={setEmail}
@@ -204,7 +205,7 @@ const Signup = ({ setShowLogin, setLogged }) => {
                 </TouchableOpacity>
 
                 <View style={styles.imageContainer}>
-                {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+                    {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
 
                 </View>
 
@@ -213,13 +214,13 @@ const Signup = ({ setShowLogin, setLogged }) => {
                     <Text style={styles.buttonText}>Sign up</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => setShowLogin(true)} color="#fff">
+                <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
                     <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
                 </TouchableOpacity>
 
-        
-            </View>
-            
+
+            </ScrollView>
+        </View >
     );
 
 };
@@ -229,11 +230,11 @@ const Signup = ({ setShowLogin, setLogged }) => {
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'stretch',
+        paddingTop: 50,
         flex: 1,
-        paddingLeft: 60,
-        paddingRight: 60,
         backgroundColor: '#FEF9A7',
         justifyContent: 'center',
+        paddingTop: 50,
     },
     input: {
         alignSelf: 'stretch',
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         borderBottomColor: '#F77E21',
         borderBottomWidth: 1,
-        
+
 
     },
     button: {
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F77E21',
         color: '#fff',
         padding: 20,
-        
+
     },
     title: {
         marginBottom: 30,
@@ -285,12 +286,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold'
     },
-    uploadedText:{
+    uploadedText: {
         color: '#465881',
         fontSize: 17,
         marginRight: 25,
     },
-   
+
     buttonText: {
         color: 'white',
         fontSize: 18,

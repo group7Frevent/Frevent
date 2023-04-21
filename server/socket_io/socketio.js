@@ -1,7 +1,8 @@
 var clients = [];
 var messageController = require('../models/messages')
+var moment = require('moment-timezone');
 
-
+// Socket.io, for real-time chat
 exports = module.exports = function (io) {
     // Create connection to Socket.io
     io.sockets.on('connection', function (socket) {
@@ -16,9 +17,12 @@ exports = module.exports = function (io) {
 
         });
 
+        // Send message 
         socket.on("send_message", (data) => {
-            console.log(data)
+            // Get timestamp
+            data.timestamp = moment().tz("Europe/Helsinki").format();
 
+            // Add message to database
             messageController.addMessage(data, (dberr, dbres) => {
                 if (dberr) {
 
@@ -28,6 +32,7 @@ exports = module.exports = function (io) {
                             if (dbErr) {
 
                             } else {
+                                // Send message to both users
                                 socket.to(parseInt(data.toID)).emit("getMSG", dbRes)
                                 socket.to(parseInt(data.senderID)).emit("getMSG", dbRes)
                                 console.log("Here")
@@ -40,6 +45,7 @@ exports = module.exports = function (io) {
 
         })
 
+        // disconnect
         socket.on('disconnect', function (data) {
             console.log("User disconnected")
             for (var i = 0, len = clients.length; i < len; ++i) {

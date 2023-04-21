@@ -20,9 +20,18 @@ const ChatContainer = ({ navigation }) => {
 
     const userData = useSelector(selectUser)
 
+    // Get all conversations
     const getConversations = () => {
-        axios.get(API_URL + "messages/friends/" + userData.user.ID).then((response) => {
 
+        const config = {
+            headers: {
+                'Authorization': `Basic ${userData?.user.token}`,
+            },
+        };
+
+        axios.get(API_URL + "messages/friends/", config).then((response) => {
+
+            // Sort conversations by timestamp
             response.data.sort((a, b) => {
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
@@ -38,22 +47,27 @@ const ChatContainer = ({ navigation }) => {
 
             }
             )
+            // Save conversations to async storage
             AsyncStorage.setItem(userData.user.username, JSON.stringify(response?.data));
+            // Set conversations to state
             setConverstions(response.data)
         })
     }
 
 
+    // Get conversations from async storage
     const getAsyncData = async () => {
-
-
         const conversations = await AsyncStorage.getItem(userData.user.username)
         setConverstions(JSON.parse(conversations))
 
     }
+
+    // Connect to socket
     const connectToSocket = async () => {
         await socket.emit('storeClientInfo', { customId: userData.user.ID });
     }
+
+
     useState(() => {
         connectToSocket()
         getAsyncData()
@@ -62,21 +76,21 @@ const ChatContainer = ({ navigation }) => {
     }, [socket])
 
 
-
+    // When screen is focused, get all conversations
     useEffect(() => {
         getAsyncData()
         getConversations()
     }, [isFocused])
 
-    const navigateToChat = (data) => {
 
+    // When clicking on a conversation, navigate to conversation screen and clear unread messages
+    const navigateToChat = (data) => {
 
         const config = {
             headers: {
                 Authorization: `Basic ${userData.user.token}`,
             },
         };
-        console.log(API_URL)
         axios.put(API_URL + "messages/setSeen/" + data.ID + "/" + userData.user.ID, {}, config)
             .then((response) => {
                 response.data.sort((a, b) => {
@@ -99,14 +113,13 @@ const ChatContainer = ({ navigation }) => {
             }).catch((e) => {
                 console.log(e.response.data)
             })
-        //console.log("here" + userData.user.ID + data.ID + userData.user.token)
         navigation.navigate("Conversation", {
             conversationID: data.ID,
             conversationdata: data
         })
     }
 
-
+    // Render all conversations
     return (
         <View style={styles.container}>
             <CustomHeader2 navigation={navigation} />
@@ -128,6 +141,7 @@ const ChatContainer = ({ navigation }) => {
     )
 }
 
+// Styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,

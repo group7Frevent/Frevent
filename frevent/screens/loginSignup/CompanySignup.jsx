@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import axios from 'axios';
@@ -9,22 +9,22 @@ import { firebase } from '../../config'
 import { addUser } from '../../features/userSlice';
 
 
-const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+const CompanySignup = ({ route, navigation }) => {      // registration for companies
+    const [userName, setUserName] = useState('');     
+    const [password, setPassword] = useState('');   
+    const [email, setEmail] = useState('');               
     const [companyName, setCompanyName] = useState("");
     const [picture, setPicture] = useState('');
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
-    useEffect(() => {
-      image && uploadImage()
-    
-    }, [image])
-    
+    useEffect(() => { // <- This is the effect hook
+        image && uploadImage()
 
-    const pickImage = async () => {
+    }, [image])
+
+
+    const pickImage = async () => { // <- This is the function that is called when the user presses the button, it launches the image library
         // No permission request is neccessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -35,12 +35,12 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
         });
 
 
-        const source = { uri: result.assets[0].uri };
+        const source = { uri: result.assets[0].uri }; // <- This is the image that is selected by the user, it is stored in the state
         console.log(source);
         setImage(source);
 
     };
-    const uploadImage = async () => {
+    const uploadImage = async () => {  // <- This is the function that is called when the user presses the button, it uploads the image to the firebase storage
         setUploading(true);
         const response = await fetch(image.uri)
         const blob = await response.blob();
@@ -49,7 +49,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
         ref.put(blob).then(() => {
             ref.getDownloadURL().then((url) => {
                 setPicture(url); // <- This is the download URL of the image
-                setUploading(false); 
+                setUploading(false);
             }).catch((error) => {
                 console.log(error);
                 setUploading(false);
@@ -62,11 +62,11 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
 
 
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); // <- This is the dispatch function that is used to dispatch actions to the store
 
-    const handleSignup = () => {
+    const handleSignup = () => { // <- This is the function that is called when the user presses the button, it sends the registration request to the backend
         // Rekisteröinnin logiikka tähän
-        var details = {
+        var details = {   // <- This is the object that is sent to the backend
             username: userName,
             password: password,
             email: email,
@@ -74,32 +74,31 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
             companyname: companyName,
         };
 
-        var formBody = [];
+        var formBody = []; // <- This is the form body that is sent to the backend
 
-        for (var property in details) {
+        for (var property in details) { // <- This is the loop that is used to create the form body
             var encodedKey = encodeURIComponent(property);
             var encodedValue = encodeURIComponent(details[property]);
             formBody.push(encodedKey + "=" + encodedValue);
         }
 
-        formBody = formBody.join("&");
+        formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-        const config = {
+        const config = { // <- This is the configuration object that is sent to the backend
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         };
 
-        const requestUrl = API_URL + 'auth/register/company'
+        const requestUrl = API_URL + 'auth/register/company' // <- This is the URL of the backend
 
 
-        axios.post(requestUrl, formBody, config).then((response) => {
+        axios.post(requestUrl, formBody, config).then((response) => { // <- This is the axios request that is sent to the backend
             // Login succeed
             console.log(response.data)
             // Tallennetaan tiedot reduxiin
             dispatch(addUser(response.data))
-            setLogged(true)
         }).catch((error) => {
             console.log(error)
         })
@@ -108,10 +107,10 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
 
     return (
 
-
-        <View style={styles.container}>
+        // This is the view that is rendered
+        <View style={styles.container}>  
             <Text style={styles.title}>Create an account</Text>
-            
+
             <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -133,6 +132,7 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
             />
             <TextInput
                 style={styles.input}
+                type="email"
                 placeholder="Email"
                 placeholderTextColor="#465881"
                 onChangeText={setEmail}
@@ -149,21 +149,18 @@ const CompanySignup = ({ setShowLogin, setShowCompanySignup, setLogged}) => {
                 maxLength={20}
             />
             <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
-                    <Text style={styles.uploadText}> Select profile picture</Text>
-                </TouchableOpacity>
+                <Text style={styles.uploadText}> Select profile picture</Text>
+            </TouchableOpacity>
 
-                <View style={styles.imageContainer}>
+            <View style={styles.imageContainer}>
                 {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
 
-                </View>
+            </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
                 <Text style={styles.buttontextsign}>Sign up</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-                setShowCompanySignup(false)
-                setShowLogin(true)
-            }}
+            <TouchableOpacity onPress={() => navigation.goBack()}
                 color="#fff">
                 <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
             </TouchableOpacity>
@@ -175,7 +172,7 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: 'stretch',
         flex: 1,
-        paddingTop:40,
+        paddingTop: 40,
         paddingLeft: 60,
         paddingRight: 60,
         backgroundColor: '#FEF9A7',
@@ -229,12 +226,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold'
     },
-    uploadedText:{
+    uploadedText: {
         color: '#465881',
         fontSize: 17,
         marginRight: 25,
     },
-    buttontextsign:{
+    buttontextsign: {
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold'

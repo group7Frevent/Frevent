@@ -8,16 +8,24 @@ const users = require('../models/users');
 
 // Send msg
 // Requires sender ID, to ID and message.
-router.post("/send", function (req, res, next) {
+router.post("/send", function (req, res, next) { // Send message
     if (req.body.senderID && req.body.toID && req.body.timestamp && req.body.message) {
-        messageController.addMessage(req.body, (dberr, dbRes) => {
-            if (dberr) {
-                errors.errorCode(dberr, res)
-            } else {
-                // Return true if not mysql errors
-                res.send(true)
-            }
-        })
+        // Added extra middleware
+        // Get bearer token and encode it to check userID
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        const encodedToken = parseJwt(token)
+        if (encodedToken.userData.ID == req.params.senderID) {
+
+            messageController.addMessage(req.body, (dberr, dbRes) => {
+                if (dberr) {
+                    errors.errorCode(dberr, res)
+                } else {
+                    // Return true if not mysql errors
+                    res.send(true)
+                }
+            })
+        }
     }
 });
 
@@ -60,11 +68,18 @@ router.get("/chats/:id", (req, res, next) => {
 
 
 // Get friends picture, last msg to you, date and username
-router.get("/friends/:id", async (req, res, next) => {
-    if (req.params.id) {
-        // Lets get friends details
-        getConversationsFun(req.params.id, req, res)
+router.get("/friends/", async (req, res, next) => {
+
+    // Lets get friends details
+    // Added extra middleware
+    // Get bearer token and encode it to check userID
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const encodedToken = parseJwt(token)
+    if (encodedToken.userData.ID) {
+        getConversationsFun(encodedToken.userData.ID, req, res)
     }
+
 })
 
 

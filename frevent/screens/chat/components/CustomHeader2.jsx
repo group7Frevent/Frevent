@@ -12,10 +12,13 @@ import { useIsFocused } from "@react-navigation/native";
 
 const CustomHeader2 = ({ navigation }) => {
 
+    // This component shows if there is pending friend requests, button to add new friends 
+
     const isFocused = useIsFocused();
 
     const [pendingRequests, setPendingRequests] = useState(0)
     const [pendingRequestsArray, setPendingRequestsArray] = useState([])
+    // Get user data from redux
     const userData = useSelector(selectUser)
 
     var config = {
@@ -23,17 +26,18 @@ const CustomHeader2 = ({ navigation }) => {
             'Authorization': `Basic ${userData?.user.token}`   // user authorization
         }
     }
-    console.log(API_URL + 'friends/getpendingrequests')
+
+    // Get pending friend requests
     const getFriendRequests = async () => {
         axios.get(API_URL + 'friends/getpendingrequests', config)
             .then(response => {
-                console.log(response.data)
                 setPendingRequestsArray(response.data)
                 setPendingRequests(response.data.length)
             }).catch(error => {
                 console.log(error)
             })
     }
+
 
     useEffect(() => {
         getFriendRequests()
@@ -53,7 +57,7 @@ const CustomHeader2 = ({ navigation }) => {
                         </View>
                     }
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("fiendFriends")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Find friends")}>
                     <Ionic name="person-add" size={24} color={"tomato"} />
                 </TouchableOpacity>
             </View>

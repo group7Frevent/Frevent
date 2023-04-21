@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
+import moment from 'moment-timezone';
 
 const ChatBubbleRight = ({ text, timestamp }) => {
+
+    // Chat bubble that shows the message sent by the client
     return (
         <View style={{
             backgroundColor: "#f77f1b",
@@ -32,6 +35,8 @@ const ChatBubbleRight = ({ text, timestamp }) => {
         </View>
     )
 }
+
+// Function that returns the time since the message was sent in a readable format
 function timeSince(date) {
 
     function addHours(date, hours) {
@@ -42,10 +47,12 @@ function timeSince(date) {
 
     const date2 = new Date();
 
-    const newDate = addHours(date2, 2);
+    const newDate = addHours(date2, 3);
 
     var seconds = Math.floor((newDate - date) / 1000);
     var interval = seconds / 31536000;
+
+    //console.log(`CahtBubbleRight.js: date: ${date}`)
 
     if (interval > 50) {
         return "NaN seconds ago";

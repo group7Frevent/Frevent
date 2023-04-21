@@ -1,7 +1,13 @@
 import { View, Text, Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import CheckBox from 'expo-checkbox';
 
-const ChatBox = ({ data, unread }) => {
+const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex, showParticipants }) => {
+
+    // Box that shows friend in chat container screen , renders an image and name of the friend
+    // Also shows the last message sent and the time since it was sent (If there is no message it shows "Start chatting!")
+
+    // But can be used for other purposes as well
 
     // Init date var
     const [date, setDate] = useState(Date)
@@ -19,19 +25,32 @@ const ChatBox = ({ data, unread }) => {
                         uri: data?.picture,
                     }} />
                 <View style={styles.texts}>
-                    <View style={styles.topRow}>
-                        <Text style={styles.sender}>{data?.username}</Text>
+                    <View style={!events && !showParticipants ? styles.topRow : styles.textIfEvents}>
+                        <Text style={styles.sender}>{data?.fname} {data?.lname}</Text>
                         {unread > 0 &&
                             <View style={styles.numberBox}>
                                 <Text>{unread}</Text>
                             </View>
                         }
                     </View>
-                    <View style={styles.msgAndClock}>
-                        <Text>{data?.message ? data?.message : "Start chatting!"}</Text>
-                        <Text style={unread > 0 ? { color: "#f77f1b", fontWeight: 700 } : {}}>{date !== "NaN seconds ago" && date}</Text>
-                    </View>
+                    {!events && !showParticipants &&
+                        <View style={styles.msgAndClock}>
+                            <Text>{data?.message ? data?.message : "Start chatting!"}</Text>
+                            <Text style={unread > 0 ? { color: "#f77f1b", fontWeight: 700 } : {}}>{date !== "NaN seconds ago" && date}</Text>
+                        </View>
+                    }
                 </View>
+                {events &&
+                    <View style={styles.checkboxContainer}>
+                        <Text>{events}</Text>
+                        <CheckBox
+                            style={styles.checkbox} // style for the container
+                            value={checkbox} // boolean value
+                            onValueChange={() => setToChecked(checkedIndex)}
+                            color={checkbox ? 'green' : undefined} // custom color for unchecked state
+                        />
+                    </View>
+                }
             </View>
             <View style={styles.line} />
         </View>
@@ -50,7 +69,7 @@ function timeSince(date) {
 
     const date2 = new Date();
 
-    const newDate = addHours(date2, 2);
+    const newDate = addHours(date2, 3);
 
     var seconds = Math.floor((newDate - date) / 1000);
     var interval = seconds / 31536000;
@@ -109,6 +128,11 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         flex: 1,
     },
+    textIfEvents: {
+        paddingLeft: 10,
+        flex: 1,
+        justifyContent: "center"
+    },
     line: {
         height: 1,
         backgroundColor: 'gray',
@@ -129,6 +153,14 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingRight: 10,
         alignItems: "center"
+    },
+    checkbox: {
+        alignSelf: 'center',
+    },
+    checkboxContainer: {
+        alignContent: "center",
+        justifyContent: "center",
+
     }
 });
 

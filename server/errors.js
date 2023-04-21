@@ -1,4 +1,5 @@
 const errors = {
+    // Function to return error codes
     errorCode: (dberr, res) => {
         if (dberr == "missing params") {
             res.status(400).send("Missing params")

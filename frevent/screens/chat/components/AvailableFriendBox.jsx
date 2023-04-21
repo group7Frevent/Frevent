@@ -9,9 +9,11 @@ import Ionic from 'react-native-vector-icons/Ionicons'
 
 const AvailableFriendBox = ({ data }) => {
 
+    // Get user data from redux
     const userData = useSelector(selectUser)
     const [status, setStatus] = React.useState(data?.status)
 
+    // Add friend
     const addFriend = () => {
         var details = {
             friendID: data?.ID,
@@ -36,9 +38,7 @@ const AvailableFriendBox = ({ data }) => {
             },
         };
         axios.post(API_URL + 'friends/addfriend/', formBody, config).then(response => {
-            console.log(response.data)
             if (response.data == true) {
-                console.log("here")
                 data.status = "pending"
                 setStatus("pending")
             }
@@ -47,6 +47,7 @@ const AvailableFriendBox = ({ data }) => {
         })
     }
 
+    // return the component
     return (
         <View>
             <View style={styles.container}>

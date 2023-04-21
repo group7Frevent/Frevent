@@ -16,9 +16,8 @@ const FindFriends = () => {
     const [filteredData, setFilteredData] = useState([])
     const [search, setSearch] = useState('')
 
+    // Get available users
     const getAvailableUsers = async () => {
-
-
         var config = {
             headers: {
                 'Authorization': `Basic ${userData?.user.token}`   // user authorization
@@ -40,6 +39,7 @@ const FindFriends = () => {
     }, [])
 
 
+    // Searchbar
     const filterData = (e) => {
         const searchWord = e;
         setSearch(searchWord);
@@ -62,6 +62,7 @@ const FindFriends = () => {
         }
     };
 
+    // Clear searchbar
     const clearSearch = () => {
         setSearch('')
         setFilteredData(availableUsers)

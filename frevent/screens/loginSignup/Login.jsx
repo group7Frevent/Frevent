@@ -6,26 +6,27 @@ import { addUser } from '../../features/userSlice';
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from 'expo-checkbox';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 
-
-const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin }) => {
+const Login = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the login screen
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [checkbox, setCheckbox] = useState(false)
+    const [spinner, setSpinner] = useState(false)
 
 
-    // Valmistelee redux
-    const dispatch = useDispatch();
-
-    const loginRequest = async () => {
-        if (checkbox) {
+    const dispatch = useDispatch(); // <- This is the redux hook that is used to dispatch actions to the redux store
+ 
+    const loginRequest = async () => { // <- This is the function that is called when the user presses the login button, it sends a login request to the backend
+        setSpinner(true)
+        if (checkbox) { // <- This is the ternary operator, it is used to set the account type based on the checkbox value
             var accountType = "company"
         }
         else {
             var accountType = "user"
         }
-        console.log(accountType)
+        console.log(accountType)  // <- This is the console.log function, it is used to print the account type to the console
         var details = {
             username: userName,
             password: password,
@@ -33,18 +34,18 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
         };
 
 
-        var formBody = [];
-
-        for (var property in details) {
+        var formBody = []; // <- This is the form body that is sent to the backend
+ 
+        for (var property in details) { // <- This is the for loop, it is used to iterate over the details object
             var encodedKey = encodeURIComponent(property);
             var encodedValue = encodeURIComponent(details[property]);
             formBody.push(encodedKey + "=" + encodedValue);
         }
 
-        formBody = formBody.join("&");
+        formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-        const config = {
-            headers: {
+        const config = { // <- This is the config object that is sent to the backend, it is used to set the headers
+            headers: { 
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
             },
@@ -52,76 +53,80 @@ const Login = ({ setLogged, setShowRegister, setShowCompanySignup, setShowLogin 
 
 
 
-        const requestUrl = API_URL + 'auth/login/'
-
-
-
-
-
-        axios.post(requestUrl, formBody, config).then((response) => {
+        const requestUrl = API_URL + 'auth/login/' // <- This is the request url that is sent to the backend
+        axios.post(requestUrl, formBody, config).then((response) => { // <- This is the axios request that is sent to the backend
             // Login succeed
             console.log(response.data)
+            console.log(accountType)
             // Tallennetaan tiedot reduxiin
-            AsyncStorage.setItem("userData", JSON.stringify(response?.data));
-            dispatch(addUser(response.data))
-            setLogged(true)
+            AsyncStorage.setItem("userData", JSON.stringify(response?.data)); // <- This is the AsyncStorage function, it is used to store the user data to the device
+            dispatch(addUser(response.data)) // <- This is the dispatch function, it is used to dispatch an action to the redux store
+            setSpinner(false) // <- This is the setSpinner function, it is used to set the spinner state, which is used to show a loading spinner
         }).catch((error) => {
-            console.log(error)
-            if (error.response.data === "wrong username") {
-                Alert.alert("Username not found");
+            console.log(error.response.data) // <- This is the console.log function, it is used to print the error message to the console
+            setSpinner(false) 
+            if (error.response.data === "wrong username") { // <- This is the if statement, it is used to check if the error message is "wrong username", if it is, it shows an alert
+                Alert.alert("Username not found");  // <- This is the Alert.alert function, it is used to show an alert to the user, it takes two parameters, the title and the message
             }
             else {
-                Alert.alert("Wrong password");
+                Alert.alert("Wrong password"); // <- This is the Alert.alert function, it is used to show an alert to the user, it takes two parameters, the title and the message
             }
         })
+
+
 
 
     }
 
     return (
-
-        <View style={styles.container}>
-            <Text style={styles.title} >Welcome to Frevent</Text>
-            <Image style={styles.image} source={require("../../assets/kaverit.png")} />
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                placeholderTextColor="grey"
-                onChangeText={setUserName}
-                value={userName}
-                autoCapitalize='none'
+        <>
+            <Spinner
+                visible={spinner}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="grey"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize='none'
+            <View style={styles.container}>
 
-            <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
-            <CheckBox
-           style={styles.checkbox} // style for the container
-           value={checkbox} // boolean value
-           onValueChange={()=>setCheckbox(!checkbox)} // toggle checkbox
-           color={checkbox ? 'green' : undefined} // custom color for unchecked state
-            />
-            
-            <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
-                <Text style={styles.logintext}>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowRegister(false)} color="#fff">
-                <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-                setShowCompanySignup(true)
-                setShowLogin(false)
-            }} color="#fff">
-                <Text style={styles.bottomtitle} > Create your company account here!</Text>
-            </TouchableOpacity>
+                <Image style={styles.image} source={require("../../assets/FreventLogo.png")} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Username"
+                    placeholderTextColor="grey"
+                    onChangeText={setUserName}
+                    value={userName}
+                    autoCapitalize='none'
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor="grey"
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    autoCapitalize='none'
 
-        </View>
+                />
+
+                <Text style={styles.checkboxtext}>Check this box if using a company account!</Text>
+                <CheckBox
+                    style={styles.checkbox} // style for the container
+                    value={checkbox} // boolean value
+                    onValueChange={() => setCheckbox(!checkbox)} // toggle checkbox
+                    color={checkbox ? 'green' : undefined} // custom color for unchecked state
+                />
+
+                <TouchableOpacity style={styles.button} onPress={loginRequest} color="#fff">
+                    <Text style={styles.logintext}>Log In</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Signup")} color="#fff">
+                    <Text style={styles.bottomtitle} > No account yet? Register here!</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("CompanySignup")} color="#fff">
+                    <Text style={styles.bottomtitle} > Create your company account here!</Text>
+                </TouchableOpacity>
+
+            </View>
+        </>
 
     )
 }
@@ -164,8 +169,9 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     image: {
-        width: 250,
-        height: 200,
+        width: 300,
+        height: 100,
+
 
     },
     title: {
