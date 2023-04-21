@@ -7,12 +7,12 @@ import { selectUser } from '../../features/userSlice'
 import { API_URL } from "@env"
 import { useDispatch } from "react-redux";
 
-const ProfileSettings = () => {
+const ProfileSettings = () => { // <- This is the component that is rendered when the user navigates to the settings screen
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const userData = useSelector(selectUser)
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = () => { // <- This is the function that is called when the user presses the button, it sends a request to the backend to update the user's details
 
     var details = {
       username: username,
@@ -22,22 +22,22 @@ const ProfileSettings = () => {
 
     var formBody = [];
 
-    for (var property in details) {
+    for (var property in details) { // <- This is the object that is sent to the backend
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
     }
 
-    formBody = formBody.join("&");
+    formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-    const config = {
-      headers: {
-        Accept: "application/json",
+    const config = { // <- This is the config object that is sent to the backend
+      headers: {  
+        Accept: "application/json", 
         "Content-Type": "application/x-www-form-urlencoded",
       },
     };
 
-    axios.put(API_URL + 'settings/update/user/', formBody, config)
+    axios.put(API_URL + 'settings/update/user/', formBody, config) // <- This is the axios request that is sent to the backend
       .then(response => {
         console.log(response.data);
       })
@@ -45,7 +45,7 @@ const ProfileSettings = () => {
         console.log(error);
       });
   };
-
+// styles
   return (
     <View style={styles.container}>
       <Text style={styles.label}>New Username</Text>

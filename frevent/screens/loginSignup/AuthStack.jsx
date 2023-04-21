@@ -5,9 +5,9 @@ import Signup from './Signup';
 import CompanySignup from './CompanySignup';
 import { Text } from 'react-native';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator(); // create stack navigator
 
-const AuthStack = () => {
+const AuthStack = () => { // Company settings stack
     return (
         <Stack.Navigator >
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />

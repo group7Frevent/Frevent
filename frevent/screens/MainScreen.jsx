@@ -9,29 +9,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompanyTabBar from './CompanyPortal/CompanyTabBar';
 import AuthStack from './loginSignup/AuthStack';
 
-const MainScreen = () => {
-
-    // State that navigates to screens
-    const [screen, setScreen] = useState("login")
-
-    //  redux
-    const dispatch = useDispatch();
-    const userData = useSelector(selectUser)
+const MainScreen = () => { // <- This is the component that is rendered when the user navigates to the home screen
 
 
-    // Get logged status
-    const getLoggedStatus = async () => {
+    const [screen, setScreen] = useState("login") // <- This is the state that is used to determine which screen is rendered
 
-        // Get user data from async storage
-        const userData = await AsyncStorage.getItem("userData")
-        const parsedJsonData = JSON.parse(userData)
+    const dispatch = useDispatch(); // <- This is the dispatch function that is used to dispatch actions to the redux store
 
-        // If user data exists, set user data to redux and navigate to home screen
-        if (parsedJsonData?.token) {
+    const userData = useSelector(selectUser) // <- This is the user data that is stored in the redux store, and is used to determine which screen is rendered
+
+
+    const getLoggedStatus = async () => { // <- This is the function that is used to check if the user is logged in or not
+
+        const userData = await AsyncStorage.getItem("userData") // <- This is the user data that is stored in the async storage
+        const parsedJsonData = JSON.parse(userData) // <- This is the parsed user data that is stored in the async storage
+
+        if (parsedJsonData?.token) { // <- This is the if statement that is used to check if the user is logged in or not
             dispatch(addUser(parsedJsonData))
 
 
-            if (parsedJsonData.IDcompany) {
+            if (parsedJsonData.IDcompany) { // <- This is the if statement that is used to check if the user is a company or not
                 setScreen("companyHome")
             } else {
                 setScreen("home")
@@ -42,9 +39,11 @@ const MainScreen = () => {
 
 
 
-    useEffect(() => {
+
+    useEffect(() => {   // <- This is the useEffect hook that is used to check if the user is logged in or not
         getLoggedStatus()
     }, [])
+
 
 
     useEffect(() => {
@@ -58,8 +57,8 @@ const MainScreen = () => {
             } else {
                 setScreen("home")
             }
-        }
-    }, [userData])
+        } 
+    }, [userData]) // <- This is the useEffect hook that is used to check if the user is a company or not, and is triggered when the user data is changed
 
     // Login screen
     if (screen === "login") {

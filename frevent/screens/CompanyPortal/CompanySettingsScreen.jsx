@@ -13,7 +13,7 @@ import { firebase } from '../../config'
 import { Linking, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const CompanySettingsScreen = ({ route, navigation }) => {
+const CompanySettingsScreen = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the settings screen
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null)
@@ -22,7 +22,7 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   //const navigation = useNavigation();
   const [uploading, setUploading] = useState(false);
 
-  const goToNotifSettings = () => {
+  const goToNotifSettings = () => { // <- This is the function that is called when the user presses the button, it opens the notification settings
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:notifications');
     } else {
@@ -30,7 +30,7 @@ const CompanySettingsScreen = ({ route, navigation }) => {
     }
   };
 
-  const goToLocSettings = () => {
+  const goToLocSettings = () => { // <- This is the function that is called when the user presses the button, it opens the location settings
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:location');
     } else {
@@ -38,17 +38,17 @@ const CompanySettingsScreen = ({ route, navigation }) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { // <- This is the effect hook
     image && uploadImage()
 
   }, [image])
 
   // Valmistelee redux
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // <- This is the redux hook that is used to dispatch actions to the redux store
 
   //////////////////////////////////////////
 
-  const pickImage = async () => {
+  const pickImage = async () => { // <- This is the function that is called when the user presses the button, it opens the image picker
     // No permission request is neccessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -59,11 +59,11 @@ const CompanySettingsScreen = ({ route, navigation }) => {
     });
 
 
-    const source = { uri: result.assets[0].uri };
+    const source = { uri: result.assets[0].uri }; // <- This is the image that is selected by the user
     setImage(source);
 
   };
-  const uploadImage = async () => {
+  const uploadImage = async () => { // <- This is the function that is called when the user presses the button, it uploads the image to firebase
     setUploading(true);
     const response = await fetch(image.uri)
     const blob = await response.blob();
@@ -84,13 +84,13 @@ const CompanySettingsScreen = ({ route, navigation }) => {
   };
 
 
-  const changePicture = (pic) => {
+  const changePicture = (pic) => { // <- This is the function that is called when the user presses the button, it updates the user's profile picture in the database
     var details = {
       picture: pic,
     };
     var formBody = [];
 
-    for (var property in details) {
+    for (var property in details) { 
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
@@ -101,7 +101,7 @@ const CompanySettingsScreen = ({ route, navigation }) => {
 
 
 
-    const config = {
+    const config = { // <- This is the configuration for the axios request
       headers: {
         Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -109,7 +109,7 @@ const CompanySettingsScreen = ({ route, navigation }) => {
       },
     };
 
-    axios.put(API_URL + 'settings/update/companypicture/', formBody, config)
+    axios.put(API_URL + 'settings/update/companypicture/', formBody, config) // <- This is the axios request
       .then(response => {
         console.log(response.data);
         dispatch(addUser(response.data))
@@ -121,17 +121,17 @@ const CompanySettingsScreen = ({ route, navigation }) => {
 
   };
 
-  const handleLogout = async () => {
+  const handleLogout = async () => { // <- This is the function that is called when the user presses the button, it logs the user out
     await AsyncStorage.removeItem("userData");
     dispatch(addUser({}))
   };
 
   //get current username
-  useEffect(() => {
+  useEffect(() => { // <- This is the effect hook
     setUsername(userData.user.username)
   }, [userData.user.username])
 
-
+ // styles for the screen
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ backgroundColor: '#FEF9A7', flex: 1 }}>

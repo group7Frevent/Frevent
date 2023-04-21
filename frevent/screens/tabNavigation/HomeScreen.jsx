@@ -10,13 +10,13 @@ import HomeScreenHeader from './HomeScreenHeader';
 import createOpenLink from 'react-native-open-maps';
 
 
-const HomeScreen = () => {
+const HomeScreen = () => { // <- This is the component that is rendered when the user navigates to the home screen                                      
   const [visibleEvents, setVisibleEvents] = useState([])
   const [attending, setAttending] = useState([])
   const [attendSwitch, setAttendSwitch] = useState(2)
 
 
-  const userData = useSelector(selectUser)
+  const userData = useSelector(selectUser) // <- This is the user data that is stored in the redux store
   const getData = async () => {
     try {
       var config = {
@@ -24,16 +24,16 @@ const HomeScreen = () => {
           'Authorization': `Basic ${userData?.user.token}`   // user authorization
         }
       }
-      const response = await axios.get(API_URL + 'events/getevents/', config)
+      const response = await axios.get(API_URL + 'events/getevents/', config) // <- This is the axios request that is sent to the backend
       setVisibleEvents(response.data)
       console.log(response.data)
     }
-    catch (error) {                                                     //Fetch event data
+    catch (error) {                                                        //Fetching events that the current user is not attending to
       console.log(error)
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {                                                       //Fetching events that the current user is not attending to
     getData()
 
     attendedEvents()
@@ -42,7 +42,7 @@ const HomeScreen = () => {
 
 
 
-  const attendedEvents = async () => {
+  const attendedEvents = async () => {                                   //Fetching events that the current user is already attending to
     try {
       var config = {
         headers: {
@@ -53,27 +53,27 @@ const HomeScreen = () => {
       setAttending(response.data)
     }
 
-    catch (error) {
+    catch (error) { 
       console.log(error)
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {                                                      //Fetching events that the current user is already attending to, and updating the switch
     attendedEvents()
 
   }, [attendSwitch])
 
 
-  const buttonAttend = (id, type, index) => {
+  const buttonAttend = (id, type, index) => {                           //Registering attendance to an event
 
     const specs = {
       IDEvent: id,
       eventType: type
     };
 
-    const config = {
+    const config = {                                                   //Registering attendance to an event, and updating the switch
       headers: {
-        'Authorization': `Basic ${userData?.user.token}`
+        'Authorization': `Basic ${userData?.user.token}`  // user authorization
       }
     };
 
@@ -132,12 +132,7 @@ const HomeScreen = () => {
       <HomeScreenHeader />
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          {/*
-            <View style={styles.header}>
-            <Text style={styles.title} >Welcome!</Text>
-            <Text style={styles.title} >Here are your upcoming events</Text>
-            </View>
-            */}
+          
           {visibleEvents.map((data, index) => {
             return (
               <View key={index} style={styles.event}>
