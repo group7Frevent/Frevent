@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 require('dotenv').config()
 
+// Databse config
 var connection = mysql.createConnection({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,

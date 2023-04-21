@@ -1,6 +1,8 @@
 const db = require("../database");
 
 const eventDetails = {
+    // MySQL queries for events
+
     getEventDetails: function (userID, callback) {          //SQL query to fetch events that the current user should see on their front page
         return db.query("SELECT e.ID AS id, e.eventname AS Tapahtuma, e.description AS Kuvaus, e.location AS Paikka, e.startdate AS Ajankohta, (SELECT COUNT(IDUser) FROM usersAndEvents WHERE IDEvent=e.ID) AS Osallistujia, e.eventType as eventType, c.companyname AS Organizer, c.picture AS ProfilePic FROM events e INNER JOIN company c ON c.IDcompany = e.companyID WHERE e.startdate > NOW() UNION SELECT ue.IDUserEvents AS id, ue.eventname AS Tapahtuma, ue.description AS Kuvaus, ue.location AS Paikka, ue.date AS Ajankohta, (SELECT COUNT(IDUser) FROM userAndUserEvents WHERE IDEvent=ue.IDUserEvents) AS Osallistujia, ue.eventType as eventType, CONCAT(u.fname, ' ', u.lname) AS Organizer, u.picture AS ProfilePic FROM userEvents ue LEFT JOIN invitations i ON ue.IDUserEvents=i.IDEvent LEFT JOIN users u ON u.ID = ue.ownerID WHERE i.IDUser = ? AND ue.date > NOW() ORDER BY Ajankohta;"
             , [userID], callback);
@@ -37,35 +39,35 @@ const eventDetails = {
             , [eventname, description, userID, location, date], callback);
     },
 
-    createCompanyEvent: function (requestbody, companyID, callback) {
+    createCompanyEvent: function (requestbody, companyID, callback) { //SQL query to create company event
         return db.query("INSERT INTO events (eventname, description, companyID, location, startdate, eventType) VALUES (?, ?, ?, ?, ?, 'com')"
             , [requestbody.eventName, requestbody.eventDescription, companyID, requestbody.eventLocation, requestbody.eventDate], callback);
     },
-    inviteUserToEvent: function (IDEvent, IDUser, callback) {
+    inviteUserToEvent: function (IDEvent, IDUser, callback) { //SQL query to invite user to event
         return db.query("INSERT INTO invitations (IDEvent, IDUser) VALUES (?,?)"
             , [IDEvent, IDUser], callback);
     },
-    getMyEvents: function (userID, callback) {
+    getMyEvents: function (userID, callback) { //SQL query to get my events, and count of attendees
         return db.query("SELECT IDUserEvents as ID, eventname ,description ,ownerID ,location, date , eventType, (SELECT COUNT(IDuserAndUserEvents) FROM userAndUserEvents WHERE IDEvent=IDUserEvents) as attendees FROM userEvents WHERE ownerID = ?"
             , [userID], callback);
     },
-    getMyEventsCompany: function (companyID, callback) {
+    getMyEventsCompany: function (companyID, callback) { //SQL query to get my company events, and count of attendees
         return db.query("SELECT ID, eventname ,description ,companyID as ownerID ,location, startdate as date , eventType, (SELECT COUNT(IDUsersAndEvents) FROM usersAndEvents WHERE IDEvent=ID) as attendees FROM events WHERE companyID = ?"
             , [companyID], callback);
     },
-    getAttendees: function (IDEvent, callback) {
+    getAttendees: function (IDEvent, callback) { //SQL query to get attendees of event
         return db.query("SELECT users.ID, users.username, users.fname, users.lname, users.birthdate, users.picture, users.email FROM users INNER JOIN userAndUserEvents ON userAndUserEvents.IDUser=users.ID WHERE IDEvent=?;"
             , [IDEvent], callback);
     },
-    getAttendeesCompany: function (IDEvent, callback) {
+    getAttendeesCompany: function (IDEvent, callback) { //SQL query to get attendees of company event
         return db.query("SELECT users.ID, users.username, users.fname, users.lname, users.birthdate, users.picture, users.email FROM users INNER JOIN usersAndEvents ON usersAndEvents.IDUser=users.ID WHERE IDEvent=?"
             , [IDEvent], callback);
     },
-    deleteEvent: function (IDEvent, ownerID, callback) {
+    deleteEvent: function (IDEvent, ownerID, callback) { //SQL query to delete event
         return db.query("CALL deleteEvent(?, ?);"
             , [IDEvent, ownerID], callback);
     },
-    deleteEventCompany: function (IDEvent, ownerID, callback) {
+    deleteEventCompany: function (IDEvent, ownerID, callback) { //SQL query to delete company event
         return db.query("CALL deleteEventComp(?, ?);"
             , [IDEvent, ownerID], callback);
     }

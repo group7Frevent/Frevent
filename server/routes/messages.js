@@ -8,7 +8,7 @@ const users = require('../models/users');
 
 // Send msg
 // Requires sender ID, to ID and message.
-router.post("/send", function (req, res, next) {
+router.post("/send", function (req, res, next) { // Send message
     if (req.body.senderID && req.body.toID && req.body.timestamp && req.body.message) {
         // Added extra middleware
         // Get bearer token and encode it to check userID

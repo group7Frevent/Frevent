@@ -151,7 +151,7 @@ router.post('/postUserEvent/', async (req, res) => {
 })
 
 
-router.post('/postCompanyEvent/', async (req, res) => {
+router.post('/postCompanyEvent/', async (req, res) => {                                                                  //Router to create an event for a company
     if (
         req.body.eventName &&
         req.body.eventDate &&
@@ -208,7 +208,7 @@ router.get('/myevents/', async (req, res) => {
 })
 
 
-router.get('/myevents/company', async (req, res) => {
+router.get('/myevents/company', async (req, res) => {       //Router to get company events
     try {
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
@@ -230,7 +230,7 @@ router.get('/myevents/company', async (req, res) => {
 })
 
 
-router.get('/getAttendees/:eventID', async (req, res) => {
+router.get('/getAttendees/:eventID', async (req, res) => {  //Router to get attendees of an event
     try {
         if (req.params.eventID) {
 
@@ -249,7 +249,7 @@ router.get('/getAttendees/:eventID', async (req, res) => {
     }
 })
 
-router.get('/getAttendees/company/:eventID', async (req, res) => {
+router.get('/getAttendees/company/:eventID', async (req, res) => { //Router to get attendees of an event (company)
     try {
         if (req.params.eventID) {
 
@@ -268,7 +268,7 @@ router.get('/getAttendees/company/:eventID', async (req, res) => {
     }
 })
 
-router.delete('/deleteEvent/:eventID', async (req, res) => {
+router.delete('/deleteEvent/:eventID', async (req, res) => {    //Router to delete an event
     try {
 
 
@@ -276,8 +276,8 @@ router.delete('/deleteEvent/:eventID', async (req, res) => {
         const token = authHeader && authHeader.split(' ')[1]
         const encodedToken = parseJwt(token)
 
+        // If the user is a normal user
         if (encodedToken.userData.ID) {
-
 
             if (req.params.eventID && encodedToken.userData.ID) {
                 eventDetails.deleteEvent(req.params.eventID, encodedToken.userData.ID, (dbError, dbresult) => {
@@ -291,7 +291,7 @@ router.delete('/deleteEvent/:eventID', async (req, res) => {
             }
         }
 
-
+        // If the user is a company
         if (encodedToken.userData.IDcompany) {
 
             if (req.params.eventID && encodedToken.userData.IDcompany) {
@@ -313,7 +313,7 @@ router.delete('/deleteEvent/:eventID', async (req, res) => {
 
 
 
-function parseJwt(token) {
+function parseJwt(token) {  //Function to parse the JWT token
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
 
