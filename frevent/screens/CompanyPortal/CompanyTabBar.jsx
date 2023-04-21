@@ -10,16 +10,16 @@ import CompanySettingsStack from "./CompanySettingsStack";
 import MyEventsStack from '../myEvents/MyEventsStack'
 import AddEvent from '../myEvents/components/AddEvent'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator(); // create bottom tab navigator
 
-const CompanyTabNavigation = () => {
+const CompanyTabNavigation = () => {    // Company tab navigation
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 
     return (
 
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
+        <Tab.Navigator    
+            screenOptions={({ route }) => ({ // set tab bar options
 
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
@@ -30,7 +30,7 @@ const CompanyTabNavigation = () => {
                     null
                 ],
 
-                tabBarIcon: ({ focused, color, size }) => {
+                tabBarIcon: ({ focused, color, size }) => { // set tab bar icons
                     let iconName;
                     if (route.name === 'My Events') {
                         iconName = focused ? 'home' : 'home-outline';
@@ -44,8 +44,8 @@ const CompanyTabNavigation = () => {
             })
 
             }
-        >
-            <Tab.Screen name="My Events" options={{ headerShown: false }} component={MyEventsStack} />
+        >  
+            <Tab.Screen name="My Events" options={{ headerShown: false }} component={MyEventsStack} /> 
             <Tab.Screen name="Add event" component={AddEvent} />
             <Tab.Screen name="Settings" component={CompanySettingsStack} />
 

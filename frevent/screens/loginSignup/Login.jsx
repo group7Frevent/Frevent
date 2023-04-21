@@ -9,24 +9,24 @@ import CheckBox from 'expo-checkbox';
 import Spinner from 'react-native-loading-spinner-overlay'
 
 
-const Login = ({ route, navigation }) => {
+const Login = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the login screen
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [checkbox, setCheckbox] = useState(false)
     const [spinner, setSpinner] = useState(false)
 
-    // Valmistelee redux
-    const dispatch = useDispatch();
 
-    const loginRequest = async () => {
+    const dispatch = useDispatch(); // <- This is the redux hook that is used to dispatch actions to the redux store
+ 
+    const loginRequest = async () => { // <- This is the function that is called when the user presses the login button, it sends a login request to the backend
         setSpinner(true)
-        if (checkbox) {
+        if (checkbox) { // <- This is the ternary operator, it is used to set the account type based on the checkbox value
             var accountType = "company"
         }
         else {
             var accountType = "user"
         }
-        console.log(accountType)
+        console.log(accountType)  // <- This is the console.log function, it is used to print the account type to the console
         var details = {
             username: userName,
             password: password,
@@ -34,18 +34,18 @@ const Login = ({ route, navigation }) => {
         };
 
 
-        var formBody = [];
-
-        for (var property in details) {
+        var formBody = []; // <- This is the form body that is sent to the backend
+ 
+        for (var property in details) { // <- This is the for loop, it is used to iterate over the details object
             var encodedKey = encodeURIComponent(property);
             var encodedValue = encodeURIComponent(details[property]);
             formBody.push(encodedKey + "=" + encodedValue);
         }
 
-        formBody = formBody.join("&");
+        formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-        const config = {
-            headers: {
+        const config = { // <- This is the config object that is sent to the backend, it is used to set the headers
+            headers: { 
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
             },
@@ -53,23 +53,23 @@ const Login = ({ route, navigation }) => {
 
 
 
-        const requestUrl = API_URL + 'auth/login/'
-        axios.post(requestUrl, formBody, config).then((response) => {
+        const requestUrl = API_URL + 'auth/login/' // <- This is the request url that is sent to the backend
+        axios.post(requestUrl, formBody, config).then((response) => { // <- This is the axios request that is sent to the backend
             // Login succeed
             console.log(response.data)
             console.log(accountType)
             // Tallennetaan tiedot reduxiin
-            AsyncStorage.setItem("userData", JSON.stringify(response?.data));
-            dispatch(addUser(response.data))
-            setSpinner(false)
+            AsyncStorage.setItem("userData", JSON.stringify(response?.data)); // <- This is the AsyncStorage function, it is used to store the user data to the device
+            dispatch(addUser(response.data)) // <- This is the dispatch function, it is used to dispatch an action to the redux store
+            setSpinner(false) // <- This is the setSpinner function, it is used to set the spinner state, which is used to show a loading spinner
         }).catch((error) => {
-            console.log(error.response.data)
-            setSpinner(false)
-            if (error.response.data === "wrong username") {
-                Alert.alert("Username not found");
+            console.log(error.response.data) // <- This is the console.log function, it is used to print the error message to the console
+            setSpinner(false) 
+            if (error.response.data === "wrong username") { // <- This is the if statement, it is used to check if the error message is "wrong username", if it is, it shows an alert
+                Alert.alert("Username not found");  // <- This is the Alert.alert function, it is used to show an alert to the user, it takes two parameters, the title and the message
             }
             else {
-                Alert.alert("Wrong password");
+                Alert.alert("Wrong password"); // <- This is the Alert.alert function, it is used to show an alert to the user, it takes two parameters, the title and the message
             }
         })
 

@@ -12,10 +12,10 @@ import { API_URL } from '@env'
 
 
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // <- This is the library that is used to store data locally
 
 
-const Signup = ({ route, navigation }) => {
+const Signup = ({ route, navigation }) => { // <- This is the component that is rendered when the user navigates to the signup screen
     const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -27,13 +27,13 @@ const Signup = ({ route, navigation }) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => { // <- This is the effect hook
         image && uploadImage()
 
     }, [image])
 
 
-    const pickImage = async () => {
+    const pickImage = async () => { // <- This is the function that is called when the user presses the button, it opens the image picker
         // No permission request is neccessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -44,12 +44,12 @@ const Signup = ({ route, navigation }) => {
         });
 
 
-        const source = { uri: result.assets[0].uri };
+        const source = { uri: result.assets[0].uri }; // <- This is the image that is selected by the user, it is stored in the state
         console.log(source);
         setImage(source);
 
     };
-    const uploadImage = async () => {
+    const uploadImage = async () => { // <- This is the function that is called when the user presses the button, it uploads the image to the firebase storage
         setUploading(true);
         const response = await fetch(image.uri)
         const blob = await response.blob();
@@ -75,13 +75,12 @@ const Signup = ({ route, navigation }) => {
 
 
 
-    // Valmistelee redux
-    const dispatch = useDispatch();
+
+    const dispatch = useDispatch(); // <- This is the dispatch function that is used to dispatch actions to the redux store
 
 
 
-    const handleSignup = () => {
-        // Rekisteröinnin logiikka tähän
+    const handleSignup = () => { // <- This is the function that is called when the user presses the signup button
 
         var details = {
             username: userName,
@@ -94,27 +93,27 @@ const Signup = ({ route, navigation }) => {
             accountType: "user"
         };
 
-        var formBody = [];
-
-        for (var property in details) {
+        var formBody = []; // <- This is the form body that is sent to the backend
+ 
+        for (var property in details) { // <- This is the loop that is used to create the form body
             var encodedKey = encodeURIComponent(property);
             var encodedValue = encodeURIComponent(details[property]);
             formBody.push(encodedKey + "=" + encodedValue);
         }
 
-        formBody = formBody.join("&");
+        formBody = formBody.join("&"); // <- This is the form body that is sent to the backend
 
-        const config = {
+        const config = { // <- This is the configuration of the request
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         };
 
-        const requestUrl = API_URL + 'auth/register/user'
+        const requestUrl = API_URL + 'auth/register/user' // <- This is the url of the backend
 
 
-        axios.post(requestUrl, formBody, config).then((response) => {
+        axios.post(requestUrl, formBody, config).then((response) => { // <- This is the axios request that is sent to the backend
             // Login succeed
             //console.log(response.data)
             // Tallennetaan tiedot reduxiin
@@ -125,7 +124,7 @@ const Signup = ({ route, navigation }) => {
         })
 
     };
-
+    // styles for the component start here after the return statement
     return (
 
         <View style={styles.container}>

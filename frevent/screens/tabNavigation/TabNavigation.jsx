@@ -15,17 +15,17 @@ import SettingsStack from './SettingsStack'
 
 
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator(); // create bottom tab navigator
 
-const TabNavigation = () => {
-    // Tuodaan tiedot reduxista
-    const userData = useSelector(selectUser)
+const TabNavigation = () => {   // Company tab navigation
+  
+    const userData = useSelector(selectUser) // get user data from redux
 
     return (
 
-        <Tab.Navigator
+        <Tab.Navigator   // create tab navigator
 
-            screenOptions={({ route }) => ({
+            screenOptions={({ route }) => ({ // set tab bar options
 
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
@@ -36,7 +36,7 @@ const TabNavigation = () => {
                     null
                 ],
 
-                tabBarIcon: ({ focused, color, size }) => {
+                tabBarIcon: ({ focused, color, size }) => { // set tab bar icons
                     let iconName;
 
                     if (route.name === 'Home') {
@@ -56,7 +56,7 @@ const TabNavigation = () => {
 
             }
         >
-            <Tab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+            <Tab.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} /> 
             <Tab.Screen options={{ headerShown: false }} name="My Events" component={MyEventsStack} />
             <Tab.Screen name="Chat" options={{ headerShown: false }} component={ChatStack} />
             <Tab.Screen name="Settings" component={SettingsStack} />
