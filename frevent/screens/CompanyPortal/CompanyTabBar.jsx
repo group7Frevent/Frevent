@@ -5,14 +5,15 @@ import { selectUser } from '../../features/userSlice'
 import Ionic from 'react-native-vector-icons/Ionicons'
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import CompanySettingsStack from "./CompanySettingsStack";
 import MyEventsStack from '../myEvents/MyEventsStack'
 import AddEvent from '../myEvents/components/AddEvent'
 
 const Tab = createBottomTabNavigator(); // create bottom tab navigator
 
+
 const CompanyTabNavigation = () => {    // Company tab navigation
+
     // Tuodaan tiedot reduxista
     const userData = useSelector(selectUser)
 

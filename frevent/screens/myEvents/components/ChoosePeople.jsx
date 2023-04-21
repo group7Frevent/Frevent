@@ -6,7 +6,10 @@ import ChatBox from '../../chat/components/ChatBox';
 
 const ChoosePeople = ({ route, navigation }) => {
 
+    // Get data from route params
     const [data, setData] = useState(route.params?.data)
+
+    // Force refresh for component
     const [forceRefresh, setForceRefresh] = useState(Math.floor(Math.random() * 1000))
 
     const save = () => {
@@ -20,10 +23,12 @@ const ChoosePeople = ({ route, navigation }) => {
         })
     }
 
+    // Set checked to true or false
     const setToChecked = (index) => {
         let temp = data;
         temp[index].checked = !temp[index].checked;
         setData(temp)
+        // Force refresh for component
         setForceRefresh(Math.floor(Math.random() * 1000))
     }
 

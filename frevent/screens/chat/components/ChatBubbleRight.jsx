@@ -3,6 +3,8 @@ import React from 'react'
 import moment from 'moment-timezone';
 
 const ChatBubbleRight = ({ text, timestamp }) => {
+
+    // Chat bubble that shows the message sent by the client
     return (
         <View style={{
             backgroundColor: "#f77f1b",
@@ -33,6 +35,8 @@ const ChatBubbleRight = ({ text, timestamp }) => {
         </View>
     )
 }
+
+// Function that returns the time since the message was sent in a readable format
 function timeSince(date) {
 
     function addHours(date, hours) {

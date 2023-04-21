@@ -8,10 +8,13 @@ import ChatBox from '../../chat/components/ChatBox'
 
 const ShowParticipants = ({ route, navigation }) => {
 
+    // Show participants in event
+
     const userData = useSelector(selectUser)
 
     const [participants, setParticipants] = useState([])
 
+    // Get participants
     const getParticipants = async () => {
         const config = {
             headers: {
@@ -27,6 +30,7 @@ const ShowParticipants = ({ route, navigation }) => {
     }
 
 
+    // Get participants for company
     const getParticipantsCompany = async () => {
         const config = {
             headers: {
@@ -42,6 +46,7 @@ const ShowParticipants = ({ route, navigation }) => {
 
 
     useEffect(() => {
+        // Check if user is company
         if (userData.user.IDcompany) {
             getParticipantsCompany()
         } else {

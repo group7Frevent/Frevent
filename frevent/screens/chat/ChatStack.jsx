@@ -9,7 +9,7 @@ import PendingRequest from './components/PendingRequest';
 
 const Stack = createNativeStackNavigator();
 
-
+// Stack navigator for chat screen
 const ChatStack = () => {
 
     return (
@@ -20,7 +20,7 @@ const ChatStack = () => {
                 component={Conversation}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="fiendFriends" component={FindFriends} options={{ headerShadowVisible: false }} />
+            <Stack.Screen name="Find friends" component={FindFriends} options={{ headerShadowVisible: false }} />
             <Stack.Screen name="pendingrequests" component={PendingRequest} options={{ headerShadowVisible: false }} />
         </Stack.Navigator>
     )

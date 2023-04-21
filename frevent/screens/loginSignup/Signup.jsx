@@ -128,98 +128,99 @@ const Signup = ({ route, navigation }) => { // <- This is the component that is 
     return (
 
         <View style={styles.container}>
-            <ScrollView style={{width:'100%'}}>
-                <View style= {{paddingLeft:60, paddingRight:60}}>
-            <Text style={styles.title}>Create an account</Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="UserName"
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor="#465881"
-                onChangeText={setUserName}
-                value={userName}
-                autoCapitalize="none"
-                maxLength={20}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor="#465881"
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                autoCapitalize="none"
-                maxLength={15}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="First Name"
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor="#465881"
-                onChangeText={setFirstName}
-                value={firstName}
-                autoCapitalize="none"
-                maxLength={30}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor="#465881"
-                onChangeText={setLastName}
-                value={lastName}
-                autoCapitalize="none"
-                maxLength={50}
-            />
+            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} >
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                type={'email'}
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor="#465881"
-                onChangeText={setEmail}
-                value={email}
-                autoCapitalize="none"
-            />
+                <Text style={styles.title}>Create an account</Text>
 
-            <TextInputMask
-                style={styles.input}
-                underlineColorAndroid={'transparent'}
-                type={'datetime'}
-                options={{
-                    format: 'YYYY.MM.DD'
-                }}
-                placeholder="Date of Birth"
-                placeholderTextColor="#465881"
-                onChangeText={setBirthday}
-                value={birthDay}
-                autoCapitalize="none"
-            />
+                <TextInput
+                    style={styles.input}
+                    placeholder="UserName"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setUserName}
+                    value={userName}
+                    autoCapitalize="none"
+                    maxLength={20}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    autoCapitalize="none"
+                    maxLength={15}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setFirstName}
+                    value={firstName}
+                    autoCapitalize="none"
+                    maxLength={30}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Last Name"
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setLastName}
+                    value={lastName}
+                    autoCapitalize="none"
+                    maxLength={50}
+                />
 
-            <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
-                <Text style={styles.uploadText}> Select profile picture</Text>
-            </TouchableOpacity>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    type={'email'}
+                    underlineColorAndroid={'transparent'}
+                    placeholderTextColor="#465881"
+                    onChangeText={setEmail}
+                    value={email}
+                    autoCapitalize="none"
+                />
 
-            <View style={styles.imageContainer}>
-                {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+                <TextInputMask
+                    style={styles.input}
+                    underlineColorAndroid={'transparent'}
+                    type={'datetime'}
+                    options={{
+                        format: 'YYYY.MM.DD'
+                    }}
+                    placeholder="Date of Birth"
+                    placeholderTextColor="#465881"
+                    onChangeText={setBirthday}
+                    value={birthDay}
+                    autoCapitalize="none"
+                />
 
-            </View>
+                <TouchableOpacity style={styles.selectButton} onPress={pickImage} >
+                    <Text style={styles.uploadText}> Select profile picture</Text>
+                </TouchableOpacity>
+
+                <View style={styles.imageContainer}>
+                    {image ? <Text style={styles.uploadedText}>Image uploaded</Text> : null}
+
+                </View>
 
 
-            <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
-                <Text style={styles.buttonText}>Sign up</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={handleSignup} color="#fff">
+                    <Text style={styles.buttonText}>Sign up</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
-                <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
-            </TouchableOpacity>
-            </View>
-        </ScrollView>
-        </View>
+                <TouchableOpacity onPress={() => navigation.goBack()} color="#fff">
+                    <Text style={styles.bottomtitle}>Already have an account? Log in</Text>
+                </TouchableOpacity>
 
+
+            </ScrollView>
+        </View >
     );
 
 };
@@ -229,6 +230,7 @@ const Signup = ({ route, navigation }) => { // <- This is the component that is 
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'stretch',
+        paddingTop: 50,
         flex: 1,
         backgroundColor: '#FEF9A7',
         justifyContent: 'center',

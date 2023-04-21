@@ -15,13 +15,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from "moment";
 
 const Conversation = ({ route, navigation }) => {
+
+    // Get conversationID from route params
     const { conversationID, conversationdata } = route.params;
+    // Get user data from redux
     const userData = useSelector(selectUser)
+    // Init all variables
     const [conv, setConv] = useState([])
     const [msg, setMsg] = useState("")
     const scrollViewRef = useRef();
     const height = useHeaderHeight()
 
+
+    // Get conversation
     const getConversation = (senderID, toID) => {
         const config = {
             headers: {
@@ -37,6 +43,8 @@ const Conversation = ({ route, navigation }) => {
             })
 
     }
+
+    // Get conversations from async storage
     const getAsyncData = async () => {
         const conv = await AsyncStorage.getItem(`${userData.user.ID}/${conversationID}`)
         setConv(JSON.parse(conv))
@@ -48,7 +56,9 @@ const Conversation = ({ route, navigation }) => {
         getConversation(userData.user.ID, conversationID)
     }, [])
 
+
     useEffect(() => {
+        // Listen for new messages
         socket.on("getMSG", (data) => {
             //setConv(data)
             getConversation(userData.user.ID, conversationID)
@@ -56,6 +66,8 @@ const Conversation = ({ route, navigation }) => {
         })
     }, [socket])
 
+
+    // Send message
     const sendMsg = () => {
 
         function addHours(date, hours) {
@@ -75,10 +87,13 @@ const Conversation = ({ route, navigation }) => {
             senderID: userData.user.ID
         }
 
+        // Send message to server
         socket.emit("send_message", data)
         setConv([...conv, data])
         setMsg("")
     }
+
+    // Render
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.container}>

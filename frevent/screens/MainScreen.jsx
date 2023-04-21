@@ -11,6 +11,7 @@ import AuthStack from './loginSignup/AuthStack';
 
 const MainScreen = () => { // <- This is the component that is rendered when the user navigates to the home screen
 
+
     const [screen, setScreen] = useState("login") // <- This is the state that is used to determine which screen is rendered
 
     const dispatch = useDispatch(); // <- This is the dispatch function that is used to dispatch actions to the redux store
@@ -24,7 +25,6 @@ const MainScreen = () => { // <- This is the component that is rendered when the
         const parsedJsonData = JSON.parse(userData) // <- This is the parsed user data that is stored in the async storage
 
         if (parsedJsonData?.token) { // <- This is the if statement that is used to check if the user is logged in or not
-            console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
 
 
@@ -39,12 +39,16 @@ const MainScreen = () => { // <- This is the component that is rendered when the
 
 
 
+
     useEffect(() => {   // <- This is the useEffect hook that is used to check if the user is logged in or not
         getLoggedStatus()
     }, [])
 
 
-    useEffect(() => { // <- This is the useEffect hook that is used to check if the user is a company or not
+
+    useEffect(() => {
+        // When user data changes, check if user is logged in
+        // If not logged in (no token), navigate to login screen
         if (!userData?.user?.token) {
             setScreen("login")
         } else {
@@ -56,32 +60,21 @@ const MainScreen = () => { // <- This is the component that is rendered when the
         } 
     }, [userData]) // <- This is the useEffect hook that is used to check if the user is a company or not, and is triggered when the user data is changed
 
-
+    // Login screen
     if (screen === "login") {
         return (
             <AuthStack />
         )
     }
 
-    /*if (screen === "signup") {
-        return (
-            <Signup setScreen={setScreen} />
-        )
-    }
-
-    if (screen === "companySignup") {
-        return (
-            <CompanySignup setScreen={setScreen} />
-        )
-    }
-    */
-
+    // Home screen
     if (screen === "home") {
         return (
             <TabNavigation />
         )
     }
 
+    // Company home screen
     if (screen === "companyHome") {
         return (
             <CompanyTabBar />

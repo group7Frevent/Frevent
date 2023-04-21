@@ -4,6 +4,11 @@ import CheckBox from 'expo-checkbox';
 
 const ChatBox = ({ data, unread, events, checkbox, setToChecked, checkedIndex, showParticipants }) => {
 
+    // Box that shows friend in chat container screen , renders an image and name of the friend
+    // Also shows the last message sent and the time since it was sent (If there is no message it shows "Start chatting!")
+
+    // But can be used for other purposes as well
+
     // Init date var
     const [date, setDate] = useState(Date)
 

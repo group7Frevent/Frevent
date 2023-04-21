@@ -19,6 +19,7 @@ const AddEventshome = ({ route, navigation }) => {
     const [spinner, setSpinner] = useState(false)
     ////////////////////////////////////////////////////////
 
+    // Get events
     const getEvents = async () => {
         const config = {
             headers: {
@@ -35,6 +36,8 @@ const AddEventshome = ({ route, navigation }) => {
     }
 
     /////////////////////////////////////////////////
+
+    // If company get company events
     const getCompanyEvents = async () => {
         const config = {
             headers: {
@@ -54,6 +57,8 @@ const AddEventshome = ({ route, navigation }) => {
 
     /////////////////////////////////////////////////
 
+
+    // Get events on load
     useEffect(() => {
         if (userData.user.IDcompany) {
             setSpinner(true)
@@ -64,6 +69,7 @@ const AddEventshome = ({ route, navigation }) => {
         }
     }, [])
 
+    // Get events on focus without spinner
     useEffect(() => {
         if (userData.user.IDcompany) {
             getCompanyEvents()
@@ -75,6 +81,8 @@ const AddEventshome = ({ route, navigation }) => {
 
 
     //////////////////////////////////////////////////////////
+
+    // Animation for the add button
     const spinValue = new Animated.Value(0)
     useEffect(() => {
         Animated.loop(
@@ -94,6 +102,8 @@ const AddEventshome = ({ route, navigation }) => {
     })
     //////////////////////////////////////////////////////////
 
+
+    // Delete event by id
     const deleteEvent = async (eventID) => {
         const config = {
             headers: {
@@ -101,6 +111,7 @@ const AddEventshome = ({ route, navigation }) => {
             }
         }
 
+        // Alert, if user is sure to delete event
         Alert.alert('Are you sure?', 'Are you sure you want to delete this event?', [
             {
                 text: 'Cancel',

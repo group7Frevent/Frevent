@@ -13,9 +13,12 @@ import { API_URL } from '@env'
 
 const AddEvent = ({ navigation, route }) => {
 
+    // Add event modal
+
     // Userdata
     const userData = useSelector(selectUser)
 
+    // Date
     const today = new Date();
 
     const startDate = getFormatedDate(today.setDate(today.getDate()), "YYYY/MM/DD  HH:MM");
@@ -32,6 +35,7 @@ const AddEvent = ({ navigation, route }) => {
     const [howManyChecked, setHowManyChecked] = useState(0);
 
 
+    // Navigation to choose people screen
     const navigateToChoosePeople = () => {
         if (choosedPeople.length > 0) {
             navigation.navigate("Choose people", { data: choosedPeople })
@@ -42,6 +46,7 @@ const AddEvent = ({ navigation, route }) => {
 
     /////////////////////////////
 
+    // Get available friends and send them to choose people screen
     const getAvailableFriends = async () => {
 
         const config = {
@@ -61,8 +66,8 @@ const AddEvent = ({ navigation, route }) => {
 
     /////////////////////////////
 
+    // Get data from choose people screen
     useEffect(() => {
-        console.log("here")
         if (route.params?.data) {
             //console.log(route.params.data)
             setHowManyChecked(route.params?.howManyChecked)
@@ -70,12 +75,14 @@ const AddEvent = ({ navigation, route }) => {
         }
     }, [route.params?.howManyChecked])
 
+
+    // Submit event
     const submit = async () => {
         //console.log(location.place_id)
 
         const invites = choosedPeople.filter((item) => item.checked == true).map((item) => item.ID)
-        console.log(invites)
 
+        // Check if user is company or customer
         if (userData.user.IDcompany) {
             var details = {
                 eventName: eventName,
@@ -150,6 +157,7 @@ const AddEvent = ({ navigation, route }) => {
                     maxLength={30}
                     value={eventName}
                     onChangeText={setEventName}
+                    placeholderTextColor="#000"
                 />
 
                 <Text style={styles.texts}>Description</Text>
@@ -159,6 +167,7 @@ const AddEvent = ({ navigation, route }) => {
                     multiline={true}
                     value={description}
                     onChangeText={setDescription}
+                    placeholderTextColor="#000"
                 />
 
 
@@ -177,20 +186,20 @@ const AddEvent = ({ navigation, route }) => {
                                 choosedPeople.map((item, index) => {
                                     if (item.checked) {
                                         return (
-                                            <>
-                                                <Image
-                                                    key={index}
-                                                    style={styles.profileImg}
-                                                    source={{
-                                                        uri: item?.picture,
-                                                    }} />
-                                            </>
+
+                                            <Image
+                                                key={index}
+                                                style={styles.profileImg}
+                                                source={{
+                                                    uri: item?.picture,
+                                                }} />
+
                                         )
                                     }
                                 })
                                 :
                                 <>
-                                    <Text style={styles.texts}>Invite people</Text>
+
                                     <TouchableOpacity
                                         style={styles.choosePeople}
                                         onPress={navigateToChoosePeople}
@@ -244,7 +253,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 10,
-        backgroundColor: '#FEF9A7',
         gap: 10,
     },
     textInput: {
@@ -252,6 +260,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 3,
         paddingLeft: 5,
+        fontSize: 15,
+        fontWeight: 'semibold',
+
     },
     texts: {
         fontSize: 20,

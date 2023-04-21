@@ -3,6 +3,8 @@ import React, { useEffect } from 'react'
 
 const ChatBubbleLeft = ({ text, timestamp }) => {
 
+    // Chat bubble that shows the message received by the other user
+
     return (
         <View style={{
             backgroundColor: "#dedede",
@@ -12,10 +14,6 @@ const ChatBubbleLeft = ({ text, timestamp }) => {
             marginLeft: "5%",
             maxWidth: '50%',
             alignSelf: 'flex-start',
-            //maxWidth: 500,
-            //padding: 14,
-
-            //alignItems:"center",
             borderRadius: 20,
         }} >
 
@@ -36,6 +34,8 @@ const ChatBubbleLeft = ({ text, timestamp }) => {
     )
 }
 
+
+// Function that returns the time since the message was sent in a readable format
 function timeSince(date) {
 
 
