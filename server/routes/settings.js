@@ -39,7 +39,7 @@ router.put('/update/user/', function (req, res, next) {
     }
 });
 
-router.put('/update/userpicture/', function (req, res, next) {
+router.put('/update/userpicture/', function (req, res, next) { // update user picture by id
     console.log(req.body.picture)
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -70,7 +70,7 @@ router.put('/update/userpicture/', function (req, res, next) {
     })
 });
 
-router.put('/update/company/', function (req, res, next) {
+router.put('/update/company/', function (req, res, next) { // update company username and password by id
     if (req.body.username && req.body.password && req.body.IDcompany) {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             console.log("here")
@@ -101,7 +101,7 @@ router.put('/update/company/', function (req, res, next) {
     }
 });
 
-router.put('/update/companypicture/', function (req, res, next) {
+router.put('/update/companypicture/', function (req, res, next) { // update company picture by id
     console.log(req.body.picture)
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -110,7 +110,7 @@ router.put('/update/companypicture/', function (req, res, next) {
     const userName = encodedToken.userData.username
     console.log("here")
     company.updateCompanyPicture(id, req.body.picture, (dberr, dbRes) => {
-        if (dberr) { 
+        if (dberr) {
             errors.errorCode(dberr, res)
         } else {
             console.log(dbRes)
@@ -132,20 +132,15 @@ router.put('/update/companypicture/', function (req, res, next) {
     })
 });
 
-function parseJwt(token) {
+function parseJwt(token) { // parse json web token
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
 
-function generateAccessToken(userID) {
+function generateAccessToken(userID) { // Generate token
     dotenv.config();
     return jwt.sign(userID, process.env.MY_TOKEN, { expiresIn: '300d' });
 }
 
-// Generate token
-function generateAccessToken(userID) {
-    dotenv.config();
-    return jwt.sign(userID, process.env.MY_TOKEN, { expiresIn: '300d' });
-}
 
 
 module.exports = router;

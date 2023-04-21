@@ -40,7 +40,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRoute)
 
 
-app.use(authenticateToken);
+app.use(authenticateToken); // This is the middleware that checks if the token is valid
 app.use('/messages', messageRoute)
 app.use('/events', eventsRouter)
 app.use('/settings', settingsRoute)
@@ -48,7 +48,7 @@ app.use('/friends', friendsRoute)
 
 
 
-
+// Middleware to check if token is valid
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]

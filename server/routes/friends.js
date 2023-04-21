@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 const friends = require('../models/friends');
 
 
-router.get('/myfriends', async function (req, res, next) {
+router.get('/myfriends', async function (req, res, next) {  // Get all my friends
     try {
 
         // Added extra middleware
@@ -30,7 +30,7 @@ router.get('/myfriends', async function (req, res, next) {
     }
 })
 
-router.get('/notfriends', async function (req, res, next) {
+router.get('/notfriends', async function (req, res, next) { // Get all users that are not my friends
     try {
         var returnObj = []
         // Added extra middleware
@@ -47,6 +47,7 @@ router.get('/notfriends', async function (req, res, next) {
                 dbresult.splice(elementPos, 1)
                 returnObj = dbresult
 
+                // Get status of friend if there is friend request
                 function getStatusIfFriend(friendID) {
                     return new Promise((resolve, reject) => {
                         friends.getFriendStatus(encodedToken.userData.ID, friendID, (dbError, dbresult) => {
@@ -80,7 +81,7 @@ router.get('/notfriends', async function (req, res, next) {
 })
 
 
-router.post('/addfriend', async function (req, res, next) {
+router.post('/addfriend', async function (req, res, next) { // Add a friend
     try {
         // Added extra middleware
         // Get bearer token and encode it to check userID
@@ -101,7 +102,7 @@ router.post('/addfriend', async function (req, res, next) {
     }
 })
 
-router.post('/acceptfriend', async function (req, res, next) {
+router.post('/acceptfriend', async function (req, res, next) { // Accept a friend request
     if (req.body.friendID) {
         try {
             // Added extra middleware
@@ -126,7 +127,7 @@ router.post('/acceptfriend', async function (req, res, next) {
     }
 })
 
-router.get('/getpendingrequests', async function (req, res, next) {
+router.get('/getpendingrequests', async function (req, res, next) { // Get all pending friend requests
     try {
         // Added extra middleware
         // Get bearer token and encode it to check userID
@@ -149,7 +150,7 @@ router.get('/getpendingrequests', async function (req, res, next) {
 }
 )
 
-router.post('/removefriend', async function (req, res, next) {
+router.post('/removefriend', async function (req, res, next) { // Remove a friend
     if (req.body.friendID) {
         try {
             // Added extra middleware
@@ -174,7 +175,7 @@ router.post('/removefriend', async function (req, res, next) {
 })
 
 
-function parseJwt(token) {
+function parseJwt(token) { // Parse JWT token
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
 
