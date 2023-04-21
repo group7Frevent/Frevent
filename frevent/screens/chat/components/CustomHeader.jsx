@@ -3,6 +3,8 @@ import React from 'react'
 import Ionic from 'react-native-vector-icons/Ionicons'
 const CustomHeader = ({ image, fname, lname, navigation: { goBack } }) => {
 
+    // return the component, with a back button, profile image, and name
+
     return (
         <View style={styles.container}>
             <View style={styles.title}>

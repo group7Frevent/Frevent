@@ -5,12 +5,13 @@ import { selectUser } from '../../features/userSlice'
 import Ionic from 'react-native-vector-icons/Ionicons'
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import CompanySettingsStack from "./CompanySettingsStack";
 import MyEventsStack from '../myEvents/MyEventsStack'
 import AddEvent from '../myEvents/components/AddEvent'
 
 const Tab = createBottomTabNavigator();
+
+// Tab navigator for company portal
 
 const CompanyTabNavigation = () => {
     // Tuodaan tiedot reduxista

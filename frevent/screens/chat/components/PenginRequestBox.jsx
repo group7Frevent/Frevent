@@ -12,6 +12,7 @@ const PenginRequestBox = ({ data }) => {
 
     const userData = useSelector(selectUser)
 
+    // Confirm friend request
     const confirmRequest = () => {
         var details = {
             friendID: data?.ID
@@ -39,6 +40,7 @@ const PenginRequestBox = ({ data }) => {
         axios.post(API_URL + 'friends/acceptfriend', formBody, config)
             .then((response) => {
                 if (response.data == true) {
+                    // data.status = "confirmed"
                     setConfirm(true)
                 }
             }).catch((error) => {
@@ -46,9 +48,6 @@ const PenginRequestBox = ({ data }) => {
             })
     }
 
-    useEffect(() => {
-        console.log(data)
-    }, [])
 
 
     return (

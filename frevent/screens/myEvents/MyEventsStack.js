@@ -8,6 +8,7 @@ import ShowParticipants from './components/ShowParticipants';
 const Stack = createNativeStackNavigator();
 
 const MyEventsStack = () => {
+    // Stack navigator for my events screen
     return (
         <Stack.Navigator >
             <Stack.Screen name="My Events home" component={AddEventshome} />

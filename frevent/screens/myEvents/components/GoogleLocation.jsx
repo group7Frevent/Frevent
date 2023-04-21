@@ -6,6 +6,7 @@ import { ScrollView, Dimensions } from 'react-native'
 
 
 const GoogleLocation = ({ width, setLocation }) => {
+    // Get google places autocomplete
     return (
         <ScrollView
             horizontal={true}
@@ -19,11 +20,15 @@ const GoogleLocation = ({ width, setLocation }) => {
                         console.log(data, details)
                         setLocation(data, details);
                     }}
+                    textInputProps={{
+                        placeholderTextColor: '#000',
+                    }}
                     onFail={error => console.error(error)}
                     query={{
                         key: GOOGLE_MAP_API_KEY,
                         language: 'fi',
                     }}
+
                 />
             </View>
         </ScrollView>

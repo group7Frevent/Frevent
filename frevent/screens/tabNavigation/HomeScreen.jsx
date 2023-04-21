@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image} from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/userSlice'
@@ -10,7 +10,7 @@ import HomeScreenHeader from './HomeScreenHeader';
 import createOpenLink from 'react-native-open-maps';
 
 
-const HomeScreen = () => {                                      
+const HomeScreen = () => {
   const [visibleEvents, setVisibleEvents] = useState([])
   const [attending, setAttending] = useState([])
   const [attendSwitch, setAttendSwitch] = useState(2)
@@ -86,7 +86,7 @@ const HomeScreen = () => {
       });
 
 
-      setAttendSwitch((Math.random()*100)+1)                                    //Update switch to render page again
+    setAttendSwitch((Math.random() * 100) + 1)                                    //Update switch to render page again
 
 
   }
@@ -110,7 +110,7 @@ const HomeScreen = () => {
       });
 
 
-      setAttendSwitch((Math.random()*100)+1)                          //Update switch to render page again
+    setAttendSwitch((Math.random() * 100) + 1)                          //Update switch to render page again
 
 
   }
@@ -125,7 +125,7 @@ const HomeScreen = () => {
     return !match;
   };
 
-                                                                                                        //Map through events and render mainfeed. Check if event button should be "attend" or "attending"
+  //Map through events and render mainfeed. Check if event button should be "attend" or "attending"
   return (
 
     <>
@@ -186,7 +186,6 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FEF9A7',
     alignItems: 'center',                                                     //CSS styles
     justifyContent: 'center',
 

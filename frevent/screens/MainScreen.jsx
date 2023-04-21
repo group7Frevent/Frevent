@@ -11,21 +11,23 @@ import AuthStack from './loginSignup/AuthStack';
 
 const MainScreen = () => {
 
+    // State that navigates to screens
     const [screen, setScreen] = useState("login")
 
-    // Valmistelee redux
+    //  redux
     const dispatch = useDispatch();
-
     const userData = useSelector(selectUser)
 
 
+    // Get logged status
     const getLoggedStatus = async () => {
 
+        // Get user data from async storage
         const userData = await AsyncStorage.getItem("userData")
         const parsedJsonData = JSON.parse(userData)
 
+        // If user data exists, set user data to redux and navigate to home screen
         if (parsedJsonData?.token) {
-            console.log(parsedJsonData)
             dispatch(addUser(parsedJsonData))
 
 
@@ -41,12 +43,13 @@ const MainScreen = () => {
 
 
     useEffect(() => {
-        //dispatch(addUser({}))
         getLoggedStatus()
     }, [])
 
 
     useEffect(() => {
+        // When user data changes, check if user is logged in
+        // If not logged in (no token), navigate to login screen
         if (!userData?.user?.token) {
             setScreen("login")
         } else {
@@ -58,32 +61,21 @@ const MainScreen = () => {
         }
     }, [userData])
 
-
+    // Login screen
     if (screen === "login") {
         return (
             <AuthStack />
         )
     }
 
-    /*if (screen === "signup") {
-        return (
-            <Signup setScreen={setScreen} />
-        )
-    }
-
-    if (screen === "companySignup") {
-        return (
-            <CompanySignup setScreen={setScreen} />
-        )
-    }
-    */
-
+    // Home screen
     if (screen === "home") {
         return (
             <TabNavigation />
         )
     }
 
+    // Company home screen
     if (screen === "companyHome") {
         return (
             <CompanyTabBar />

@@ -14,6 +14,7 @@ const PendingRequest = ({ route, navigation }) => {
 
     const userData = useSelector(selectUser)
 
+    // Modify array to fit SwipeListView
     useEffect(() => {
         const emptyArray = []
         pending.map((item, index) =>
@@ -21,6 +22,7 @@ const PendingRequest = ({ route, navigation }) => {
         setListData(emptyArray)
     }, [])
 
+    // Close row after delete
     const closeRow = (rowMap, rowKey) => {
         console.log(rowKey)
         if (rowMap[rowKey]) {
@@ -30,6 +32,7 @@ const PendingRequest = ({ route, navigation }) => {
 
 
     ////////////////////////////////////////////////////////////////////////
+    // Delete friend request
     const deleteRequest = (rowMap, rowKey, item) => {
         var details = {
             friendID: item?.ID
@@ -71,12 +74,13 @@ const PendingRequest = ({ route, navigation }) => {
 
 
     ////////////////////////////////////////////////////////////////////////
+    // Delete row
     const deleteRow = (rowMap, rowKey, item) => {
         deleteRequest(rowMap, rowKey, item);
 
     };
 
-
+    // Render item
     const renderItem = data => (
         <TouchableHighlight
             style={styles.rowFront}
@@ -87,6 +91,7 @@ const PendingRequest = ({ route, navigation }) => {
         </TouchableHighlight>
     );
 
+    // Render hidden item
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
 

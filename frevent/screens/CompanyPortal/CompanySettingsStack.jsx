@@ -7,8 +7,9 @@ import CompanySettingsScreen from './CompanySettingsScreen';
 const Stack = createNativeStackNavigator();
 
 const CompanySettingsStack = () => {
-  return (
 
+  // Stack navigator for company settings screen
+  return (
     <Stack.Navigator>
       <Stack.Screen name="CompanySettingsScreen" component={CompanySettingsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Companyprofile" component={CompanyProfileSettings} />
